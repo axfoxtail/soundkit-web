@@ -1,0 +1,29 @@
+<?php if(config('enable-track-time-comment', true) and (!isset($track['playlist_id']) or !$track['playlist_id'])):?>
+    <?php $duration = $track['track_duration']?>
+    <div class="track-time-comment-container track-time-comment-container-<?php echo $track['id']?>" data-id="<?php echo $track['id']?>">
+        <div class="pane" data-seconds="<?php echo $duration?>">
+            <div class="users"></div>
+            <?php if($C->model('user')->isLoggedIn() and $track['comments']):?>
+                <a href="#" class="clicker">
+                    <img src="<?php echo $C->model('user')->getAvatar()?>"/>
+                </a>
+            <?php endif?>
+        </div>
+
+        <?php if($C->model('user')->isLoggedIn() and $track['comments']):?>
+            <form action="<?php echo url('comment/add')?>" method="post" class="clearfix general-form">
+                <input type="hidden" name="val[id]" value="<?php echo $track['id']?>"/>
+                <input type="hidden" name="val[at]" value="" class="at-value"/>
+                <div class="avatar" style="background-image: url(<?php echo $C->model('user')->getAvatar() ?>);"></div>
+                <div class="reply-to">
+                    <span class="text colored" style=""></span>
+                    <input type="hidden" name="val[replyto]" value=""/>
+                </div>
+                <div class="input">
+                    <input type="text" autocomplete="off" name="val[comment_text]" required placeholder="<?php _l('write-comment')?>"/>
+                </div>
+            </form>
+        <?php endif?>
+
+    </div>
+<?php endif?>

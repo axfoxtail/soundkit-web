@@ -1,0 +1,98 @@
+<div class="horizontal-list">
+    <div class="clearfix">
+        <div class="float-left" style="width: 80%">
+            <div class="title">
+                 <?php _l('top-artists')?>
+                <span><?php _l('discover-top-artists-note')?></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="slider" >
+        <div class="swiper-container" id="top-artist-slider">
+            <div class="swiper-wrapper">
+                <?php foreach($C->model('user')->getPeople('top', '',10,0) as $user):?>
+                    <div class="swiper-slide">
+                        <div class="grid list">
+                            <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>">
+                                <div class="art" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 200)?>);"></div>
+                            </a>
+                            <div class="grid-title-container mt-3">
+                                <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>" class="grid-title "><span><b><?php echo $user['full_name']?></b></span></a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach;?>
+
+            </div>
+        </div>
+        <div class="swiper-button-next  scroller scroll-right" id="top-artist-slider-next"><i class="la  la-angle-right"></i></div>
+        <div class="swiper-button-prev scroller scroll-left" id="top-artist-slider-right"><i class="la  la-angle-left"></i></div>
+    </div>
+</div>
+
+<?php $tracks = $C->model('track')->getTracks('charts-new-hot', 'all/'.config('chart-new-hot-time', 'this-week'),0,10)?>
+<?php if($tracks):?>
+    <div class="horizontal-list">
+        <div class="clearfix">
+            <div class="float-left" style="width: 80%">
+                <div class="title">
+                    <?php _l('charts')?> : <?php _l('new-hot')?>
+                    <span><?php _l('new-hot-note')?></span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="slider" >
+            <div class="swiper-container" id="new-hot-slider">
+                <div class="swiper-wrapper">
+                    <?php foreach($tracks as $track):?>
+                        <?php echo $C->view('track/track-slide', array('track' => $track, 'type' => 'charts-new-hot', 'typeId' => 'all/'.config('chart-new-hot-time', 'this-week')))?>
+                    <?php endforeach;?>
+                </div>
+            </div>
+            <div class="swiper-button-next  scroller scroll-right" id="new-hot-slider-next"><i class="la  la-angle-right"></i></div>
+            <div class="swiper-button-prev scroller scroll-left" id="new-hot-slider-right"><i class="la  la-angle-left"></i></div>
+        </div>
+
+        <div class="clearfix">
+            <a href="<?php echo url('charts')?>"  data-ajax="true" class="btn btn-sm btn-outline-secondary float-right round-sm"><?php _l('more-on-charts')?></a>
+        </div>
+    </div>
+
+<?php endif?>
+
+
+<div class="horizontal-list" style="border:none">
+    <div class="clearfix">
+        <div class="float-left" style="width: 80%">
+            <div class="title">
+                <?php _l('charts')?> : <?php _l('this-week-top-50')?>
+                <span><?php _l('this-week-top-note')?></span>
+            </div>
+        </div>
+        <div class="float-right">
+
+        </div>
+    </div>
+
+
+    <div class="full-slider slider" >
+        <div class="swiper-container" id="new-top-slider">
+            <div class="swiper-wrapper">
+                <?php foreach($C->model('track')->getTracks('charts-top', 'all/'.config('chart-top-time', 'this-week'),0,10) as $track):?>
+                    <?php echo $C->view('track/track-slide', array('track' => $track, 'type' => 'charts-top', 'typeId' => 'all/'.config('chart-top-time', 'this-week')))?>
+                <?php endforeach;?>
+
+            </div>
+        </div>
+        <div class="swiper-button-next  scroller scroll-right" id="top-50-slider-next"><i class="la  la-angle-right"></i></div>
+        <div class="swiper-button-prev scroller scroll-left" id="top-50-slider-right"><i class="la  la-angle-left"></i></div>
+    </div>
+
+    <div class="clearfix">
+        <a data-ajax="true" href="<?php echo url('charts/top')?>" class="btn btn-sm btn-outline-secondary float-right round-sm"><?php _l('more-on-charts')?></a>
+    </div>
+</div>

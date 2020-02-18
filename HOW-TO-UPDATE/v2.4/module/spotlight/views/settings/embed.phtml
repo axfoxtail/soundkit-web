@@ -1,0 +1,29 @@
+<hr/>
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('who-can-use-spotlight')?></label>
+    <div class="col-sm-5">
+        <select  name="val[use-spotlight]">
+            <option <?php echo (config('use-spotlight', 'all-author') == 'all-author') ? 'selected' : null?> value="all-author"><?php _l('all-authors')?></option>
+            <option <?php echo (config('use-spotlight', 'all-author') == 'pro-author') ? 'selected' : null?> value="pro-author"><?php _l('pro-authors')?></option>
+        </select>
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('display-global-spotlight')?></label>
+    <div class="col-sm-5">
+        <select  name="val[display-spotlight]">
+            <option <?php echo (config('display-spotlight', 1) == '1') ? 'selected' : null?> value="1"><?php _l('yes')?></option>
+            <option <?php echo (config('display-spotlight', 1) == 0) ? 'selected' : null?> value="0"><?php _l('no')?></option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('max-spotlight-tracks')?></label>
+    <div class="col-sm-5">
+        <input type="number" class="form-control" name="val[max-spotlight-tracks]" value="<?php echo config('max-spotlight-tracks', 5)?>"/>
+    </div>
+</div>
+

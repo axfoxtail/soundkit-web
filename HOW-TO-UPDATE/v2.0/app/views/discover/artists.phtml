@@ -1,0 +1,23 @@
+<div
+    data-paginate-url="artists/paginate"
+    data-offset="0"
+    data-param="<?php echo perfectSerialize(array('limit' => 20))?>"
+    class="playlists-container grid-container clearfix"
+    id="artists-top">
+
+    <?php $users = $C->model('user')->getPeople('top', '',20,0)?>
+
+    <?php foreach($users as $user):?>
+        <?php echo $C->view('user/display-grid', array('user' => $user))?>
+    <?php endforeach;?>
+
+    <?php if(count($users) >19):?>
+        <div class="load-more-button-container" id="artists-top-load-more-container">
+            <a href=""
+               data-size="s" data-style="zoom-in"
+               class="load-more-button  btn btn-outline-dark btn-sm ladda-button"
+               data-container="artists-top"
+               id="artists-top-loadmore-button"><?php _l('load-more')?></a>
+        </div>
+    <?php endif?>
+</div>

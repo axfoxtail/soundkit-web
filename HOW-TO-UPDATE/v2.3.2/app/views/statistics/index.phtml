@@ -1,0 +1,282 @@
+<?php Hook::getInstance()->fire('statistics.dashboard.header')?>
+<div class="profile-menu">
+    <div class="inner-container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-ajax="true" href="#" ><?php _l('statistics')?></a>
+            </li>
+            <?php if(moduleExists('store') and model('user')->isLoggedIn() and model('user')->isAuthor() and (model('user')->subscriptionActive() or !config('disable-tracks', true))):?>
+            <li class="nav-item">
+                <a class="nav-link "  data-ajax="true" href="<?php echo url('store/dashboard')?>"><?php _l('my-store')?></a>
+            </li>
+            <?php endif?>
+
+            <?php Hook::getInstance()->fire('statistics.dashboard.tabs')?>
+        </ul>
+
+    </div>
+</div>
+
+<div class="inner-container">
+    <div class="clearfix mt-3">
+
+        <div class="float-right">
+            <input type="hidden" id="stats-id" value="<?php echo $id?>"/>
+            <span>
+                <?php if(config('allow-user-change-chart',1) == 1):?>
+                    <select onchange="reloadStatistics()" id="filter-chart"  class="select-input"  >
+                    <option <?php echo ($chart == 'bar') ? 'selected': null?>  value="bar"><?php _l('bar-chart')?></option>
+                    <option  <?php echo ($chart == 'line') ? 'selected': null?>  value="line"><?php _l('line-chart')?></option>
+                    <option  <?php echo ($chart == 'area') ? 'selected': null?>  value="area"><?php _l('area-chart')?></option>
+                </select>
+                <?php endif?>
+            </span>
+            <span>
+                <select onchange="reloadStatistics()" id="filter-time"  class="select-input"  >
+                <option <?php echo ($time == 'today') ? 'selected': null?>  value="today"><?php _l('today')?></option>
+                <option  <?php echo ($time == '7days') ? 'selected': null?>  value="7days"><?php _l('last-7days')?></option>
+                <option  <?php echo ($time == '30days') ? 'selected': null?>  value="30days"><?php _l('last-30days')?></option>
+                <option  <?php echo ($time == '12month') ? 'selected': null?>  value="12month"><?php _l('last-12months')?></option>
+                <option  <?php echo ($time == 'total') ? 'selected': null?>  value="total"><?php _l('total')?></option>
+            </select>
+            </span>
+        </div>
+    </div>
+</div>
+<hr/>
+<div class="inner-container">
+    <div class="row">
+        <div class="col-md-8">
+            <?php if($C->model('user')->subscriptionActive()):?>
+                <div id="charts-stats" data-type="<?php echo $chart?>" data-time="<?php echo $time?>" data-id="<?php echo $id?>">
+                    <img style="width: 50px;margin: 10% auto;display: block" src="<?php echo assetUrl('assets/images/loading.gif') ?>"/>
+                </div>
+            <?php else:?>
+                <div class="chart-pro-only">
+                    <img src="<?php echo assetUrl('assets/images/chart-pro.png')?>">
+                    <div class="info">
+                        <h5><?php _l('go-pro')?></h5>
+                        <span><?php _l('go-pro-chart-info')?></span>
+
+                        <div class="mt-5">
+                            <a href="<?php echo url('pro')?>" data-ajax="true" class="btn btn-primary round-sm pl-5 pr-5"><?php _l('go-pro')?></a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif?>
+        </div>
+        <div class="col-md-4">
+            <div class="card-list">
+
+                <div class="track-side-stats">
+                    <?php $stats =  $C->model('track')->countTrackStatistics($id, $strtime)?>
+                    <div class="each clearfix">
+                        <div class="float-left"><?php _l('plays')?></div>
+                        <div class="float-right">
+                            <div class="count">
+                                <?php echo $stats['plays']?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="each clearfix">
+                        <div class="float-left"><?php _l('likes')?></div>
+                        <div class="float-right">
+                            <div class="count"><?php echo $stats['likes']?></div>
+                        </div>
+                    </div>
+                    <div class="each clearfix">
+                        <div class="float-left"><?php _l('comments')?></div>
+                        <div class="float-right">
+                            <div class="count"><?php echo $stats['comments']?></div>
+                        </div>
+                    </div>
+                    <div class="each clearfix">
+                        <div class="float-left"><?php _l('downloads')?></div>
+                        <div class="float-right">
+                            <div class="count"><?php echo $stats['downloads']?></div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr/>
+<div class="profile-menu">
+    <div class=" inner-container">
+
+        <ul class="nav nav-tabs" role="tablist">
+            <?php if($id == 'all'):?>
+                <li class="nav-item">
+                    <a class="nav-link active " data-toggle="tab"    href="#tracks" ><?php _l('tracks')?></a>
+                </li>
+            <?php endif?>
+            <?php Hook::getInstance()->fire('statistics.tabs.extend', null, array($id))?>
+            <li class="nav-item">
+                <a class="nav-link <?php echo ($id != 'all') ? 'active' : null?>"  data-toggle="tab"  href="#users" ><?php _l('users')?></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link "    href="#geo" data-toggle="tab"><?php _l('geographic')?></a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="inner-container" >
+    <div class="tab-content" id="nav-tabContent">
+        <?php if($id == 'all'):?>
+            <?php Hook::getInstance()->fire('statistics.tabs.content', null, array($id,$strtime))?>
+            <div class="tab-pane fade show active" id="tracks" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <h6><?php _l('most-played')?></h6>
+                        <?php $tracks = $C->model('track')->getStatisticsTracks('plays', $strtime)?>
+                        <?php foreach($tracks as $track):?>
+                            <div class="clearfix mb-3 each-track-stats">
+                                <div class="float-left" style="width: 90%;">
+                                    <a data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track)?>">
+                                        <img src="<?php echo $C->model('track')->getArt($track)?>" style="width:20px;height:20px;display: inline-block;"/>
+                                        <span><b><?php echo $track['title']?></b></span>
+                                    </a>
+                                </div>
+                                <div class="float-right">
+                                    <?php echo $track['count']?>
+                                </div>
+                            </div>
+                        <?php endforeach;?>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><?php _l('most-liked')?></h6>
+                        <?php $tracks = $C->model('track')->getStatisticsTracks('likes', $strtime)?>
+                        <?php foreach($tracks as $track):?>
+                            <div class="clearfix mb-3 each-track-stats">
+                                <div class="float-left" style="width: 90%;">
+                                    <a data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track)?>">
+                                        <img src="<?php echo $C->model('track')->getArt($track)?>" style="width:20px;height:20px;display: inline-block;"/>
+                                        <span><b><?php echo $track['title']?></b></span>
+                                    </a>
+                                </div>
+                                <div class="float-right">
+                                    <?php echo $track['count']?>
+                                </div>
+                            </div>
+                        <?php endforeach;?>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><?php _l('most-commented')?></h6>
+                        <?php $tracks = $C->model('track')->getStatisticsTracks('comments', $strtime)?>
+                        <?php foreach($tracks as $track):?>
+                            <div class="clearfix mb-3 each-track-stats">
+                                <div class="float-left" style="width: 90%;">
+                                    <a data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track)?>">
+                                        <img src="<?php echo $C->model('track')->getArt($track)?>" style="width:20px;height:20px;display: inline-block;"/>
+                                        <span><b><?php echo $track['title']?></b></span>
+                                    </a>
+                                </div>
+                                <div class="float-right">
+                                    <?php echo $track['count']?>
+                                </div>
+                            </div>
+                        <?php endforeach;?>
+                    </div>
+                </div>
+            </div>
+        <?php endif?>
+        <div class="tab-pane fade <?php echo ($id != 'all') ? 'show active': null?>" id="users" role="tabpanel" aria-labelledby="nav-profile-tab">
+            <div class="row mt-4">
+                <div class="col-6">
+                   <h6><?php _l('who-play-most')?></h6>
+                    <?php if($C->model('user')->subscriptionActive()):?>
+                        <?php $tracks = $C->model('track')->getStatisticsTracks('users.played', $strtime)?>
+                        <?php foreach($tracks as $track):?>
+                            <div class="clearfix mb-3 each-track-stats">
+                                <div class="float-left" style="width: 90%;">
+                                    <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($track)?>">
+                                        <img src="<?php echo $C->model('user')->getAvatar($track)?>" style="width:20px;height:20px;display: inline-block;"/>
+                                        <span><b><?php echo $track['full_name']?></b></span>
+                                    </a>
+                                </div>
+                                <div class="float-right">
+                                    <?php echo $track['count']?>
+                                </div>
+                            </div>
+                        <?php endforeach;?>
+
+                    <?php endif?>
+                </div>
+                <div class="col-6">
+                    <h6><?php _l('who-download-most')?></h6>
+                    <?php if($C->model('user')->subscriptionActive()):?>
+                        <?php $tracks = $C->model('track')->getStatisticsTracks('users.download', $strtime)?>
+                        <?php foreach($tracks as $track):?>
+                            <div class="clearfix mb-3 each-track-stats">
+                                <div class="float-left" style="width: 90%;">
+                                    <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($track)?>">
+                                        <img src="<?php echo $C->model('user')->getAvatar($track)?>" style="width:20px;height:20px;display: inline-block;"/>
+                                        <span><b><?php echo $track['full_name']?></b></span>
+                                    </a>
+                                </div>
+                                <div class="float-right">
+                                    <?php echo $track['count']?>
+                                </div>
+                            </div>
+                        <?php endforeach;?>
+
+
+                    <?php endif?>
+                </div>
+            </div>
+
+            <?php if(!$C->model('user')->subscriptionActive()):?>
+                <div class="more-pro-options">
+                    <div><?php _l('more-pro-stats-note')?></div>
+                    <a href="<?php echo url('pro')?>" data-ajax="true" class="btn btn-secondary round-sm mt-4"><?php _l('go-pro')?></a>
+                </div>
+            <?php endif?>
+        </div>
+        <div class="tab-pane fade" id="geo" role="tabpanel" aria-labelledby="nav-contact-tab">
+            <div class="row mt-4">
+                <div class="col-6">
+                    <h6><?php _l('top-countries')?></h6>
+                    <?php $tracks = $C->model('track')->getStatisticsTracks('geo.country', $strtime)?>
+                    <?php foreach($tracks as $track):?>
+                        <div class="clearfix mb-3 each-track-stats">
+                            <div class="float-left" style="width: 90%;">
+                                <?php echo $track['country']?>
+                            </div>
+                            <div class="float-right">
+                                <?php echo $track['count']?>
+                            </div>
+                        </div>
+                    <?php endforeach;?>
+                </div>
+                <div class="col-6">
+                    <h6><?php _l('top-cities')?></h6>
+                    <?php $tracks = $C->model('track')->getStatisticsTracks('geo.city', $strtime)?>
+                    <?php foreach($tracks as $track):?>
+                        <div class="clearfix mb-3 each-track-stats">
+                            <div class="float-left" style="width: 90%;">
+                                <?php echo $track['city']?>
+                            </div>
+                            <div class="float-right">
+                                <?php echo $track['count']?>
+                            </div>
+                        </div>
+                    <?php endforeach;?>
+                </div>
+            </div>
+
+            <?php if(!$C->model('user')->subscriptionActive()):?>
+                <div class="more-pro-options">
+                    <div><?php _l('more-pro-stats-note')?></div>
+                    <a href="<?php echo url('pro')?>" data-ajax="true" class="btn btn-secondary round-sm mt-4"><?php _l('go-pro')?></a>
+                </div>
+            <?php endif?>
+        </div>
+    </div>
+
+</div>

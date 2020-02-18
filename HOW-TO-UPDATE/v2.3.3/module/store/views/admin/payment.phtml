@@ -1,0 +1,15 @@
+<div class="profile-menu">
+    <div class="inner-container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link " data-ajax="true" href="<?php echo url('admin/payments')?>" ><?php _l('transactions')?></a>
+            </li>
+            <?php Hook::getInstance()->fire('admin.payments.tab', null, array($type))?>
+        </ul>
+
+    </div>
+</div>
+
+<div class="inner-container mt-3">
+    <?php echo $content?>
+</div>

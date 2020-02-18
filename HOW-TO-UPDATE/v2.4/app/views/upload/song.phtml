@@ -1,0 +1,448 @@
+<div class="inner-container">
+    <form  id="song--upload-form"  action="<?php echo getFullUrl(true)?>" class="general-form mb-5" method="post" enctype="multipart/form-data">
+        <div class="upload-types">
+            <h4><?php _l('please-select-upload-type')?></h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="javascript:void(0)" onclick="return switch_upload_type('song')" class="each">
+                        <i class="la la-music colored"></i>
+                        <h6><?php _l('song')?></h6>
+
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="javascript:void(0)" onclick="return switch_upload_type('album')" class="each">
+                        <i class="la-folder-open la colored "></i>
+                        <h6><?php _l('album')?></h6>
+
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="javascript:void(0)" onclick="return switch_upload_type('playlist')" class="each">
+                        <i class="la la-indent colored"></i>
+                        <h6><?php _l('playlist')?></h6>
+
+                    </a>
+                </div>
+
+
+                <?php Hook::getInstance()->fire('uploads.type')?>
+            </div>
+
+        </div>
+
+        <div class="create-playlist-container hide">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="upload-playlist-form" style="text-align: left">
+                        <h5 class="album-type-title hide" style="text-align: center;"><?php _l('upload-your-album')?></h5>
+                        <h5 class="playlist-type-title hide" style="text-align: center;"><?php _l('upload-your-playlist')?></h5>
+
+                        <div class="form-group">
+
+                            <input type="text" placeholder="<?php _l('title')?>" name="val[playlist]" class="form-control upload-playlist-title"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php _l('description')?></label>
+                            <textarea rows="5" name="val[playlist_desc]" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group upload-album-price hide">
+                            <label><?php _l('album-price')?></label>
+                            <input step="0.01" type="number" formnovalidate name="album_price" id="album-price-input" class="form-control"/>
+                        </div>
+                        <input type="hidden" value="1" class="upload-playlist-type" name="val[playlist_type]"/>
+
+                        <br/><br/>
+                        <button type="button" onclick="return start_upload_playlist()" class="btn btn-lg btn-primary round-sm"><?php _l('start')?></button>
+                    </div>
+
+                    <a href="javascript:void(0)" onclick="return refresh_upload_type()"><i class="fa  fa-long-arrow-left"></i> <?php _l('go-back')?></a>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+
+        <div class="uploader-form hide">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="upload-playlist-form">
+                        <h5 class="playlist-type-title mb-3"><?php _l('upload-your-music')?></h5>
+
+                        <div class="track-selector">
+                            <div class="mt-4 mb-4">
+                                <span style="font-weight: bold;"><?php _l('select-song-note')?> <?php echo config('audio-file-types', 'mp3,m4a,mp4')?></span>
+                            </div>
+                            <button class="btn btn-primary  " style="padding-right: 40px;padding-left: 40px;text-transform: uppercase"><?php _l('browse-to-your-file')?></button>
+                            <input  multiple  data-title-placeholder="#audioTitle" onchange="validate_file_size(this, 'audio')" class="main-audio start-main-audio" type="file" name="tracks[]"/>
+                        </div>
+
+
+                    </div>
+                    <a href="javascript:void(0)" onclick="return refresh_upload_type()"><i class="fa  fa-long-arrow-left"></i> <?php _l('go-back')?></a>
+
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+
+
+        </div>
+
+        <div class="uploader-main-form hide">
+
+            <div class="row ">
+                <div class="col-md-8">
+
+
+                    <div class="track-selector mt-3">
+                        <div class="mt-4 mb-4">
+                            <span style="font-weight: bold;"><?php _l('select-song-note')?> <?php echo config('audio-file-types', 'mp3,m4a,mp4')?></span>
+                        </div>
+                        <button class="btn btn-outline-secondary  " style="padding-right: 40px;padding-left: 40px;text-transform: uppercase"><?php _l('add-more-track')?></button>
+                        <input  multiple id="moretrack-input"  onchange="validate_file_size(this, 'audio')" class="main-audio " type="file" name="track"/>
+                    </div>
+
+                    <div class="auto-fill-container">
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-10 col-form-label"><?php _l('autofill-upload-data')?></label>
+                            <div class="col-sm-2" style="text-align: right">
+                                <div class="switch embed-code-toggle">
+                                    <input id="cmn-toggle-auto-fill" value="1" onchange="enableAutoFillUploadData(this)"  class="cmn-toggle cmn-toggle-round-flat embed-input" type="checkbox">
+                                    <label for="cmn-toggle-auto-fill"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="selected-songs">
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <button style="-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;" type="submit" data-size="s" data-style="zoom-in" class="btn btn-info btn-block  ladda-button mt-3" id="upload-submit"><?php _l('publish')?></button>
+                    <div class="box p-4 mt-3">
+                        <h6><?php _l('your-stats')?></h6>
+
+                        <div class="clearfix mb-2">
+                            <div class="float-left">
+                                <?php _l('tracks-upload')?>
+                            </div>
+                            <div class="float-right">
+                                <h5><?php echo $C->model('user')->countTracks()?></h5>
+                            </div>
+                        </div>
+                        <div class="clearfix mb-2">
+                            <div class="float-left">
+                                <?php _l('total-space')?>
+                            </div>
+                            <div class="float-right">
+                                <?php
+                                $size = null;
+                                if (config('enable-premium', false)) {
+                                    $size = format_bytes($C->model('user')->getTotalTrackSize() * 1000000);
+                                    if (model('user')->subscriptionActive() and config('pro-artist-total-track-size', 1024) == '-1') $size = l('unlimited');
+                                }
+
+                                ?>
+                                <h5><?php echo (config('enable-premium', false)) ? $size : l('unlimited')?></h5>
+                            </div>
+                        </div>
+
+                        <div class="clearfix mb-2">
+                            <div class="float-left">
+                                <?php _l('used-space')?>
+                            </div>
+                            <div class="float-right">
+                                <?php _l('free-space')?>
+                            </div>
+                        </div>
+
+                        <?php
+                        $useSpace = $C->model('user')->getTracksSpace();
+                        $percent = config('enable-premium', false) ? round($useSpace * 100 / ($C->model('user')->getTotalTrackSize() * 1000 * 1024)) : 0 ;
+                        ?>
+                        <div class="progress" style="height: 4px;margin-bottom: 5px;">
+                            <div class="progress-bar bg-secondary" role="progressbar" style="width: <?php echo $percent?>%" aria-valuenow="<?php echo $percent?>" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        <div class="clearfix mb-2">
+                            <div class="float-left">
+                                <?php echo format_bytes($useSpace)?>
+                            </div>
+                            <div class="float-right">
+                                <?php echo config('enable-premium', false) ? $size : l('unlimited')?>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <?php Hook::getInstance()->fire('upload.tabs')?>
+        <?php Hook::getInstance()->fire('upload.tabs.content')?>
+    </form>
+</div>
+
+
+<div class="each-track-form-tabs" style="display: none">
+    <ul class="nav nav-tabs exception mt-3 uploader-tabs" style="" role="tablist">
+        <li class="nav-item" style="padding-left: 10px">
+            <a class="nav-link active general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true"><?php _l('basic-info')?></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link metadata-tab" data-toggle="tab" href="#metadata" role="tab" aria-controls="metadata" aria-selected="false"><?php _l('metadata')?></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link permission-tab" data-toggle="tab" href="#permissions" role="tab" aria-controls="permissions" aria-selected="true"><?php _l('permissions')?></a>
+        </li>
+
+        <?php Hook::getInstance()->fire('upload.each.tabs')?>
+    </ul>
+</div>
+<div class="each-track-form-template" style="display: none">
+    <div  class="static-row mt-3 clearfix" style="padding:10px">
+        <div class="row-left" style="width: 150px;left:10px;">
+            <div class="avatar-placeholder">
+                <div class="songAvatar"></div>
+                <i class="la la-photo"></i>
+            </div>
+
+            <div class="input-picker mb-3">
+                <button class="btn btn-outline-secondary btn-sm btn-block round-sm"><?php _l('select-image')?></button>
+                <input class="songAvatar-input" data-placeholder="#songAvatar" onchange="validate_file_size(this, 'image')" type="file" name="img"/>
+            </div>
+
+        </div>
+        <div class="row-right" style="padding-left: 160px;">
+            <div class="tab-content" id="myTabContent">
+                <?php Hook::getInstance()->fire('upload.each.tabs.content')?>
+                <div class="tab-pane fade show active" id="general" role="tabpanel">
+                    <div class="form-group">
+                        <label><?php _l('description')?></label>
+                        <textarea onchange="autoFillDescription(this)" onkeyup="autoFillDescription(this)" rows="4" name="val[description][]"  class="form-control form-control-sm upload-description-input" ></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label><?php _l('tags')?><span class="important">*</span></label>
+                                <input  data-popup="true" onchange="autoFillTags(this)" required autocomplete="off" type="text" name="val[tags][]" class=" input-tags-temp" >
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group ">
+                                <label><?php _l('genre')?></label>
+                                <select onchange="autoFillGenre(this)" data-popup="true" data-ui-select="true" class=" select-input-temp upload-genre-input" name="val[genre][]">
+                                    <?php foreach ($C->model('admin')->getGenres() as $genre):?>
+                                        <option value="<?php echo $genre['id']?>"><?php echo $genre['name']?></option>
+                                    <?php endforeach;?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="metadata" role="tabpanel">
+                    <div class="form-group">
+                        <label><?php _l('purchase-link')?></label>
+                        <input onchange="autoFillPurhcaseLink(this)" onkeyup="autoFillPurhcaseLink(this)" autocomplete="off" type="text" name="val[link][]" class="form-control form-control-sm upload-purchase-link" >
+                    </div>
+
+                    <div class="form-group">
+                        <label><?php _l('record-label')?></label>
+                        <input onchange="autoFillRecordLabel(this)" onkeyup="autoFillRecordLabel(this)" autocomplete="off" type="text" name="val[label][]" class="form-control form-control-sm upload-record-label" >
+                    </div>
+
+                    <div class="form-group mb-5">
+                        <label><?php _l('release-date')?></label>
+                        <select onchange="autoFillReleaseDay(this)" name="val[day][]" class="upload-release-day">
+                            <option value=""><?php _l('day')?></option>
+                            <?php $i =1; while($i <= 31):?>
+                                <option value="<?php echo $i?>"><?php echo $i?></option>
+                                <?php $i++; endwhile;?>
+                        </select>
+                        <select onchange="autoFillReleaseMonth(this)" name="val[month][]" class="upload-release-month">
+                            <option value=""><?php _l('month')?></option>
+                            <?php $i=1;foreach (getMonths() as $month):?>
+                                <option value="<?php echo $i?>"><?php _l($month)?></option>
+                                <?php $i++; endforeach;?>
+                        </select>
+                        <select onchange="autoFillReleaseYear(this)" name="val[year][]" class="upload-release-year">
+                            <option value=""><?php _l('year')?></option>
+                            <?php $i =date('Y'); while($i >= 1910):?>
+                                <option value="<?php echo $i?>"><?php echo $i?></option>
+                                <?php $i--; endwhile;?>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label><?php _l('license')?></label>
+                        <div class="mb-2">
+                            <label class="custom-control custom-radio">
+                                <input onchange="hideView('', this)" value="1" id="radio1" checked name="val[license]" type="radio" class="custom-control-input all-right-reserve-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description"><?php _l('all-right-reserved')?></span>
+                            </label>
+                        </div>
+                        <div class="mb-2">
+                            <label class="custom-control custom-radio">
+                                <input onchange="toggleView(this)" value="2" id="radio2" name="val[license]" type="radio" class="custom-control-input creative-commons-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description"><?php _l('creative-commons')?></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="creative-container" style="display: none;">
+                        <hr/>
+                        <div class="row">
+                            <div class="form-group col">
+                                <label class="custom-control custom-checkbox">
+
+                                    <input checked type="checkbox" value="1"  disabled class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description"><?php _l('attribution')?></span>
+                                </label>
+                            </div>
+
+                            <div class="form-group col">
+                                <label class="custom-control custom-checkbox">
+                                    <input type="hidden" name="val[noncommercial][]" value="0"/>
+                                    <input type="checkbox" name="val[noncommercial][]" value="1"  class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description"><?php _l('noncommercial')?></span>
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col">
+                                <label class="custom-control custom-radio">
+                                    <input type="hidden" name="val[creative_second]" class="creative_second-input" value="0"/>
+                                    <input type="radio" name="val[creative_second]" value="1" class="custom-control-input creative_second-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description"><?php _l('no-derivative-works')?></span>
+                                </label>
+                            </div>
+
+                            <div class="form-group col">
+                                <label class="custom-control custom-radio">
+                                    <input type="radio" name="val[creative_second]" value="2" class="custom-control-input creative_second-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description"><?php _l('share-alike')?></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="permissions" role="tabpanel">
+                    <div class="form-group">
+                        <label><?php _l('availability')?></label>
+                        <div class="mb-2">
+                            <label class="custom-control custom-radio">
+                                <input onchange="hideView('', this)" value="1" id="radio4" checked name="val[privacy]" type="radio" class="custom-control-input public-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description mt-1"><?php _l('public')?></span>
+                            </label>
+                        </div>
+                        <div class="mb-2">
+                            <label class="custom-control custom-radio">
+                                <input onchange="hideView('', this)" value="2" id="radio3" name="val[privacy]" type="radio" class="custom-control-input private-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description mt-1"><?php _l('private')?></span>
+                            </label>
+                        </div>
+
+
+                        <div class="mb-2">
+                            <label class="custom-control custom-radio">
+                                <input
+                                    <?php echo (!$C->model('user')->subscriptionActive()) ? 'disabled':null?>
+                                        onchange="return toggleView(this)"
+                                        value="3" id="radio5" name="val[privacy]" type="radio" class="custom-control-input schedule-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description mt-1"
+                                    <?php if(!$C->model('user')->subscriptionActive()):?>
+                                        data-toggle="tooltip" title="<?php _l('scheduled-pro-note')?>"
+                                    <?php endif?>
+                                ><?php _l('scheduled')?></span>
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <?php if($C->model('user')->subscriptionActive()):?>
+                        <div  class="hide mb-2 select-date-container">
+                            <label><?php _l('select-release-date-for-tracks')?></label>
+
+                            <input name="val[release_date][]" placeholder="<?php _l('choose-date')?>" type="text" class="form-control track-datepicker"/>
+                        </div>
+                    <?php endif?>
+
+                    <?php Hook::getInstance()->fire('upload.each.permissions.extend')?>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('allow-downloads')?></label>
+                        <div class="col-sm-5">
+                            <input type="hidden" name="val[download]" class="download-input" value="0"/>
+                            <div class="switch premium-users-toggle">
+                                <input id="cmn-toggle-premium-users" value="1" onchange="autoFillDownload(this)" name="val[download]" <?php echo (config('enable-download-options', false)) ? 'checked' :null?>   class="cmn-toggle cmn-toggle-round-flat download-input upload-download-input" type="checkbox">
+                                <label for="cmn-toggle-premium-users"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('display-embeded-code')?></label>
+                        <div class="col-sm-5">
+                            <input type="hidden" name="val[embed]" class="embed-input" value="0"/>
+                            <div class="switch embed-code-toggle">
+                                <input id="cmn-toggle-embed-code" value="1" onchange="autoFillEmbed(this)" name="val[embed]"  checked class="cmn-toggle cmn-toggle-round-flat embed-input upload-embed-input" type="checkbox">
+                                <label for="cmn-toggle-embed-code"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php if(!$C->model('user')->subscriptionActive()):?>
+                        <div class="alert alert-warning text-center">
+                            <h6><?php _l('be-in-control')?></h6>
+                            <div class="mt-2 mb-2">
+                                <?php _l('be-in-control-note')?>
+                            </div>
+
+                            <a href="<?php echo url('pro')?>" data-ajax="true" class="btn btn-sm btn-primary"><?php _l('unlock-with-pro-plan')?></a>
+                        </div>
+                    <?php else:?>
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('comments')?></label>
+                            <div class="col-sm-5">
+                                <select onchange="autoFillComments(this)" data-ui-select="true" class=" upload-comments-input" name="val[comments][]">
+                                    <option value="1"><?php _l('public')?></option>
+                                    <option value="2"><?php _l('private-followers-only')?></option>
+                                    <option value="3"><?php _l('disabled')?></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('public-statistics')?></label>
+                            <div class="col-sm-5">
+                                <input type="hidden" name="val[stats]" class="stats-input" value="0"/>
+                                <div class="switch stats-toggle">
+                                    <input id="cmn-toggle-stats" onchange="autoFillStatistics(this)" value="1" name="val[stats]"  checked class="cmn-toggle cmn-toggle-round-flat stats-input upload-statistics-input" type="checkbox">
+                                    <label for="cmn-toggle-stats"></label>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif?>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

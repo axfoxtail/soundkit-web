@@ -1,0 +1,85 @@
+<div class="search-title clearfix">
+    <div class="float-left">
+        <a href="<?php echo url('search', array('term' => $term))?>" data-ajax="true"><?php _l('view-all-results')?></a>
+    </div>
+    <div class="float-right">
+        <a href="" onclick="return hideSearchDropdown()"><i class="la la-times"></i></a>
+    </div>
+</div>
+
+<?php
+    $tracks = $C->model('track')->getTracks('search', $term, 0,3);
+    $artists = $C->model('user')->getPeople('top', $term,3,0);
+    $people = $C->model('user')->getPeople('people', $term,3,0);
+    $videos = array();
+    if (moduleExists('video')) {
+        $videos = model('video::video')->getVideos('search', $term, 0, 3);
+    }
+?>
+
+<?php if(count($tracks) < 1 and count($artists) < 1 and count($people) < 1  and count($videos) < 1):?>
+    <div class="search-empty mt-2"><?php _l('search-empty')?></div>
+<?php else:?>
+    <?php foreach($tracks as $track):?>
+        <a data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track)?>" class="each-search-result clearfix">
+            <div class="float-left">
+                <div class="media" >
+                    <div class="img" style="background-image: url(<?php echo $C->model('track')->getArt($track, 75) ?>);"></div>
+                    <div class="media-body" style="font-size: 12px;">
+                        <?php echo str_limit($track['title'], 35)?>
+                    </div>
+                </div>
+            </div>
+            <div class="float-right">
+                <i class="la la-music"></i>
+            </div>
+        </a>
+    <?php endforeach?>
+    <?php foreach($artists as $user):?>
+        <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>" class="each-search-result clearfix">
+            <div class="float-left">
+                <div class="media" >
+                    <div class="img" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 75) ?>);"></div>
+                    <div class="media-body" style="font-size: 12px;">
+                        <?php echo str_limit($user['full_name'], 35)?>
+                    </div>
+                </div>
+            </div>
+            <div class="float-right">
+                <i class="la la-microphone"></i>
+            </div>
+        </a>
+    <?php endforeach?>
+
+    <?php foreach($people as $user):?>
+        <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>" class="each-search-result clearfix">
+            <div class="float-left">
+                <div class="media" >
+                    <div class="img" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 75) ?>);"></div>
+                    <div class="media-body" style="font-size: 12px;">
+                        <?php echo str_limit($user['full_name'], 35)?>
+                    </div>
+                </div>
+            </div>
+            <div class="float-right">
+                <i class="la la-user"></i>
+            </div>
+        </a>
+    <?php endforeach?>
+
+    <?php foreach($videos as $video):?>
+        <a data-ajax="true" href="<?php echo $C->model('video::video')->videoUrl($video)?>" class="each-search-result clearfix">
+            <div class="float-left">
+                <div class="media" >
+                    <div class="img" style="background-image: url(<?php echo $C->model('video::video')->getArt($video, 75) ?>);"></div>
+                    <div class="media-body" style="font-size: 12px;">
+                        <?php echo str_limit($video['title'], 35)?>
+                    </div>
+                </div>
+            </div>
+            <div class="float-right">
+                <i class="la la-video-camera"></i>
+            </div>
+        </a>
+    <?php endforeach?>
+<?php endif?>

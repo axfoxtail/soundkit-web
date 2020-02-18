@@ -1,0 +1,5 @@
+
+<div class="track-list playlist-tracks-list-<?php echo $playlist['id']?>" data-view="inline" data-type-id="<?php echo $playlist['id']?>" data-type="playlist" data-offset="0">
+    <?php echo $C->view('track/placeholder', array('type' => 'inline'))?>
+</div>
+<a href="" class="track-paginate-link show-mobile-sm show-mobile-md" onclick="return paginateTracks()"><?php _l('load-more-tracks')?></a>

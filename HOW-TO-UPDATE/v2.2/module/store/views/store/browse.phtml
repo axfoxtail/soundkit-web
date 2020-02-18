@@ -1,0 +1,28 @@
+<div class="title clearfix">
+    <div class="float-left">
+        <a data-ajax="true" href="<?php echo url('store/browse', array('which' => 'tracks'))?>"  class="btn btn-sm mr-2 <?php echo $which == 'tracks' ? 'btn-primary' : 'btn-secondary'?>">
+            <?php _l('tracks')?>
+        </a>
+
+        <a data-ajax="true" href="<?php echo url('store/browse', array('which' => 'albums'))?>"  class="btn btn-sm <?php echo $which == 'albums'? 'btn-primary' : 'btn-secondary'?>">
+            <?php _l('albums')?>
+        </a>
+    </div>
+    <div class="float-right">
+        <?php if($which == 'tracks'):?>
+            <div style="position: relative;margin-right: 20px;">
+                <select onchange="load_store_browse(this, '<?php echo $which?>')" id="filter-genre"  class="select-input" data-ui-select="true" style="width:200px;right:25px">
+                    <option value="all"><?php _l('all-genres')?></option>
+                    <?php foreach($C->model('admin')->getGenres() as $dgenre):?>
+                        <option <?php echo ($genre == $dgenre['id']) ? 'selected' : null?>  value="<?php echo $dgenre['id']?>"><?php echo $dgenre['name']?></option>
+                    <?php endforeach;?>
+                </select>
+            </div>
+        <?php endif?>
+    </div>
+</div>
+
+<div class="inline-grid inline-grid-full">
+    <div class="track-list grid-container" data-view="inline-grid" data-type-id="<?php echo $which.'-'.$genre?>" data-type="store-browse" data-offset="0">
+    </div>
+</div>

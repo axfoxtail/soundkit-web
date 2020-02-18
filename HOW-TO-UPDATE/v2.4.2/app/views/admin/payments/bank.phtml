@@ -1,0 +1,65 @@
+<div class="profile-menu">
+    <div class="inner-container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link " data-ajax="true" href="<?php echo url('admin/payments')?>" ><?php _l('transactions')?></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" data-ajax="true" href="<?php echo url('admin/payments/transfer')?>" ><?php _l('bank-transfers')?></a>
+            </li>
+            <?php Hook::getInstance()->fire('admin.payments.tab')?>
+        </ul>
+
+    </div>
+</div>
+
+<div class="inner-container">
+    <table class="table table-striped mt-4 table-responsive-sm">
+        <thead>
+        <tr>
+            <th scope="col" style="width: 20%;"><?php _l('id')?></th>
+            <th scope="col" style="width: 30%;"><?php _l('by')?></th>
+            <th scope="col" style="width: 10%;"><?php _l('type')?></th>
+
+            <th scope="col" style="width: 10%;"><?php _l('price')?></th>
+            <th scope="col" style="width: 15%;"><?php _l('action')?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php $payments = model('admin')->getBankTransfers(); foreach($payments->results() as $payment):?>
+            <tr>
+                <td>
+                    <span style="font-size: 10px;"><?php echo $payment['id']?></span>
+                </td>
+                <td>
+                    <?php $theUser = $C->model('user')->getUser($payment['userid'])?>
+                    <a href="<?php echo $C->model('user')->profileUrl($theUser)?>" data-ajax="true"><img src="<?php echo $C->model('user')->getAvatar($theUser)?>" style="width:20px;height:20px;border-radius:100px"/> <?php echo $theUser['full_name']?></a>
+                </td>
+                <td>
+                    <?php $details = $C->model('admin')->getPaymentDetails($payment['type'], $payment['typeid'])?>
+                    <?php echo $details['title']?>
+                </td>
+                <td>
+                    <span class="badge badge-dark">
+                        <?php echo formatMoney($payment['price'])?>
+                    </span>
+                </td>
+
+                <td>
+                    <a href="<?php echo assetUrl($payment['file'])?>" target="_blank"  class="btn btn-info btn-sm"><i class="la la-eye"></i></a>
+                    <a href="<?php echo url('admin/payments/transfer', array('id' => $payment['id'], 'action' => 'delete'))?>" class="btn btn-sm btn-secondary "><i class="la la-trash"></i></a>
+                    <a href="<?php echo url('admin/payments/transfer', array('id' => $payment['id'], 'action' => 'approve'))?>" class="btn btn-sm btn-success "><i class="la la-check"></i></a>
+                </td>
+            </tr>
+        <?php endforeach;?>
+        </tbody>
+    </table>
+    <?php if($payments->total < 1):?>
+        <div class="empty-content">
+            <i class="la la-money"></i>
+            <span><?php _l('no-contents-show')?></span>
+        </div>
+    <?php else:?>
+        <?php echo $payments->links()?>
+    <?php endif?>
+</div>

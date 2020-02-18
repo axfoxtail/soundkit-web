@@ -1,0 +1,40 @@
+Update from V2.3.3 to V2.4
+
+If you have not upgrade to 2.3.3 please follow the instructions in v2.4.txt file
+
+Before you start updating make sure you do this first part and get it correctly
+
+Make sure you are logged in as admin to your website !!Very !!Important
+
+
+In the HOW-TO-UPGRADE/ folder you can find the v2.4/ folder
+
+Now Upload and replace/add all the files in this folder
+
+
+After that run https://www.YOURDOMAIN.COM/admin/update
+
+And that is it
+
+If you want to see the files changes one by one kindly browse through the v2.4/ folder
+
+Thanks
+
+app/model/user.php
+	modified:   app/views/home/index.phtml
+	modified:   app/views/search/layout.phtml
+	styles/main/js/main.js
+    	modified:   styles/main/views/includes/wrapper.phtml
+
+    	app/controllers/home.php
+        	modified:   app/controllers/track.php
+        	modified:   app/model/track.php
+        	modified:   app/model/user.php
+        	modified:   app/views/charts/index.phtml
+        	modified:   app/views/track/track-slide.phtml
+        	modified:   changelog.html
+        	modified:   index.php
+        	modified:   styles/main/css/main.css
+        	modified:   styles/main/js/main.js
+        	modified:   styles/main/views/includes/footer.phtml
+        	modified:   styles/main/views/includes/side-menu.phtml

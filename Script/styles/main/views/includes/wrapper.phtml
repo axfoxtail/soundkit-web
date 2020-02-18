@@ -1,0 +1,177 @@
+<div class=" <?php echo  !$C->model('user')->isLoggedIn() ? 'in-header-mobile' : null?>">
+    <div class="in-header clearfix">
+        <a href="" class="navicon"><i class="la la-navicon"></i></a>
+        <div class="inner-container">
+            <div class="clearfix">
+                <div class="left float-left clearfix" style="position: relative;">
+                    <a href="" class="navicon-2"><i class="la la-navicon"></i></a>
+                    <form class="form-inline searchbar" action="<?php echo url('search')?>">
+                        <?php Hook::getInstance()->fire('head.search.form')?>
+                        <input value="<?php echo $C->request->input('term')?>" autocomplete="off" class="" type="search" name="term" placeholder="<?php _l('search')?>">
+                        <button class="" type="submit" style="background: none;border: none;padding: 0;"><i class="la la-search"></i></button>
+                    </form>
+
+                    <div class="search-dropdown-container header-dropdown">
+
+                    </div>
+
+                </div>
+                <div class="right float-right">
+                    <ul class="float-left">
+                        <?php if(!config('enable-premium-listeners', false)):?>
+                            <?php if($C->model('user')->canUpload()):?>
+                                <?php if(config('enable-premium', false) and  (!$C->model('user')->isLoggedIn() or !$C->model('user')->subscriptionActive())):?>
+                                    <li class="hide-mobile"><a href="<?php echo url('pro')?>" data-ajax="true" class="btn btn-sm btn-primary"><?php _l('go-pro')?></a></li>
+                                <?php endif?>
+
+                                <li><a data-ajax="true" href="<?php echo url('upload')?>" class="btn btn-sm btn-primary upload-btn-mobile">
+                                        <span class="hide-mobile-sm"><i style="font-size: 15px; display: inline-block;position:relative;top:0px" class="fa-cloud-upload fa"></i> <?php _l('upload')?></span>
+                                        <span class="show-mobile-sm"><i class="la la-upload" style="font-size: 15px; top: 0;"></i></span>
+                                    </a></li>
+                            <?php endif?>
+                        <?php else:?>
+                                <?php if(!$C->model('user')->isLoggedIn() or model('user')->authUser['user_type'] == 1):?>
+
+                                    <?php if(!model('user')->listenerSubscriptionActive()):?>
+                                        <li class="mobile-bottom-up"><a href="<?php echo url('pro')?>" data-ajax="true" class="btn btn-sm btn-primary"><?php _l('go-pro')?></a></li>
+                                    <?php endif?>
+                                <?php else:?>
+                                    <?php if($C->model('user')->canUpload()):?>
+                                        <?php if(config('enable-premium', false) and  (!$C->model('user')->isLoggedIn() or !$C->model('user')->subscriptionActive())):?>
+                                            <li class="hide-mobile"><a href="<?php echo url('pro')?>" data-ajax="true" class="btn btn-sm btn-primary"><?php _l('go-pro')?></a></li>
+                                        <?php endif?>
+
+                                        <li><a data-ajax="true" href="<?php echo url('upload')?>" class="btn btn-sm btn-primary upload-btn-mobile">
+                                                <span class="hide-mobile-sm"><i style="font-size: 15px; display: inline-block;position:relative;top:0px" class="fa-cloud-upload fa"></i> <?php _l('upload')?></span>
+                                                <span class="show-mobile-sm"><i class="la la-upload" style="font-size: 15px; top: 0;"></i></span>
+                                            </a></li>
+                                    <?php endif?>
+                                <?php endif?>
+                        <?php endif?>
+
+                        <?php if($C->model('user')->isLoggedIn()):?>
+                            <?php if($C->model('user')->isAdmin()):?>
+                                <li><a data-ajax="true" href="<?php echo url('admin')?>" class="btn btn-sm btn-secondary  show-large round-sm">
+                                        <?php _l('admin-panel')?>
+                                    </a></li>
+                            <?php endif?>
+                            <li class="border-right hide-mobile">
+                                <a   href="<?php echo $C->model('user')->profileUrl()?>" data-ajax="true">
+                                    <?php echo str_limit($C->model('user')->authUser['full_name'], 20)?>   <img style="width:30px;height: 30px;-webkit-border-radius: 100px;-moz-border-radius: 100px;border-radius: 100px;" src="<?php echo $C->model('user')->getAvatar()?>"/>
+                                </a>
+                            </li>
+                            <li class="hide-mobile">
+                                <a href="" id="show-notification-btn" onclick="return show_notification_dropdown(this)">
+                                    <i class="la la-bell"></i>
+                                    <?php $countNotifications = $C->model('user')->countUnreadNotifications()?>
+                                    <span class="count notification-count " style="<?php echo ($countNotifications < 1) ? 'display:none' : null?>"><?php echo ($countNotifications > 99 ) ? '99+' : $countNotifications?></span>
+                                </a>
+                                <div class="notification-dropdown-container header-dropdown">
+                                    <div class="search-title clearfix">
+                                        <div class="float-left" >
+                                            <?php _l('notifications')?> - <a data-ajax="true" class="colored" style="display: inline-block;" href="<?php echo url('notifications')?>"><?php _l('view-all')?></a>
+                                        </div>
+                                        <div class="float-right">
+                                            <a style="position: absolute;top: 10px;right: 10px;" href="<?php echo url('settings/notification')?>" data-toggle="tooltip" title="<?php _l('notification-settings')?>" data-ajax="true"><i style="font-size: 20px;" class="la la-cog"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="content">
+
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="hide-mobile">
+                                <a href="<?php echo url('messages')?>" data-ajax="true">
+                                    <i class="la la-envelope"></i>
+                                    <?php $countMessages = $C->model('message')->countUnread()?>
+                                    <span class="count message-count " style="<?php echo ($countMessages < 1) ? 'display:none' : null?>"><?php echo ($countMessages > 99 ) ? '99+' : $countMessages?></span>
+                                </a>
+                            </li>
+                            <li class="dropdown">
+                                <a data-toggle="dropdown" class="hover-show dropdown-toggle account-menu-link no-caret" href="#" >
+                                    <i class="la la-ellipsis-v hide-mobile-sm"></i>
+                                    <img class="show-mobile-sm" style="
+                        width:30px;
+                        height: 30px;
+                        border: solid 2px black;
+                        position: relative;
+                        top: 5px;
+                        -webkit-border-radius: 100px;-moz-border-radius: 100px;border-radius: 100px;" src="<?php echo $C->model('user')->getAvatar()?>"/>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right   " aria-labelledby="dropdownMenuButton">
+                                    <a data-ajax="true" class="dropdown-item" href="<?php echo $C->model('user')->profileUrl()?>"><?php _l('my-profile')?></a>
+                                    <a data-ajax="true" class="dropdown-item" href="<?php echo url('settings')?>"><?php _l('settings')?></a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" data-ajax="true" href="<?php echo url('collection/likes')?>"><?php _l('likes')?></a>
+                                    <a class="dropdown-item" data-ajax="true" href="<?php echo url('collection/playlists')?>"><?php _l('playlists')?></a>
+                                    <?php if($C->model('user')->isAuthor()):?>
+                                        <a class="dropdown-item" data-ajax="true" href="<?php echo url('statistics')?>"><?php _l('dashboard')?></a>
+                                    <?php endif?>
+                                    <?php if(moduleExists('store') and model('user')->isLoggedIn() and model('user')->isAuthor() and model('user')->subscriptionActive()):?>
+                                        <a class="dropdown-item" data-ajax="true" href="<?php echo url('store/dashboard')?>"><?php _l('my-store')?></a>
+                                    <?php endif?>
+                                    <?php Hook::getInstance()->fire('user.menu.extend')?>
+                                    <?php if($C->model('user')->isAdmin()):?>
+                                        <div class="dropdown-divider"></div>
+                                        <a data-ajax="true" class="dropdown-item" href="<?php echo url('admin')?>"><?php _l('admin-panel')?></a>
+                                    <?php endif?>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="<?php echo url('logout')?>"><?php _l('logout')?></a>
+                                </div>
+                            </li>
+                            <li class="show-large">
+                                <a data-toggle="modal" data-target="#keyboard-shorts-modal" class="" href="#" >
+                                    <i class="la la-keyboard-o"></i>
+                                </a>
+                            </li>
+                        <?php else:?>
+                            <?php if(config('separate-login', 0)):?>
+                                <li><a   href="<?php echo url('login')?>" class="">
+                                        <span class="hide-mobile-sm"><?php _l('sign-in')?></span>
+                                        <i class="show-mobile-sm la la-lock " style="position:relative;bottom: 5px;display: none;"></i>
+                                    </a></li>
+                                <li class="hide-mobile-sm"><a    href="<?php echo url('signup')?>" class=""><?php _l('create-account')?></a></li>
+
+                            <?php else:?>
+                                <li><a  onclick="return changeAuthModal('.login-form')"   href="" class="">
+                                        <span class="hide-mobile-sm"><?php _l('sign-in')?></span>
+                                        <i class="show-mobile-sm la la-lock " style="position:relative;bottom: 5px;display: none;"></i>
+                                    </a></li>
+                                <li class="hide-mobile-sm"><a  onclick="return changeAuthModal('.signup-form')"   href="" class=""><?php _l('create-account')?></a></li>
+
+                            <?php endif?>
+                             <?php endif?>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <?php if($C->model('user')->isLoggedIn()):?>
+            <div class="mobile-tab">
+                <?php $segment = $C->request->segment(0)?>
+                <a data-ajax="true" href="<?php echo url()?>" class="<?php echo ($segment == '')? 'active' : null?>">
+                    <i class="la la-home"></i>
+                </a>
+                <a data-ajax="true" href="<?php echo url('discover')?>" class="<?php echo (!in_array($segment, array('notifications','messages')) and $segment) ? 'active' : null?> ">
+                    <i class="la la-compass"></i>
+                </a>
+                <a data-ajax="true" href="<?php echo url('notifications')?>" class="<?php echo ($segment == 'notifications')? 'active' : null?>">
+                    <i class="la la-bell"></i>
+                    <span class="count notification-count colored-bg" style="<?php echo ($countNotifications < 1) ? 'display:none' : null?>"><?php echo ($countNotifications > 99 ) ? '99+' : $countNotifications?></span>
+                </a>
+                <a data-ajax="true" href="<?php echo url('messages')?>" class="<?php echo ($segment == 'messages')? 'active' : null?>">
+                    <i class="la la-envelope"></i>
+                    <span class="count message-count colored-bg" style="<?php echo ($countMessages < 1) ? 'display:none' : null?>"><?php echo ($countMessages > 99 ) ? '99+' : $countMessages?></span>
+                </a>
+            </div>
+        <?php endif?>
+    </div>
+    <div id="wrapper-container" style="padding-bottom: 70px;">
+
+        <?php if(config('enable-breadcrumb', true)):?>
+            <?php echo $C->view('includes/breadcrumb')?>
+        <?php endif?>
+        <?php echo $content?>
+    </div>
+
+</div>

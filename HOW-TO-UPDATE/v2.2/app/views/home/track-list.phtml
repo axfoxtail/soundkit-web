@@ -1,0 +1,7 @@
+<?php if($type == 'feed'):?>
+    <h6 style="color:#A7A59D" class="mb-4"><?php _l('latest-post-stream-note')?></h6>
+<?php endif?>
+<div class="track-list" data-type-id="" data-type="<?php echo $type?>" data-offset="0">
+    <?php echo $C->view('track/placeholder')?>
+</div>
+<a href="" class="track-paginate-link show-mobile-sm show-mobile-md" onclick="return paginateTracks()"><?php _l('load-more-tracks')?></a>

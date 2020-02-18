@@ -1,0 +1,27 @@
+<div class="profile-menu">
+    <div class="inner-container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link <?php echo $type == 'store' ? 'active' : null?>" data-ajax="true" href="<?php echo url('store')?>" ><?php _l('store')?></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo $type == 'browse' ? 'active' : null?>"  data-ajax="true" href="<?php echo url('store/browse')?>"><?php _l('browse')?></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo $type == 'top-songs' ? 'active' : null?>"  data-ajax="true" href="<?php echo url('store/top-songs')?>"><?php _l('top-songs')?></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link <?php echo $type == 'top-albums' ? 'active' : null?>"  data-ajax="true" href="<?php echo url('store/top-albums')?>"><?php _l('top-albums')?></a>
+
+            <li class="nav-item">
+                <a class="nav-link <?php echo $type == 'purchase' ? 'active' : null?>"  data-ajax="true" href="<?php echo url('store/purchased')?>"><?php _l('purchased')?></a>
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+<div class="inner-container mt-3">
+    <?php echo $content?>
+</div>

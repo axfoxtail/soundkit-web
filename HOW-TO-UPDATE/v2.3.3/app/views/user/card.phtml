@@ -1,0 +1,26 @@
+<div class="user-card">
+    <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>" class="avatar" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 75)?>)">
+    </a>
+    <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>">
+        <h6>
+            <?php echo $user['full_name']?>
+            <?php echo $C->view('user/badge', array('userid'=> $user['id']))?>
+        </h6>
+    </a>
+    <div class="stats">
+        <span><i class="la la-users"></i> <?php echo $C->model('user')->countFollowers($user['id'])?></span> |
+        <span><i class="la la-music"></i> <?php echo $C->model('track')->countTracks($user['id'])?></span>
+    </div>
+
+    <?php if($C->model('user')->isLoggedIn()):?>
+        <div class="actions-container  ">
+        <?php if($user['id'] != $C->model('user')->authId): $isFollowing = $C->model('user')->isFollowing($user['id'])?>
+            <a href="<?php echo url('follow', array('id' => $user['id']))?>" class="btn follow-<?php echo $user['id']?>-btn <?php echo !$isFollowing ? 'follow' : null?> ajax-action " > <?php echo $isFollowing ? l('following') : l('follow')?></a>
+
+        <?php else:?>
+            <a href="<?php echo url('settings/profile')?>" data-ajax="true" class="btn mtooltip" title="<?php _l('edit-profile')?>"> <i class="fa fa-edit"></i></a>
+
+        <?php endif?>
+        </div>
+    <?php endif?>
+</div>

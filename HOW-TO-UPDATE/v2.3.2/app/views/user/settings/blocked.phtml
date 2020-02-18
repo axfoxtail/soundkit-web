@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col-md-9">
+        <?php $users = $C->model('user')->getBlockedUsers()?>
+        <?php if($users):?>
+            <?php foreach($users as $user):?>
+                <div class="media mt-3">
+                    <img class="mr-3" style="width:35px;height:35px" src="<?php echo $C->model('user')->getAvatar($user, 200)?>" >
+                    <div class="media-body clearfix">
+                        <div class="float-left">
+                            <span style="font-weight: 600;"><?php echo $user['full_name']?></span>
+                        </div>
+                        <div class="float-right">
+                            <a data-ajax-action="true" data-message="<?php _l('do-want-unblock')?>" href="<?php echo url('settings/blocked', array('action' => 'unblock', 'id' => $user['id']))?>" class="confirm btn btn-secondary"><i class="la la-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach?>
+        <?php else:?>
+            <div class="alert alert-warning"><?php _l('you-have-not-block-users')?></div>
+        <?php endif?>
+
+    </div>
+</div>

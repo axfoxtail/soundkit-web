@@ -1,0 +1,18 @@
+<div class="inner-container pt-3">
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="spotlight-container mb-3">
+                <h5><?php _l('spotlight')?></h5>
+            </div>
+            <div class="track-list" data-type-id="" data-type="global-spotlight" data-offset="0" data-limit="100">
+                <?php echo $C->view('track/placeholder')?>
+            </div>
+        </div>
+        <div class="col-md-4 pt-2">
+            <?php echo $C->view('home/general-right', array('stats' => true))?>
+        </div>
+
+
+    </div>
+</div>

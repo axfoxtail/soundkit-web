@@ -1,0 +1,18 @@
+<div class="form-group">
+    <label><?php _l('to')?><span class="important">*</span></label>
+    <input type="hidden" name="val[track]" value="<?php echo (isset($track)) ? $track : null?>"/>
+    <input type="hidden" name="val[playlist]" value="<?php echo (isset($playlist)) ? $playlist : null?>"/>
+    <select name="val[to][]" multiple data-url="message/search" class=" input-tags-fetch">
+        <?php if(isset($user) and $user):?>
+            <option value="<?php echo $user['id']?>" selected><?php echo $user['full_name']?></option>
+        <?php endif?>
+    </select>
+</div>
+
+<div class="form-group">
+    <textarea name="val[text]" class="form-control" rows="5"></textarea>
+</div>
+
+<div class="form-group">
+    <button type="submit" class="btn btn-primary round-sm"><?php _l('send')?></button>
+</div>

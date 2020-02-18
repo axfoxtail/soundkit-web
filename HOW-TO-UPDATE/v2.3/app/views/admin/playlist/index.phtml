@@ -1,0 +1,126 @@
+<div class="profile-menu">
+    <div class="inner-container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link <?php echo $page == 'albums' ? 'active' : null?>"  data-ajax="true" href="<?php echo url('admin/albums')?>"><?php _l('albums')?></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo $page == 'playlists' ? 'active' : null?>" data-ajax="true" href="<?php echo url('admin/playlists')?>" ><?php _l('playlists')?></a>
+            </li>
+
+        </ul>
+
+    </div>
+</div>
+
+<div class="inner-container mt-3">
+
+    <div class="row">
+        <div class="col-md-8">
+            <?php if($page == 'albums'):?>
+                <div class="mt-3 mb-2 alert alert-info"><?php _l('only-public-album-listed')?></div>
+            <?php else:?>
+                <div class="mt-3 mb-2 alert alert-info"><?php _l('only-public-playlist-listed')?></div>
+            <?php endif?>
+        </div>
+        <div class="col-md-4">
+            <form class="form-inline mt-3" method="post">
+                <div class="input-group mb-2 mb-sm-0">
+                    <div class="input-group-addon"><i class="la la-search"></i></div>
+                    <input type="text" value="<?php echo $C->request->input('term')?>" name="term" class="form-control" id="inlineFormInputGroup" placeholder="<?php _l('search')?>">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-responsive-sm">
+        <thead class="">
+        <tr>
+
+            <th scope="col"  style="width: 25%"><?php _l('name')?></th>
+            <th scope="col"  style="width: 15%"><?php _l('owner')?></th>
+            <th scope="col"  style="width: 20%"><?php _l('description')?></th>
+            <th scope="col"  style="width: 10%"><?php _l('number-tracks')?></th>
+            <th scope="col"  style="width: 15%"><?php _l('added-on')?></th>
+            <th scope="col"  style="width: 15%"><?php _l('action')?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php $playlists = model('admin')->getPlaylists($page, $C->request->input('term'))?>
+        <?php foreach($playlists->results() as $playlist):?>
+            <tr>
+                <td>
+                    <a href="<?php echo $C->model('track')->playlistUrl($playlist)?>" target="_blank">
+                        <?php echo $playlist['name']?>
+                    </a>
+                    <?php Hook::getInstance()->fire('admin.playlists.name', null, array($playlist, $page))?>
+                </td>
+                <td>
+                    <?php $user = model('user')->getUser($playlist['userid'])?>
+                    <a href="">
+                        <img src="<?php echo model('user')->getAvatar($user)?>" style="width:20px;height: 20px;border-radius:100px"/>
+                        <?php echo $user['full_name']?>
+                    </a>
+                </td>
+                <td>
+                    <?php echo str_limit($playlist['description'], 100)?>
+                </td>
+                <td><?php echo model('track')->countPlaylistTracks($playlist['id'])?></td>
+                <td>
+                    <?php echo date('m - d - Y', $playlist['time'])?>
+                </td>
+                <td>
+                    <?php Hook::getInstance()->fire('admin.playlist.action', null, array($playlist))?>
+                    <a href="" class="btn btn-secondary btn-sm " data-target="#editPlaylistModal-<?php echo $playlist['id']?>" data-toggle="modal"><i class="la la-pencil"></i></a>
+                    <div class="modal" id="editPlaylistModal-<?php echo $playlist['id']?>" tabindex="-1" role="dialog">
+                        <div class="modal-dialog " role="document">
+                            <form action="<?php echo getFullUrl(true)?>" method="post" class="general-form">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"><?php _l('edit')?></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <input type="hidden" name="val[id]" value="<?php echo $playlist['id']?>"/>
+
+                                    <div class="p-4">
+                                        <div class="form-group">
+                                            <label><?php _l('name')?></label>
+                                            <input class="form-control" type="text" name="val[name]" value="<?php echo $playlist['name']?>"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label><?php _l('description')?></label>
+                                            <textarea  class="form-control" rows="7" type="text" name="val[desc]"><?php echo $playlist['description']?></textarea>
+                                        </div>
+
+                                        <?php Hook::getInstance()->fire('admin.playlists.edit', null, array($playlist, $page))?>
+
+                                        <button type="submit" data-style="zoom-in" data-size="s" class="btn round-sm  btn-primary ladda-button" id="save-playlist-submit-<?php echo $playlist['id']?>"><?php _l('save-changes')?></button>
+
+                                    </div>
+
+
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <a href="<?php echo url('admin/playlist/delete', array('id' => $playlist['id']))?>" class="btn btn-danger btn-sm confirm "><i class="la la-trash"></i></a>
+                </td>
+            </tr>
+        <?php endforeach?>
+        </tbody>
+    </table>
+
+    <?php if($playlists->total < 1):?>
+        <div class="empty-content" style="padding:5% 0">
+            <i class="la la-money"></i>
+            <span><?php _l('no-contents-show')?></span>
+        </div>
+    <?php else:?>
+        <?php echo $playlists->links()?>
+    <?php endif?>
+</div>

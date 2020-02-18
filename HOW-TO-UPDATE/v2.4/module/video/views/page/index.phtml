@@ -1,0 +1,166 @@
+<div class="inner-container">
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="video-box">
+                <div class="videoplayer" data-id="<?php echo $video['id']?>">
+                    <?php $player = model('video::video')->getPlayerDetails($video)?>
+                    <video id="player1"  preload="none" style="width:100%;height:100% !important;" controls poster="<?php echo model('video::video')->getArt($video, 920)?>" playsinline webkit-playsinline>
+                        <source src="<?php echo $player['src']?>" type="<?php echo $player['type']?>">
+                    </video>
+                    <?php if($video['price'] > 0 and !$player['src']):?>
+                        <div class="fake-player" style="background-image: url(<?php echo model('video::video')->getArt($video, 920)?>);">
+                            <a href="" onclick="return buy_item('video','<?php echo $video['id']?>')"><i class="fa fa-play"></i></a>
+                        </div>
+                    <?php endif?>
+                </div>
+
+                <div class="video-details-container p-2">
+                    <h4><?php echo $video['title']?></h4>
+                    <div class="clearfix">
+                        <?php
+                        $actionType = 'video';
+                        $actionId = $video['id'];
+                        ?>
+                        <div class="float-left">
+                            <div class="actions-container dropdown">
+                                <button  data-toggle="tooltip" title="<?php _l('like')?>" class="btn like-button-<?php echo $actionType?>-<?php echo $actionId?> ajax-action <?php echo ($C->model('track')->hasLiked($actionType, $actionId)) ? 'liked' : null?>" href="<?php echo url('like/item', array('type' => $actionType, 'type_id' => $actionId))?>"><i class="la la-heart"></i></button>
+                                <button
+                                        onclick="return share(<?php echo $video['id']?>, 'video')"
+                                        data-toggle="tooltip" title="<?php _l('share')?>" class="btn "><i class="la la-external-link"></i></button>
+                                <?php if(model('user')->isLoggedIn()):?>
+                                    <?php $exists = model('video::video')->laterExists($video['id']);?>
+                                    <a href="<?php echo url('video/add/later', array('id' => $video['id']))?>"
+                                       data-toggle="tooltip" title="<?php echo ($exists) ? l('remove-from-watch-later') : l('add-to-watch-later') ?>" class="btn <?php echo ($exists) ? 'colored-bg color-white' : null?> ajax-action add-watch-btn"><i class="la la-plus"></i></a>
+                                <?php endif?>
+                            </div>
+                        </div>
+                        <div class="float-right hide-mobile-sm">
+                            <ul class="track-stats">
+                                <?php $countLikes = $C->model('track')->countLikes($actionType, $actionId)?>
+                                <li ><a href="javascript:void(0)"  class="like-count-<?php echo $actionType?>-<?php echo $actionId?>" style="<?php echo ($countLikes < 1) ? 'display:none': null?>"><i class="la la-heart-o"></i> <span><?php echo $countLikes?></span></a></li>
+                                <li ><a  href=javascript:void(0)"" style=""><i class="la la-eye"></i> <span><?php echo $video['views']?></span></a></li>
+                                <?php $countViews = $C->model('video::video')->countPlays($actionId)?>
+                                <li ><a  href=javascript:void(0)"" style="<?php echo ($countViews < 1) ? 'display:none': null?>"><i class="la la-play"></i> <span><?php echo $countViews?></span></a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <hr class="line"/>
+
+                    <div class="clearfix people-list-container">
+                        <?php $user = model('user')->getUser($video['userid'])?>
+                        <div class="user media lists">
+                            <a class="" href="<?php echo $C->model('user')->profileUrl($user)?>" data-ajax="true" >
+                                <div class="avatar" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 200)?>)"></div>
+                            </a>
+                            <div class="media-body">
+                                <div class="clearfix">
+                                    <div class="float-left">
+                                        <h5 class="mt-2 media-heading">
+                                            <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>">
+                                                <?php echo $user['full_name']?>
+                                                <?php echo $C->view('user/badge', array('userid'=> $user['id']))?>
+                                            </a></h5>
+                                    </div>
+                                    <div class="float-right">
+                                        <div class="actions-container">
+                                            <?php if($C->model('user')->isLoggedIn()):?>
+                                                <?php if($user['id'] != $C->model('user')->authId): $isFollowing = $C->model('user')->isFollowing($user['id'])?>
+                                                    <a href="<?php echo url('follow', array('id' => $user['id']))?>" class="btn follow-<?php echo $user['id']?>-btn <?php echo !$isFollowing ? 'follow' : null?> ajax-action " >
+                                                        <?php if($isFollowing):?>
+                                                            <i class="la la-user-times"></i>
+                                                        <?php else:?>
+                                                            <i class="la la-user-plus"></i>
+                                                        <?php endif?>
+                                                    </a>
+                                                <?php endif?>
+
+                                            <?php endif?>
+                                        </div>
+                                        <?php if($user['id'] == model('user')->authId):?>
+                                            <a href="<?php echo model('video::video')->videoUrl($video, '/edit')?>" data-ajax="true" class="btn btn-primary round-sm"><i class="la la-pencil"></i> <?php _l('edit-video')?></a>
+                                        <?php endif?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="line"/>
+
+
+                        <div class="pt-3 pb-3" >
+                            <div style="font-size: 13px;font-weight: 600;">
+                                <?php $genre = model('admin')->findGenre($video['genre'])?>
+                                <?php _l('published-on', array('date' => date('d M Y', $video['time'])))?>
+                                <?php if($genre):?>
+                                    / <?php _l('in')?> <a href="" class="" data-ajax="true"><?php echo $genre['name']?></a>
+                                <?php endif?>
+                            </div>
+                            <?php if($video['description']):?>
+                                <div class="video-description mt-3">
+                                    <div class="text">
+                                        <?php echo format_output_text($video['description'])?>
+                                    </div>
+
+                                    <div class="toggler">
+                                        <a href="" data-type="expand" onclick="return show_more(this)" data-more="<?php _l('show-more')?>" data-less="<?php _l('show-less')?>"><?php _l('show-more')?></a>
+                                    </div>
+                                </div>
+                            <?php endif?>
+                        </div>
+
+                </div>
+            </div>
+
+            <?php if($video['comments']):?>
+                <div class="video-box mt-3 p-3">
+                    <h4><?php _l('comments')?> </h4>
+
+                    <div class="main-loadmore-container" data-container="comments-video-<?php echo $video['id']?>">
+                        <?php echo $C->view('track/comment/display', array('form'=> true,'type' => 'video', 'typeId' => $video['id'], 'title' => l('what-do-think').' '.$video['title']));?>
+                    </div>
+                </div>
+            <?php endif?>
+        </div>
+        <div class="col-md-4">
+            <?php if($video['price']):$price = formatMoney($video['price']);?>
+                <button onclick="return buy_item('video','<?php echo $video['id']?>')" title="<?php _l('buy-now')?>" class="btn btn-sm btn-primary round-sm btn-block mtitle" style="width:100%"><i class="la la-cart-plus"></i>   <?php _l('buy-now')?> <?php echo $price?> </button>';
+
+            <?php endif?>
+            <?php if($video['track_id']): $track = model('track')->findTrack($video['track_id']);if($track):?>
+                <div class="video-play-track-container colored-bg mb-3">
+                    <?php echo view('track/track-small-inline', array('track' => $track, 'type' => '', 'typeId' => '','alwaysShow' => false))?>
+                </div>
+            <?php endif;endif?>
+
+            <?php $videos = model('video::video')->getSuggestedVideos($video['id'])?>
+            <?php if(count($videos) > 0):?>
+                <div class="box">
+                    <div class="clearfix title mb-3">
+                        <div class="float-left">
+                            <div class="">
+                                <i class="la la-film"></i>
+                                <?php _l('suggested-videos-for-you')?>
+                            </div>
+                        </div>
+                        <div class="float-right">
+                            <a href="" onclick="return reloadVideoSuggestions()"><i class=" la-refresh la"></i></a>
+                        </div>
+                    </div>
+
+                    <div class=" video-suggestion-list">
+                        <?php foreach($videos as $vid):?>
+                            <?php echo view('video::display/side', array('video' => $vid))?>
+                        <?php endforeach?>
+                    </div>
+
+                </div>
+            <?php endif?>
+            <?php Hook::getInstance()->fire('global.sidebar')?>
+
+            <?php echo config('ad-unit2')?>
+
+            <?php echo view('home/side-footer')?>
+        </div>
+    </div>
+</div>

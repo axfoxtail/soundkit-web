@@ -1,0 +1,178 @@
+<div class="profile-menu">
+    <div class="inner-container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#tracks" ><?php _l('tracks')?></a>
+            </li>
+            <?php if(moduleExists('video') ):?>
+                <li class="nav-item">
+                    <a class="nav-link " data-toggle="tab" href="#videos" ><?php _l('videos')?></a>
+                </li>
+            <?php endif?>
+            <li class="nav-item">
+                <a class="nav-link"  data-toggle="tab" href="#albums"><?php _l('albums')?></a>
+            </li>
+        </ul>
+
+    </div>
+</div>
+<div class="inner-container">
+    <div class="tab-content mt-3">
+        <div id="tracks" class="tab-pane fade show active">
+            <table class="table table-responsive-sm">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col" style="width: 10%">#</th>
+                    <th scope="col"  style="width: 35%"><?php _l('song-name')?></th>
+                    <th scope="col"  style="width: 15%"><?php _l('date')?></th>
+                    <th scope="col"  style="width: 15%"><?php _l('status')?></th>
+                    <th scope="col"  style="width: 25%"><?php _l('action')?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php $transactions = model('store::store')->getPurchased('track')?>
+                <?php foreach($transactions as $transaction):?>
+                    <tr>
+                        <td><?php echo $transaction['id']?></td>
+                        <td>
+                            <?php $track = model('track')->findTrack($transaction['type_id']);?>
+                            <a data-ajax="true" href="<?php echo model('track')->trackUrl($track)?>"><?php echo $track['title']?></a>
+                        </td>
+                        <td>
+                            <?php echo date('m - d - Y', $transaction['time'])?>
+                        </td>
+
+                        <td>
+                            <?php if($transaction['status'] == 3):?>
+                            <span class="badge"><?php _l('pending')?></span>
+                            <?php else:?>
+                                <span class="badge <?php echo ($transaction['status']) ? 'badge-success' : 'badge-danger'?>"><?php echo ($transaction['status']) ? l('successful') : l('failed')?></span>
+                            <?php endif?>
+                        </td>
+                        <td>
+                            <?php if($transaction['status'] != 0 and $transaction['status'] != 3):?>
+                                <?php $user = $C->model('user')->getUser($track['userid'])?>
+                                <a
+                                        data-id="<?php echo $track['id']?>"
+                                        data-url="<?php echo $C->model('track')->getTrackFile($track)?>"
+                                        data-art="<?php echo $C->model('track')->getArt($track)?>"
+                                        data-title="<?php echo str_limit( $track['title'], 50)?>"
+                                        data-link="<?php echo url('track/'.$track['id'])?>"
+                                        data-owner="<?php echo $user['full_name']?>"
+                                        data-owner-link="<?php echo $C->model('user')->profileUrl($user)?>"
+                                        data-wave="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave'] : '' ?>"
+                                        data-type=""
+                                        data-typeid=""
+                                        data-wave-colored="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave_colored'] : '' ?>"
+                                        href=""
+                                        id="track-play-button-<?php echo $track['id']?>"
+                                        class="play-button track-play-button track-play-button-<?php echo $track['id']?> btn btn-primary btn-sm mr-1 mtitle" title="<?php _l('play-track')?>"><i class="la la-play"></i></a>
+
+                                <a onclick="addDownload(<?php echo $track['id']?>)" href="<?php echo model('track')->getDownloadUrl($track)?>" class="btn btn-sm ml-1 btn-success"><i class="la la-download"></i></a>
+                                <?php Hook::getInstance()->fire("purchased.actions", null, array($transaction,$track))?>
+                            <?php endif?>
+                        </td>
+                    </tr>
+                <?php endforeach?>
+                </tbody>
+            </table>
+            <?php if(count($transactions) < 1):?>
+                <div class="empty-content" style="padding:5% 0">
+                    <i class="la la-music"></i>
+                    <span><?php _l('no-contents-show')?></span>
+                </div>
+            <?php endif?>
+        </div>
+        <?php if(moduleExists('video')):?>
+            <div id="videos" class="tab-pane fade">
+                <table class="table table-responsive-sm">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col" style="width: 10%">#</th>
+                        <th scope="col"  style="width: 45%"><?php _l('video-title')?></th>
+                        <th scope="col"  style="width: 15%"><?php _l('date')?></th>
+                        <th scope="col"  style="width: 15%"><?php _l('status')?></th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $transactions = model('store::store')->getPurchased('video')?>
+                    <?php foreach($transactions as $transaction):?>
+                        <tr>
+                            <td><?php echo $transaction['id']?></td>
+                            <td>
+                                <?php $video = model('video::video')->find($transaction['type_id']);?>
+                                <a data-ajax="true" href="<?php echo model('video::video')->videoUrl($video)?>"><?php echo $video['title']?></a>
+                            </td>
+                            <td>
+                                <?php echo date('m - d - Y', $transaction['time'])?>
+                            </td>
+
+                            <td>
+                                <?php if($transaction['status'] == 3):?>
+                                    <span class="badge"><?php _l('pending')?></span>
+                                <?php else:?>
+                                    <span class="badge <?php echo ($transaction['status']) ? 'badge-success' : 'badge-danger'?>"><?php echo ($transaction['status']) ? l('successful') : l('failed')?></span>
+                                <?php endif?>
+                            </td>
+                        </tr>
+                    <?php endforeach?>
+                    </tbody>
+                </table>
+                <?php if(count($transactions) < 1):?>
+                    <div class="empty-content" style="padding:5% 0">
+                        <i class="la la-music"></i>
+                        <span><?php _l('no-contents-show')?></span>
+                    </div>
+                <?php endif?>
+            </div>
+        <?php endif?>
+        <div id="albums" class="tab-pane fade">
+            <table class="table table-responsive-sm">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col" style="width: 10%">#</th>
+                    <th scope="col"  style="width: 50%"><?php _l('song-name')?></th>
+                    <th scope="col"  style="width: 20%"><?php _l('date')?></th>
+                    <th scope="col"  style="width: 20%"><?php _l('status')?></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php $transactions = model('store::store')->getPurchased('album')?>
+                <?php foreach($transactions as $transaction):?>
+                    <tr>
+                        <td><?php echo $transaction['id']?></td>
+                        <td>
+                            <?php $playlist = model('track')->findPlaylist($transaction['type_id']);?>
+                            <a data-ajax="true" href="<?php echo model('track')->playlistUrl($playlist)?>"><?php echo $playlist['name']?></a>
+                        </td>
+                        <td>
+                            <?php echo date('m - d - Y', $transaction['time'])?>
+                        </td>
+
+                        <td>
+                            <?php if($transaction['status'] == 3):?>
+                                <span class="badge"><?php _l('pending')?></span>
+                            <?php else:?>
+                                <span class="badge <?php echo ($transaction['status']) ? 'badge-success' : 'badge-danger'?>"><?php echo ($transaction['status']) ? l('successful') : l('failed')?></span>
+                            <?php endif?>
+                        </td>
+                        <td>
+                            <?php if(config('enable-zip-download-album', false)):?>
+                                <a href="<?php echo url('download/album', array('id' => $playlist['id']))?>" class="btn "><?php _l('download-album')?></a>
+                            <?php endif?>
+                        </td>
+                    </tr>
+                <?php endforeach?>
+                </tbody>
+            </table>
+            <?php if(count($transactions) < 1):?>
+                <div class="empty-content" style="padding:5% 0">
+                    <i class="la la-music"></i>
+                    <span><?php _l('no-contents-show')?></span>
+                </div>
+            <?php endif?>
+        </div>
+    </div>
+</div>

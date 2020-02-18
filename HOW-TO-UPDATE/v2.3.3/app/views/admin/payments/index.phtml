@@ -1,0 +1,98 @@
+<div class="profile-menu">
+    <div class="inner-container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-ajax="true" href="<?php echo url('admin/payments')?>" ><?php _l('transactions')?></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " data-ajax="true" href="<?php echo url('admin/payments/transfer')?>" ><?php _l('bank-transfers')?></a>
+            </li>
+           <?php Hook::getInstance()->fire('admin.payments.tab')?>
+        </ul>
+
+    </div>
+</div>
+
+
+<div class="inner-container">
+    <table class="table table-striped mt-4 table-responsive-sm">
+        <thead>
+        <tr>
+            <th scope="col" style="width: 20%;"><?php _l('id')?></th>
+            <th scope="col" style="width: 30%;"><?php _l('by')?></th>
+            <th scope="col" style="width: 10%;"><?php _l('type')?></th>
+            <th scope="col" style="width: 10%;"><?php _l('status')?></th>
+            <th scope="col" style="width: 15%;"><?php _l('paid-on')?></th>
+            <th scope="col" style="width: 15%;"><?php _l('action')?></th>
+        </tr>
+        </thead>
+        <tbody>
+            <?php foreach($payments->results() as $payment):?>
+            <tr>
+                <td>
+                    <span style="font-size: 10px;"><?php echo $payment['sale_id']?></span>
+                </td>
+                <td>
+                    <?php $theUser = $C->model('user')->getUser($payment['userid'])?>
+                    <a href="<?php echo $C->model('user')->profileUrl($theUser)?>" data-ajax="true"><img src="<?php echo $C->model('user')->getAvatar($theUser)?>" style="width:20px;height:20px;border-radius:100px"/> <?php echo $theUser['full_name']?></a>
+                </td>
+                <td>
+                    <?php $details = $C->model('admin')->getPaymentDetails($payment['type'], $payment['type_id'])?>
+                    <?php echo $details['title']?>
+                </td>
+                <td>
+                    <span class="badge badge-dark">
+                        <?php echo ($payment['status']) ? l('active') : l('suspended')?>
+                    </span>
+                </td>
+                <td>
+                    <?php echo date('d/m/Y', $payment['time'])?>
+                </td>
+                <td>
+                    <a href="" class="btn btn-sm btn-secondary " data-toggle="modal" data-target="#transactionModal-<?php echo $payment['id']?>"><?php _l('view-details')?></a>
+
+                    <div class="modal" id="transactionModal-<?php echo $payment['id']?>" tabindex="-1" role="dialog">
+                        <div class="modal-dialog " role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"><?php _l('transaction-details')?></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+                                <div class="p-4">
+                                    <ol>
+                                        <li class="mb-2"><?php _l('status')?> : <?php echo ($payment['status']) ? l('active'): l('suspended')?></li>
+                                        <li class="mb-2"><?php _l('full-name')?> : <?php echo $payment['name']?></li>
+                                        <li class="mb-2"><?php _l('email')?> : <?php echo $payment['email']?></li>
+                                        <li class="mb-2"><?php _l('country')?> : <?php echo $payment['country']?></li>
+                                        <li class="mb-2"><?php _l('type')?> : <?php echo $payment['type']?></li>
+                                        <li class="mb-2"><?php _l('amount')?> : <?php echo $payment['amount']?> <?php echo $payment['currency']?></li>
+                                        <li class="mb-2"><?php _l('currency')?> : <?php echo $payment['currency']?></li>
+                                        <li class="mb-2"><?php _l('valid-till')?> : <?php echo date('d/m/Y', $payment['valid_time'])?></li>
+                                        <li class="mb-2"><?php _l('paid-on')?> : <?php echo date('d/m/Y', $payment['time'])?></li>
+
+                                    </ol>
+
+                                    <a href="<?php echo url('admin/payments', array('id' => $payment['id'], 'status' => !$payment['status']))?>" class="btn btn-primary round-sm mt-3 ml-2"><?php echo ($payment['status']) ? l('suspend') : l('enable')?></a>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <?php endforeach;?>
+        </tbody>
+    </table>
+    <?php if($payments->total < 1):?>
+        <div class="empty-content">
+            <i class="la la-money"></i>
+            <span><?php _l('no-contents-show')?></span>
+        </div>
+    <?php else:?>
+        <?php echo $payments->links()?>
+    <?php endif?>
+</div>

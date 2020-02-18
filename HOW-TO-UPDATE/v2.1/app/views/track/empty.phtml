@@ -1,0 +1,12 @@
+<div class="empty-content">
+   <?php if($type == 'my-albums'):?>
+       <i class="fa fa-list-alt"></i>
+       <span><?php _l('no-albums-display')?></span>
+    <?php elseif($type == 'my-playlists'):?>
+       <i class="fa fa-list-alt"></i>
+       <span><?php _l('no-playlist-display')?></span>
+    <?php else:?>
+       <i class="la la-music"></i>
+       <span><?php _l('no-tracks-display')?></span>
+    <?php endif?>
+</div>

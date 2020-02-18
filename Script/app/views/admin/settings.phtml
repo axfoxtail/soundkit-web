@@ -1,0 +1,1473 @@
+<form class="general-form" action="<?php echo getFullUrl(true)?>" method="post" enctype="multipart/form-data">
+
+    <div class="profile-menu">
+        <div class="inner-container">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#general" ><?php _l('general')?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  data-toggle="tab" href="#registration"><?php _l('registration')?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  data-toggle="tab" href="#limit"><?php _l('limit')?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link "  data-toggle="tab" href="#membership"><?php _l('premium-accounts')?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link "  data-toggle="tab" href="#email"><?php _l('email')?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " data-toggle="tab" href="#integrations"><?php _l('integrations')?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " data-toggle="tab" href="#applications"><?php _l('applications')?></a>
+                </li>
+                <?php Hook::getInstance()->fire('settings.tab.menu')?>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-danger ajax-action" style="border-radius:5px;padding: 5px 10px;color:white !important;" href="<?php echo url('admin/update')?>"><?php _l('update-system')?></a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <div class="inner-container">
+        <div class="tab-content mt-3">
+
+            <?php if($message):?>
+                <div class="alert alert-<?php echo $messageType?>"><?php echo $message?></div>
+            <?php endif?>
+
+            <div id="general" class="tab-pane fade show active">
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('site-title')?></label>
+                    <div class="col-sm-5">
+                        <input type="text" name="val[site-title]"  class="form-control form-control-sm"  value="<?php echo config('site-title', 'MusicLy')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('site-description')?></label>
+                    <div class="col-sm-5">
+                        <textarea rows="5" name="val[site-description]" class="form-control form-control-sm"  ><?php echo config('site-description', '')?></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('site-keywords')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[site-keywords]" class="form-control form-control-sm"  value="<?php echo config('site-keywords', '')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('enable-breadcrumb')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[enable-breadcrumb]">
+                            <option <?php echo (config('enable-breadcrumb',1) == 1) ? 'selected' : null?> value="1"><?php _l('yes')?></option>
+                            <option <?php echo (config('enable-breadcrumb',1) == 0) ? 'selected' : null?> value="0"><?php _l('no')?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('default-homepage')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[default-homepage]">
+                            <option <?php echo (config('default-homepage','splash') == 'splash') ? 'selected' : null?> value="splash"><?php _l('splash-homepage')?></option>
+                            <option <?php echo (config('default-homepage','splash') == 'discover') ? 'selected' : null?> value="discover"><?php _l('discover')?></option>
+                            <option <?php echo (config('default-homepage','splash') == 'charts') ? 'selected' : null?> value="charts"><?php _l('charts')?></option>
+
+                        </select>
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group row">
+                    <input type="hidden" name="img[site_logo]" value="<?php echo config('site_logo','')?>"/>
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('site-logo')?></label>
+                    <div class="col-sm-5">
+                        <?php if(config('site_logo','')):?>
+                            <img style="margin: 10px 0;width:200px" src="<?php echo assetUrl(config('site_logo',''))?>"/>
+                        <?php endif?>
+
+                        <input type="file"  name="site_logo" class="form-control form-control-sm" ">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <input type="hidden" name="img[site_logo_dark]" value="<?php echo config('site_logo_dark','')?>"/>
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('site-logo')?>(<?php _l('dark-mode')?>)</label>
+                    <div class="col-sm-5">
+                        <?php if(config('site_logo_dark','')):?>
+                            <img style="margin: 10px 0;width:200px" src="<?php echo assetUrl(config('site_logo_dark',''))?>"/>
+                        <?php endif?>
+
+                        <input type="file"  name="site_logo_dark" class="form-control form-control-sm" ">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <input type="hidden" name="img[favicon]" value="<?php echo config('favicon','')?>"/>
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('site-favicon')?></label>
+                    <div class="col-sm-5">
+                        <?php if(config('favicon','')):?>
+                            <img style="margin: 10px 0;width:60px" src="<?php echo assetUrl(config('favicon',''))?>"/>
+                        <?php endif?>
+                        <input type="file"  name="favicon" class="form-control form-control-sm" ">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('default-theme-mode')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[default-theme-mode]">
+                            <option <?php echo (config('default-theme-mode','light-mode') == 'light-mode') ? 'selected' : null?> value="light-mode"><?php _l('light-mode')?></option>
+                            <option <?php echo (config('default-theme-mode','light-mode') == 'dark-mode') ? 'selected' : null?> value="dark-mode"><?php _l('dark-mode')?></option>
+                        </select>
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('default-volume')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[default-volume]">
+                            <option <?php echo (config('default-volume',80) == 20) ? 'selected' : null?> value="20">20%</option>
+                            <option <?php echo (config('default-volume',80) == 30) ? 'selected' : null?> value="30">30%</option>
+                            <option <?php echo (config('default-volume',80) == 40) ? 'selected' : null?> value="40">40%</option>
+                            <option <?php echo (config('default-volume',80) == 50) ? 'selected' : null?> value="50">50%</option>
+                            <option <?php echo (config('default-volume',80) == 60) ? 'selected' : null?> value="60">60%</option>
+                            <option <?php echo (config('default-volume',80) == 70) ? 'selected' : null?> value="70">70%</option>
+                            <option <?php echo (config('default-volume',80) == 80) ? 'selected' : null?> value="80">80%</option>
+                            <option <?php echo (config('default-volume',80) == 100) ? 'selected' : null?> value="100">100%</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('wave-generator')?></label>
+                    <div class="col-sm-8">
+                        <select name="val[wave-generator]">
+                            <option <?php echo (config('wave-generator','browser') == 'browser') ? 'selected' : null?> value="browser"><?php _l('browser')?></option>
+                            <option <?php echo (config('wave-generator','browser') == 'server') ? 'selected' : null?> value="server"><?php _l('server-generator')?></option>
+                        </select>
+                        <?php if(config('wave-generator', 'browser') == 'server'):?>
+                            <a href="" onclick="return admin_generate_waves(this, 1)" class="btn btn-sm btn-secondary round-sm"><?php _l('re-generate-track-wave')?></a>
+                        <?php endif?>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('player-progress-type')?></label>
+                    <div class="col-sm-8">
+                        <select name="val[player-progress-type]">
+                            <option <?php echo (config('player-progress-type','bar') == 'bar') ? 'selected' : null?> value="bar"><?php _l('bar')?></option>
+                            <option <?php echo (config('player-progress-type','bar') == 'wave') ? 'selected' : null?> value="wave"><?php _l('wave')?></option>
+                            <option <?php echo (config('player-progress-type','bar') == 'wave-revert') ? 'selected' : null?> value="wave-revert"><?php _l('wave-revert')?></option>
+                        </select>
+
+
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('default-chart-type')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[default-chart-type]">
+                            <option <?php echo (config('default-chart-type','bar') == 'bar') ? 'selected' : null?> value="bar"><?php _l('bar-chart')?></option>
+                            <option <?php echo (config('default-chart-type','bar') == 'line') ? 'selected' : null?> value="line"><?php _l('line-chart')?></option>
+                            <option <?php echo (config('default-chart-type','bar') == 'area') ? 'selected' : null?> value="area"><?php _l('area-chart')?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('allow-user-change-chart')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[allow-user-change-chart]">
+                            <option <?php echo (config('allow-user-change-chart',1) == 1) ? 'selected' : null?> value="1"><?php _l('yes')?></option>
+                            <option <?php echo (config('allow-user-change-chart',1) == 0) ? 'selected' : null?> value="0"><?php _l('no')?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('enable-track-time-comment')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[enable-track-time-comment]">
+                            <option <?php echo (config('enable-track-time-comment',1) == 1) ? 'selected' : null?> value="1"><?php _l('yes')?></option>
+                            <option <?php echo (config('enable-track-time-comment',1) == 0) ? 'selected' : null?> value="0"><?php _l('no')?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('enable-gdpr-cookie-alert')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[enable-gdpr]">
+                            <option <?php echo (config('enable-gdpr',1) == 1) ? 'selected' : null?> value="1"><?php _l('yes')?></option>
+                            <option <?php echo (config('enable-gdpr',1) == 0) ? 'selected' : null?> value="0"><?php _l('no')?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('enable-captcha')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[enable-captcha]">
+                            <option <?php echo (config('enable-captcha',1) == 1) ? 'selected' : null?> value="1"><?php _l('yes')?></option>
+                            <option <?php echo (config('enable-captcha',1) == 0) ? 'selected' : null?> value="0"><?php _l('no')?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('currency')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[currency]">
+                            <?php $currencies = getRawCurriencies(); foreach($currencies as $curr => $de):?>
+                                <option <?php echo (config('currency','USD') == $curr) ? 'selected' : null?> value="<?php echo $curr?>"><?php echo $curr?> (<?php echo $de['name']?>)</option>
+                            <?php endforeach;?>
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('currency-symbol')?></label>
+                    <div class="col-sm-5">
+                        <input type="text" disabled  name="val[currency-symbol]" class="form-control form-control-sm"  value="<?php echo $currencies[config('currency','USD')]['symbol']?>">
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('enable-multi-currency')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-multi-currency]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-enable-multi-currency" value="1" name="val[enable-multi-currency]" <?php echo (config('enable-multi-currency', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-enable-multi-currency"></label>
+                        </div>
+
+                        <span class="text-muted"><?php _l('enable-multi-currency-info')?></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('currency-converter-source')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[currency-converter-source]">
+                            <?php $currencies = getRawCurriencies(); foreach($currencies as $curr => $de):?>
+                                <option <?php echo (config('currency-converter-source','USD') == $curr) ? 'selected' : null?> value="<?php echo $curr?>"><?php echo $curr?> (<?php echo $de['name']?>)</option>
+                            <?php endforeach;?>
+                        </select>
+
+
+
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('currency-converter-api-key')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[currency-converter-api-key]" class="form-control form-control-sm"  value="<?php echo config('currency-converter-api-key','')?>">
+                        <span class="text-muted">Get API KEy here <a href="https://currencylayer.com/" target="_blank">https://currencylayer.com/</a></span>
+                    </div>
+                </div>
+                <hr/>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('decimal-separator')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[decimal-separator]">
+                            <option <?php echo (config('decimal-separator','.') == '.') ? 'selected' : null?> value=".">.</option>
+                            <option <?php echo (config('decimal-separator','.') == ',') ? 'selected' : null?> value=",">,</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('thousand-separator')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[thousand-separator]">
+                            <option <?php echo (config('thousand-separator',',') == '.') ? 'selected' : null?> value=".">.</option>
+                            <option <?php echo (config('thousand-separator',',') == ',') ? 'selected' : null?> value=",">,</option>
+                            <option <?php echo (config('thousand-separator',',') == "'") ? 'selected' : null?> value="'">' apostrophe</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('currency-placement')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[currency-placement]">
+                            <option <?php echo (config('currency-placement','before') == 'before') ? 'selected' : null?> value="before"><?php _l('before')?> ($30.00)</option>
+                            <option <?php echo (config('currency-placement','before') == 'after') ? 'selected' : null?> value="after"><?php _l('after')?> (30.00$)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('remove-zero-decimals')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[remove-zero-decimals]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-decimal" value="1" name="val[remove-zero-decimals]" <?php echo (config('remove-zero-decimals', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-decimal"></label>
+                        </div>
+
+                        <span class="text-muted"><?php _l('remove-zero-decimals-info')?></span>
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label"><?php _l('google-analytic-code')?></label>
+                    <div class="col-sm-5">
+                        <div class="alert alert-info"><?php _l('copy-javascript-code')?></div>
+                        <textarea rows="5" name="val[google-analytic-code]" class="form-control form-control-sm"  ><?php echo config('google-analytic-code', '')?></textarea>
+                    </div>
+                </div>
+
+                <?php echo Hook::getInstance()->fire('admin.settings.general')?>
+            </div>
+            <div id="registration" class="tab-pane fade">
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-user-registration')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[user-signup]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-signup" value="1" name="val[user-signup]" <?php echo (config('user-signup', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-signup"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('email-activation')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[email-activation]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-activation" value="1" name="val[email-activation]" <?php echo (config('email-activation', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-activation"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('allow-two-factor-authentication')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[allow-two-factor-authentication]" value="0"/>
+                        <div class="switch">
+                            <input  id="cmn-toggle-allow-two-factor-authentication" value="1" name="val[allow-two-factor-authentication]" <?php echo (config('allow-two-factor-authentication', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-allow-two-factor-authentication"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('user-can-register-artist')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[user-signup-artist]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-artist" value="1" name="val[user-signup-artist]" <?php echo (config('user-signup-artist', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-artist"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-artist-verification')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-artist-verification]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-enable-artist-verification" value="1" name="val[enable-artist-verification]" <?php echo (config('enable-artist-verification', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-enable-artist-verification"></label>
+                        </div>
+
+                        <small><?php _l('enable-artist-verification-help')?></small>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-user-welcome-screen')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-welcome]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-welcome" value="1" name="val[enable-welcome]" <?php echo (config('enable-welcome', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-welcome"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('ban-username-filter')?></label>
+                    <div class="col-sm-5">
+                        <textarea rows="5" class="form-control" name="val[ban-username-filter]"><?php echo config('ban-username-filter', 'fuck,sex,admin')?></textarea>
+                        <span class="text-muted"><?php _l('separate-by-comma')?></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('auto-follow-accounts')?></label>
+                    <div class="col-sm-5">
+                        <textarea rows="5" class="form-control" name="val[auto-follow-accounts]"><?php echo config('auto-follow-accounts', '')?></textarea>
+                        <span class="text-muted"><?php _l('autofollow-help')?></span>
+                    </div>
+                </div>
+                <hr/>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-facebook-login')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-facebook]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-facebook" value="1" name="val[enable-facebook]" <?php echo (config('enable-facebook', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-facebook"></label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('facebook-id')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[facebook-key]" class="form-control form-control-sm"  value="<?php echo config('facebook-key', '')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('facebook-secret')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[facebook-secret]" class="form-control form-control-sm"  value="<?php echo config('facebook-secret', '')?>">
+                    </div>
+                </div>
+
+                <?php echo Hook::getInstance()->fire('admin.settings.registration')?>
+
+            </div>
+            <div id="limit" class="tab-pane fade">
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('who-can-upload')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[can-upload]">
+                            <option <?php echo (config('can-upload',1) == 1) ? 'selected' : null?> value="1"><?php _l('all')?></option>
+                            <option <?php echo (config('can-upload',1) == 2) ? 'selected' : null?> value="2"><?php _l('artist-only')?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('who-can-update-track')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[can-update-track]">
+                            <option <?php echo (config('can-update-track',2) == 1) ? 'selected' : null?> value="1"><?php _l('all-artists')?></option>
+                            <option <?php echo (config('can-update-track',2) == 2) ? 'selected' : null?> value="2"><?php _l('premium-artist-only')?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('delete-tmp-tracks')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[delete-tmp-tracks]" class="form-control form-control-sm"  value="<?php echo config('delete-tmp-tracks', '5')?>">
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('check-update-time')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[update-time]">
+                            <option <?php echo (config('update-time',10000) == 5000) ? 'selected' : null?> value="5000">5 <?php _l('seconds')?></option>
+                            <option <?php echo (config('update-time',10000) == 10000) ? 'selected' : null?> value="10000">10 <?php _l('seconds')?></option>
+                            <option <?php echo (config('update-time',10000) == 15000) ? 'selected' : null?> value="15000">15 <?php _l('seconds')?></option>
+                            <option <?php echo (config('update-time',10000) == 20000) ? 'selected' : null?> value="20000">20 <?php _l('seconds')?></option>
+                            <option <?php echo (config('update-time',10000) == 30000) ? 'selected' : null?> value="30000">30 <?php _l('seconds')?></option>
+                            <option <?php echo (config('update-time',10000) == 60000) ? 'selected' : null?> value="60000">1 <?php _l('minute')?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('allow-image-size')?>(MB)</label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[image-file-size]" class="form-control form-control-sm"  value="<?php echo config('image-file-size', 2)?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('allow-image-format')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[image-file-types]" class="form-control form-control-sm"  value="<?php echo config('image-file-types', 'jpg,png,gif,jpeg')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('allow-audio-size')?>(MB)</label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[audio-file-size]" class="form-control form-control-sm"  value="<?php echo config('audio-file-size', 55)?>">
+                        <small class="form-text text-muted"><?php _l('allow-audio-size-help')?></small>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('allow-track-format')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[audio-file-types]" class="form-control form-control-sm"  value="<?php echo config('audio-file-types', 'mp3,m4a,mp4')?>">
+                    </div>
+                </div>
+
+
+                <hr/>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('chart-new-hot-time-base')?></label>
+                    <div class="col-sm-5">
+                        <select  name="val[chart-new-hot-time]">
+                            <option <?php echo (config('chart-new-hot-time', 'this-week') == 'this-week') ? 'selected' : null?> value="this-week"><?php _l('this-week')?></option>
+                            <option <?php echo (config('chart-new-hot-time', 'this-week') == 'last-week') ? 'selected' : null?> value="last-week"><?php _l('from-last-week')?></option>
+                            <option <?php echo (config('chart-new-hot-time', 'this-week') == 'this-month') ? 'selected' : null?> value="this-month"><?php _l('this-month')?></option>
+                            <option <?php echo (config('chart-new-hot-time', 'this-week') == 'last-month') ? 'selected' : null?> value="last-month"><?php _l('from-last-month')?></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('chart-top-time-base')?></label>
+                    <div class="col-sm-5">
+                        <select  name="val[chart-top-time]">
+                            <option <?php echo (config('chart-top-time', 'this-week') == 'this-week') ? 'selected' : null?> value="this-week"><?php _l('this-week')?></option>
+                            <option <?php echo (config('chart-top-time', 'this-week') == 'last-week') ? 'selected' : null?> value="last-week"><?php _l('from-last-week')?></option>
+                            <option <?php echo (config('chart-top-time', 'this-week') == 'this-month') ? 'selected' : null?> value="this-month"><?php _l('this-month')?></option>
+                            <option <?php echo (config('chart-top-time', 'this-week') == 'last-month') ? 'selected' : null?> value="last-month"><?php _l('from-last-month')?></option>
+                            <option <?php echo (config('chart-top-time', 'this-week') == 'this-year') ? 'selected' : null?> value="this-year"><?php _l('this-year')?></option>
+
+                        </select>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('tracks-per-page')?></label>
+                    <div class="col-sm-5">
+                        <input type="number"  name="val[tracks-limit]" class="form-control form-control-sm"  value="<?php echo config('tracks-limit', 10)?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('comment-per-page')?></label>
+                    <div class="col-sm-5">
+                        <input type="number"  name="val[comment-limit]" class="form-control form-control-sm"  value="<?php echo config('comment-limit', 5)?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('users-per-page')?></label>
+                    <div class="col-sm-5">
+                        <input type="number"  name="val[users-limit]" class="form-control form-control-sm"  value="<?php echo config('users-limit', 20)?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('notifications-per-page')?></label>
+                    <div class="col-sm-5">
+                        <input type="number"  name="val[notifications-limit]" class="form-control form-control-sm"  value="<?php echo config('notifications-limit', 10)?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('notification-dropdown-limit')?></label>
+                    <div class="col-sm-5">
+                        <input type="number"  name="val[notification-dropdown-limit]" class="form-control form-control-sm"  value="<?php echo config('notification-dropdown-limit', 5)?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-download-options-by-default')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-download-options]" value="0"/>
+                        <div class="switch">
+                            <input  id="cmn-toggle-enable-download-options" value="1" name="val[enable-download-options]" <?php echo (config('enable-download-options', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-enable-download-options"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-zip-download-album')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-zip-download-album]" value="0"/>
+                        <div class="switch">
+                            <input  id="cmn-toggle-enable-zip-download-album" value="1" name="val[enable-zip-download-album]" <?php echo (config('enable-zip-download-album', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-enable-zip-download-album"></label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-logged-user-only-download')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-logged-user-only-download]" value="0"/>
+                        <div class="switch">
+                            <input  id="cmn-toggle-enable-logged-user-only-download" value="1" name="val[enable-logged-user-only-download]" <?php echo (config('enable-logged-user-only-download', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-enable-logged-user-only-download"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-artist-featuring')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-artist-featuring]" value="0"/>
+                        <div class="switch">
+                            <input  id="cmn-toggle-enable-artist-featuring" value="1" name="val[enable-artist-featuring]" <?php echo (config('enable-artist-featuring', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-enable-artist-featuring"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-lyrics-upload')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-lyrics-upload]" value="0"/>
+                        <div class="switch">
+                            <input  id="cmn-toggle-enable-lyrics-upload" value="1" name="val[enable-lyrics-upload]" <?php echo (config('enable-lyrics-upload', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-enable-lyrics-upload"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-chunk-track-play')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-chunk-play]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-enable-chunk-play" value="1" name="val[enable-chunk-play]" <?php echo (config('enable-chunk-play', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-enable-chunk-play"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <?php echo Hook::getInstance()->fire('admin.settings.limit')?>
+            </div>
+            <div id="membership" class="tab-pane fade">
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-premium-artists')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-premium]" value="0"/>
+                        <div class="switch">
+                            <input  onchange="toogleView(this, '#premium-contents')" id="cmn-toggle-premium" value="1" name="val[enable-premium]" <?php echo (config('enable-premium', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-premium"></label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div id="premium-contents" style="display: <?php echo (config('enable-premium', false)) ? 'block' : 'none'?>">
+
+                    <h5><?php _l('membership-plan')?></h5>
+
+                    <hr/>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-trial')?></label>
+                        <div class="col-sm-5">
+                            <input type="hidden" name="val[enable-trial]" value="0"/>
+                            <div class="switch">
+                                <input id="cmn-toggle-trial" value="1" name="val[enable-trial]" <?php echo (config('enable-trial', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                <label for="cmn-toggle-trial"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('no-of-days')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[trial-days]" class="form-control form-control-sm"  value="<?php echo config('trial-days', '14')?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('disable-tracks-on-expire')?></label>
+                        <div class="col-sm-5">
+                            <input type="hidden" name="val[disable-tracks]" value="0"/>
+                            <div class="switch">
+                                <input id="cmn-toggle-tracksdisable" value="1" name="val[disable-tracks]" <?php echo (config('disable-tracks', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                <label for="cmn-toggle-tracksdisable"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="mb-4"><?php _l('premium')?></h6>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-5 col-form-label"><?php _l('monthly-price')?></label>
+                                <div class="col-sm-6">
+                                    <input type="text"  name="val[pro-artist-month-price]" class="form-control form-control-sm"  value="<?php echo config('pro-artist-month-price', '5')?>">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-5 col-form-label"><?php _l('yearly-price')?></label>
+                                <div class="col-sm-6">
+                                    <input type="text"  name="val[pro-artist-yearly-price]" class="form-control form-control-sm"  value="<?php echo config('pro-artist-yearly-price', '55')?>">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-5 col-form-label"><?php _l('track-size')?>(MB)</label>
+                                <div class="col-sm-6">
+                                    <input type="number"  name="val[pro-artist-track-size]" class="form-control form-control-sm"  value="<?php echo config('pro-artist-track-size', 50)?>">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-5 col-form-label"><?php _l('total-tracks-size')?>(MB)</label>
+                                <div class="col-sm-6">
+                                    <input type="number"  name="val[pro-artist-total-track-size]" class="form-control form-control-sm"  value="<?php echo config('pro-artist-total-track-size', 1024)?>">
+                                    <small><?php _l('pro-yearly-size-help')?></small>
+                                </div>
+                            </div>
+
+
+
+                            <?php  Hook::getInstance()->fire("premium.artists.hook")?>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="mb-4"><?php _l('standard-free')?></h6>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-5 col-form-label"><?php _l('track-size')?>(MB)</label>
+                                <div class="col-sm-6">
+                                    <input type="number"  name="val[free-artist-track-size]" class="form-control form-control-sm"  value="<?php echo config('free-artist-track-size', 5)?>">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-5 col-form-label"><?php _l('total-tracks-size')?>(MB)</label>
+                                <div class="col-sm-6">
+                                    <input type="number"  name="val[free-artist-total-track-size]" class="form-control form-control-sm"  value="<?php echo config('free-artist-total-track-size', 100)?>">
+                                </div>
+                            </div>
+
+
+                            <?php  Hook::getInstance()->fire("free.artists.hook")?>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-premium-listeners')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-premium-listeners]" value="0"/>
+                        <div class="switch">
+                            <input  onchange="toogleView(this, '#premium-users-contents')" id="cmn-toggle-premium-users" value="1" name="val[enable-premium-listeners]" <?php echo (config('enable-premium-listeners', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-premium-users"></label>
+                        </div>
+                        <small><?php _l('enable-listeners-help')?></small>
+                    </div>
+                </div>
+
+
+
+                <div id="premium-users-contents" style="display: <?php echo (config('enable-premium-listeners', false)) ? 'block' : 'none'?>">
+
+
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('artist-share-per-play')?></label>
+                        <div class="col-sm-5">
+                            <input type="number" step="0.001"  name="val[artist-play-share]" class="form-control form-control-sm"  value="<?php echo config('artist-play-share', '0.001')?>">
+                            <small><?php _l('artist-share-per-play-help')?></small>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('allow-premium-artists')?></label>
+                        <div class="col-sm-5">
+                            <input type="hidden" name="val[allow-premium-artists]" value="0"/>
+                            <div class="switch">
+                                <input  id="cmn-toggle-allow-premium-artists" value="1" name="val[allow-premium-artists]" <?php echo (config('allow-premium-artists', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                <label for="cmn-toggle-allow-premium-artists"></label>
+                            </div>
+                            <small><?php _l('allow-premium-artists-help')?></small>
+                        </div>
+                    </div>
+
+                    <h6 class="mb-4"><?php _l('plan-price')?></h6>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('monthly-price')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[pro-user-month-price]" class="form-control form-control-sm"  value="<?php echo config('pro-user-month-price', '5')?>">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('yearly-price')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[pro-user-yearly-price]" class="form-control form-control-sm"  value="<?php echo config('pro-user-yearly-price', '55')?>">
+                        </div>
+                    </div>
+                </div>
+
+                <?php echo Hook::getInstance()->fire('admin.settings.membership')?>
+            </div>
+            <div id="email" class="tab-pane fade">
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('email-driver')?></label>
+                    <div class="col-sm-5">
+                        <select name="val[email-driver]">
+                            <option <?php echo (config('email-driver',1) == 'mail') ? 'selected' : null?> value="mail"><?php _l('mail')?></option>
+                            <option <?php echo (config('email-driver',1) == 'smtp') ? 'selected' : null?> value="smtp"><?php _l('smtp')?></option>
+                        </select>
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('smtp-host')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[smtp-host]" class="form-control form-control-sm"  value="<?php echo config('smtp-host', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('smtp-username')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[smtp-username]" class="form-control form-control-sm"  value="<?php echo config('smtp-username', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('smtp-password')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[smtp-password]" class="form-control form-control-sm"  value="<?php echo config('smtp-password', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('smtp-port')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[smtp-port]" class="form-control form-control-sm"  value="<?php echo config('smtp-port', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('email-charset')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[email-charset]" class="form-control form-control-sm"  value="<?php echo config('email-charset', 'utf-8')?>">
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('from_address')?>(Site Email Address)</label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[from_address]" class="form-control form-control-sm"  value="<?php echo config('from_address', '')?>">
+                    </div>
+                </div>
+
+
+                <hr/>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('email-on-registration')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[email-registration]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-reg" value="1" name="val[email-registration]" <?php echo (config('email-registration', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-reg"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('email-on-comment')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[email-comment]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-comment" name="val[email-comment]" <?php echo (config('email-comment', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-comment"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('email-on-like')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[email-like]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-like" name="val[email-like]" <?php echo (config('email-like', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-like"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('email-on-follow')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[email-follow]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-follow" name="val[email-follow]" <?php echo (config('email-follow', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-follow"></label>
+                        </div>
+                    </div>
+                </div>
+                <?php echo Hook::getInstance()->fire('admin.settings.email')?>
+            </div>
+            <div id="integrations" class="tab-pane fade">
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('ffmpeg-settings')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[ffmpeg-path]" class="form-control form-control-sm"  value="<?php echo config('ffmpeg-path', '')?>">
+                        <small class="form-text text-muted"><?php _l('ffmpeg-path-help')?></small>
+                        <a target="_blank" href="https://www.vultr.com/docs/how-to-install-ffmpeg-on-centos">Install FFMPEG on Linux Centos</a><br/>
+                        <a target="_blank" href="https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg">Install FFMPEG on Linux Ubuntu | Windows</a>
+                    </div>
+                </div>
+
+
+                <hr/>
+
+                <h6><?php _l('paypal')?></h6>
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('paypal-username')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[paypal-username]" class="form-control form-control-sm"  value="<?php echo config('paypal-username', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('paypal-password')?></label>
+                    <div class="col-sm-5">
+                        <input type="password"  name="val[paypal-password]" class="form-control form-control-sm"  value="<?php echo config('paypal-password', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('paypal-signature')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[paypal-signature]" class="form-control form-control-sm"  value="<?php echo config('paypal-signature', '')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('paypal-sandbox')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[paypal-sandbox]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-paypal" name="val[paypal-sandbox]" <?php echo (config('paypal-sandbox', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-paypal"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <?php if(config('enable-multi-currency', false)):?>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('paypal-supported-currency')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[paypal-supported-currency]" class="form-control form-control-sm"  value="<?php echo config('paypal-supported-currency', 'ARS,AUD,BRL,CAD,CHF,CZK,DKK,EUR,GBP,HKD,HUF,INR,ILS,JPY,MXN,MYR,NOK,NZD,PHP,PLN,RUB,SEK,SGD,THB,TWD,USD')?>">
+                        </div>
+                    </div>
+                <?php endif?>
+                <hr/>
+                <h6><?php _l('bank-transfer-details')?></h6>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-bank-transfer')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-bank-transfer]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-enable-bank-transfer" name="val[enable-bank-transfer]" <?php echo (config('enable-bank-transfer', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-enable-bank-transfer"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('bank-name')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[bank-name]" class="form-control form-control-sm"  value="<?php echo config('bank-name', '')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('bank-acc-name')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[bank-acc-name]" class="form-control form-control-sm"  value="<?php echo config('bank-acc-name', '')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('bank-acc-number')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[bank-acc-number]" class="form-control form-control-sm"  value="<?php echo config('bank-acc-number', '')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('bank-country')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[bank-country]" class="form-control form-control-sm"  value="<?php echo config('bank-country', '')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('bank-routing-code')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[bank-routing-code]" class="form-control form-control-sm"  value="<?php echo config('bank-routing-code', '')?>">
+                    </div>
+                </div>
+                <hr/>
+                <h6><?php _l('Stripe')?></h6>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('stripe-secret-key')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[stripe-secret-key]" class="form-control form-control-sm"  value="<?php echo config('stripe-secret-key', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('stripe-publishable-key')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[stripe-publishable-key]" class="form-control form-control-sm"  value="<?php echo config('stripe-publishable-key', '')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-stripe-recurring')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-stripe-recurring]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-enable-stripe-recurring" name="val[enable-stripe-recurring]" <?php echo (config('enable-stripe-recurring', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-enable-stripe-recurring"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('stripe-product-monthly-plan')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[stripe-product-monthly-plan]" class="form-control form-control-sm"  value="<?php echo config('stripe-product-monthly-plan', '')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('stripe-product-yearly-plan')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[stripe-product-yearly-plan]" class="form-control form-control-sm"  value="<?php echo config('stripe-product-yearly-plan', '')?>">
+                    </div>
+                </div>
+
+                <?php if(config('enable-multi-currency', false)):?>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('stripe-supported-currency')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[stripe-supported-currency]" class="form-control form-control-sm"  value="<?php echo config('stripe-supported-currency', 'AFN,ALL,DZD,AOA,ARS,AMD,AWG,AUD,AZN,BSD,BDT,BBD,BZD,BMD,BOB,BAM,BWP,BRL,GBP,BND,BGN,BIF,KHR,CAD,CVE,KYD,XAF,XPF,CLP,CNY,COP,KMF,CDF,CRC,HRK,CZK,DKK,DJF,DOP,XCD,EGP,ETB,EUR,FKP,FJD,GMD,GEL,GIP,GTQ,GNF,GYD,HTG,HNL,HKD,HUF,ISK,INR,IDR,ILS,JMD,JPY,KZT,KES,KGS,LAK,LBP,LSL,LRD,MOP,MKD,MGA,MWK,MYR,MVR,MRO,MUR,MXN,MDL,MNT,MAD,MZN,MMK,NAD,NPR,ANG,TWD,NZD,NIO,NGN,NOK,PKR,PAB,PGK,PYG,PEN,PHP,PLN,QAR,RON,RUB,RWF,STD,SHP,SVC,WST,SAR,RSD,SCR,SLL,SGD,SBD,SOS,ZAR,KRW,LKR,SRD,SZL,SEK,CHF,TJS,TZS,THB,TOP,TTD,TRY,UGX,UAH,AED,USD,UYU,UZS,VUV,VND,XOF,YER,ZMW')?>">
+                        </div>
+                    </div>
+                <?php endif?>
+                <hr/>
+                <h6><?php _l('Mollie')?></h6>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('mollie-api-key')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[mollie-api-key]" class="form-control form-control-sm"  value="<?php echo config('mollie-api-key', '')?>">
+                    </div>
+                </div>
+                <?php if(config('enable-multi-currency', false)):?>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('mollie-supported-currency')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[mollie-supported-currency]" class="form-control form-control-sm"  value="<?php echo config('mollie-supported-currency', 'ARS,AUD,BRL,CAD,CHF,CZK,DKK,EUR,GBP,HKD,HUF,INR,ILS,JPY,MXN,MYR,NOK,NZD,PHP,PLN,RUB,SEK,SGD,THB,TWD,USD')?>">
+                        </div>
+                    </div>
+                <?php endif?>
+                <hr/>
+
+                <h6><?php _l('amazon-s3-storage')?></h6>
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-s3]" value="0"/>
+                        <div class="switch">
+                            <input onchange="toogleView(this, '#s3-contents')" id="cmn-toggle-s3" name="val[enable-s3]" <?php echo (config('enable-s3', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-s3"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="s3-contents" style="display: <?php echo (config('enable-s3', false)) ? 'block' : 'none'?>">
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('key-id')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[s3-key-id]" class="form-control form-control-sm"  value="<?php echo config('s3-key-id', '')?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('secret-key')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[s3-secret-key]" class="form-control form-control-sm"  value="<?php echo config('s3-secret-key', '')?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('region')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[s3-region]" class="form-control form-control-sm"  value="<?php echo config('s3-region', '')?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('bucket')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[s3-bucket]" class="form-control form-control-sm"  value="<?php echo config('s3-bucket', '')?>">
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <hr/>
+                <h6><?php _l('Wasabi Storage')?></h6>
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-wasabi]" value="0"/>
+                        <div class="switch">
+                            <input onchange="toogleView(this, '#wasabi-contents')" id="cmn-toggle-wasabi" name="val[enable-wasabi]" <?php echo (config('enable-wasabi', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-wasabi"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="wasabi-contents" style="display: <?php echo (config('enable-wasabi', false)) ? 'block' : 'none'?>">
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('key-id')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[wasabi-key-id]" class="form-control form-control-sm"  value="<?php echo config('wasabi-key-id', '')?>">
+                            <small>See <a href="http://prntscr.com/lpnmas" target="_blank">http://prntscr.com/lpnmas</a> </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('secret-key')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[wasabi-secret-key]" class="form-control form-control-sm"  value="<?php echo config('wasabi-secret-key', '')?>">
+                            <small>See <a href="http://prntscr.com/lpnmas" target="_blank">http://prntscr.com/lpnmas</a> </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('region')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[wasabi-region]" class="form-control form-control-sm"  value="<?php echo config('wasabi-region', '')?>">
+                            <small>Example : us-east-1</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('bucket')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[wasabi-bucket]" class="form-control form-control-sm"  value="<?php echo config('wasabi-bucket', '')?>">
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <hr/>
+                <h6><?php _l('ftp-storage')?></h6>
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[enable-ftp]" value="0"/>
+                        <div class="switch">
+                            <input onchange="toogleView(this, '#ftp-contents')" id="cmn-toggle-ftp" name="val[enable-ftp]" <?php echo (config('enable-ftp', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-ftp"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="ftp-contents" style="display: <?php echo (config('enable-ftp', false)) ? 'block' : 'none'?>">
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('ftp-hostname')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[ftp-hostname]" class="form-control form-control-sm"  value="<?php echo config('ftp-hostname', '')?>">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('ftp-username')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[ftp-username]" class="form-control form-control-sm"  value="<?php echo config('ftp-username', '')?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('ftp-password')?></label>
+                        <div class="col-sm-5">
+                            <input type="password"  name="val[ftp-password]" class="form-control form-control-sm"  value="<?php echo config('ftp-password', '')?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('ftp-port')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[ftp-port]" class="form-control form-control-sm"  value="<?php echo config('ftp-port', '21')?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('ftp-path')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[ftp-path]" class="form-control form-control-sm"  value="<?php echo config('ftp-path', '/')?>">
+                            <small><?php _l('ftp-path-helper')?></small>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('ftp-endpoint')?></label>
+                        <div class="col-sm-5">
+                            <input type="text"  name="val[ftp-endpoint]" class="form-control form-control-sm" placeholder="https://storage.myserver.com" value="<?php echo config('ftp-endpoint', '')?>">
+                        </div>
+                    </div>
+
+                </div>
+
+                <?php echo Hook::getInstance()->fire('admin.settings.integrations')?>
+
+                <hr/>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('cron-job-url')?></label>
+                    <div class="col-sm-5">
+                        <input type="text"  class="form-control form-control-sm"  value="<?php echo url('cronjob/run')?>">
+                        <span class="text-muted"><?php _l('cronjob-note')?></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="applications" class="tab-pane fade">
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><h6><?php _l('api-key')?></h6></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[api-access-key]" class="form-control form-control-sm"  value="<?php echo config('api-access-key', 'o0q0aOmm4M0JEA')?>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('default-language')?></label>
+                    <div class="col-sm-5">
+                        <select  name="val[api-default-language]">
+                            <?php $languages = Translator::instance()->getAvailableLanguages()?>
+                            <?php foreach($languages as $language):?>
+                                <option <?php echo (config('api-default-language', 'en') == $language) ? 'selected' : null?> value="<?php echo $language?>"><?php echo getLanguageName($language)?></option>
+                            <?php endforeach?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('api-enable-in-purchase')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[api-enable-in-purchase]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-api-enable-in-purchase" value="1" name="val[api-enable-in-purchase]" <?php echo (config('api-enable-in-purchase', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-api-enable-in-purchase"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <h6><?php _l('features')?></h6>
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('api-enable-premium')?></label>
+                    <div class="col-sm-5">
+                        <input type="hidden" name="val[api-enable-premium]" value="0"/>
+                        <div class="switch">
+                            <input id="cmn-toggle-api-enable-premium" value="1" name="val[api-enable-premium]" <?php echo (config('api-enable-premium', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                            <label for="cmn-toggle-api-enable-premium"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <?php if(moduleExists('blog')):?>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('api-enable-blogs')?></label>
+                        <div class="col-sm-5">
+                            <input type="hidden" name="val[api-enable-blogs]" value="0"/>
+                            <div class="switch">
+                                <input id="cmn-toggle-api-enable-blogs" value="1" name="val[api-enable-blogs]" <?php echo (config('api-enable-blogs', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                <label for="cmn-toggle-api-enable-blogs"></label>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif?>
+
+                <?php if(moduleExists('video')):?>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('api-enable-video')?></label>
+                        <div class="col-sm-5">
+                            <input type="hidden" name="val[api-enable-video]" value="0"/>
+                            <div class="switch">
+                                <input id="cmn-toggle-api-enable-video" value="1" name="val[api-enable-video]" <?php echo (config('api-enable-video', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                <label for="cmn-toggle-api-enable-video"></label>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif?>
+
+                <?php if(moduleExists('store')):?>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('api-enable-store')?></label>
+                        <div class="col-sm-5">
+                            <input type="hidden" name="val[api-enable-store]" value="0"/>
+                            <div class="switch">
+                                <input id="cmn-toggle-api-enable-store" value="1" name="val[api-enable-store]" <?php echo (config('api-enable-store', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                <label for="cmn-toggle-api-enable-store"></label>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif?>
+
+                <?php if(moduleExists('radio')):?>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('api-enable-radios')?></label>
+                        <div class="col-sm-5">
+                            <input type="hidden" name="val[api-enable-radios]" value="0"/>
+                            <div class="switch">
+                                <input id="cmn-toggle-api-enable-radios" value="1" name="val[api-enable-radios]" <?php echo (config('api-enable-radios', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                <label for="cmn-toggle-api-enable-radios"></label>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif?>
+
+                <hr/>
+                <h6><?php _l('design')?></h6>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('default-mode')?></label>
+                    <div class="col-sm-5">
+                        <select  name="val[api-default-mode]">
+                            <option <?php echo (config('api-default-mode', 'dark') == 'dark') ? 'selected' : null?> value="dark"><?php _l('dark')?></option>
+                            <option <?php echo (config('api-default-mode', 'dark') == 'light') ? 'selected' : null?> value="light"><?php _l('light')?></option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('primary-color')?></label>
+                    <div class="col-sm-5">
+                        <div id="primary-color" class="input-group colorpicker-component cp" data-color="<?php echo config('api-primary-color', '#FA0052')?>">
+                            <input name="val[api-primary-color]" value="<?php echo config('api-primary-color', '#FA0052')?>" id="primary-color" type="text" class="form-control input-lg"/>
+                            <span class="input-group-addon"><i></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('accent-color')?></label>
+                    <div class="col-sm-5">
+                        <div id="accent-color" class="input-group colorpicker-component cp" data-color="<?php echo config('api-accent-color', '#141821')?>">
+                            <input name="val[api-accent-color]" value="<?php echo config('api-accent-color', '#141821')?>" id="accent-color" type="text" class="form-control input-lg"/>
+                            <span class="input-group-addon"><i></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <input type="hidden" name="img[api_slide_image_1]" value="<?php echo config('api_slide_image_1','')?>"/>
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('api-slide-image')?> 1</label>
+                    <div class="col-sm-5">
+                        <?php if(config('api_slide_image_1','')):?>
+                            <img style="margin: 10px 0;max-width:300px" src="<?php echo assetUrl(config('api_slide_image_1',''))?>"/>
+                        <?php endif?>
+                        <input type="file"  name="api_slide_image_1" class="form-control form-control-sm" ">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <input type="hidden" name="img[api_slide_image_2]" value="<?php echo config('api_slide_image_2','')?>"/>
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('api-slide-image')?> 2</label>
+                    <div class="col-sm-5">
+                        <?php if(config('api_slide_image_2','')):?>
+                            <img style="margin: 10px 0;max-width:300px" src="<?php echo assetUrl(config('api_slide_image_2',''))?>"/>
+                        <?php endif?>
+                        <input type="file"  name="api_slide_image_2" class="form-control form-control-sm" ">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <input type="hidden" name="img[api_slide_image_3]" value="<?php echo config('api_slide_image_3','')?>"/>
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('api-slide-image')?> 3</label>
+                    <div class="col-sm-5">
+                        <?php if(config('api_slide_image_3','')):?>
+                            <img style="margin: 10px 0;max-width:300px" src="<?php echo assetUrl(config('api_slide_image_3',''))?>"/>
+                        <?php endif?>
+                        <input type="file"  name="api_slide_image_3" class="form-control form-control-sm" ">
+                    </div>
+                </div>
+
+                <hr/>
+                <h6><?php _l('external-links')?></h6>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><h6><?php _l('api-privacy-link')?></h6></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[api-privacy-link]" class="form-control form-control-sm"  value="<?php echo config('api-privacy-link', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><h6><?php _l('api-terms-link')?></h6></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[api-terms-link]" class="form-control form-control-sm"  value="<?php echo config('api-terms-link', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><h6><?php _l('api-contact-link')?></h6></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[api-contact-link]" class="form-control form-control-sm"  value="<?php echo config('api-contact-link', url('contact'))?>">
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><h6><?php _l('android-app-download-link')?></h6></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[android-app-download-link]" class="form-control form-control-sm"  value="<?php echo config('android-app-download-link', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><h6><?php _l('iphone-app-download-link')?></h6></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[iphone-app-download-link]" class="form-control form-control-sm"  value="<?php echo config('iphone-app-download-link', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><h6><?php _l('window-app-download-link')?></h6></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[window-app-download-link]" class="form-control form-control-sm"  value="<?php echo config('window-app-download-link', '')?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label"><h6><?php _l('mac-app-download-link')?></h6></label>
+                    <div class="col-sm-5">
+                        <input type="text"  name="val[mac-app-download-link]" class="form-control form-control-sm"  value="<?php echo config('mac-app-download-link', '')?>">
+                    </div>
+                </div>
+                <hr/>
+            </div>
+
+            <?php Hook::getInstance()->fire('settings.tab.content')?>
+        </div>
+
+        <hr/>
+        <div class="">
+            <button data-size="s" data-style="zoom-in" class="btn btn-primary round-sm ladda-button" id="admin-settings"><?php _l('save')?></button>
+        </div>
+    </div>
+</form>

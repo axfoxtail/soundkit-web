@@ -1,0 +1,10 @@
+<div class="section ">
+    <div class="side-links">
+        <?php foreach($C->model('admin')->getPagesMenu('footer') as $page):?>
+            <a data-ajax="true" href="<?php echo url('page/'.$page['url'])?>"><?php _l($page['title'])?></a>
+        <?php endforeach;?>
+        <?php Hook::getInstance()->fire('home-footer-right')?>
+    </div>
+
+    <span class="ml-2"> © <?php echo config('site-title')?> <?php echo date('Y')?> <span class="colored"></span></span>
+</div>

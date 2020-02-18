@@ -1,0 +1,84 @@
+<div class="tab-pane fade" id="videos" aria-labelledby="nav-home-tab">
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="track-side-stats">
+                <?php $stats =  $C->model('video::video')->countStatistics('all', $strtime)?>
+                <div class="each clearfix">
+                    <div class="float-left"><?php _l('plays')?></div>
+                    <div class="float-right">
+                        <div class="count">
+                            <?php echo $stats['plays']?>
+                        </div>
+                    </div>
+                </div>
+                <div class="each clearfix">
+                    <div class="float-left"><?php _l('likes')?></div>
+                    <div class="float-right">
+                        <div class="count"><?php echo $stats['likes']?></div>
+                    </div>
+                </div>
+                <div class="each clearfix">
+                    <div class="float-left"><?php _l('comments')?></div>
+                    <div class="float-right">
+                        <div class="count"><?php echo $stats['comments']?></div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-md-3">
+            <h6><?php _l('most-played')?></h6>
+            <?php $videos = $C->model('video::video')->getStatistics('plays', $strtime, 5)?>
+            <?php foreach($videos as $video):?>
+                <div class="clearfix mb-3 each-track-stats">
+                    <div class="float-left" style="width: 90%;">
+                        <a data-ajax="true" href="<?php echo $C->model('video::video')->videoUrl($video)?>">
+                            <img src="<?php echo $C->model('video::video')->getArt($video)?>" style="width:20px;height:20px;display: inline-block;"/>
+                            <span><b><?php echo $video['title']?></b></span>
+                        </a>
+                    </div>
+                    <div class="float-right">
+                        <?php echo $video['count']?>
+                    </div>
+                </div>
+            <?php endforeach;?>
+        </div>
+        <div class="col-md-3">
+            <h6><?php _l('most-commented')?></h6>
+            <?php $videos = $C->model('video::video')->getStatistics('comments', $strtime, 5)?>
+            <?php foreach($videos as $video):?>
+                <div class="clearfix mb-3 each-track-stats">
+                    <div class="float-left" style="width: 90%;">
+                        <a data-ajax="true" href="<?php echo $C->model('video')->videoUrl($video)?>">
+                            <img src="<?php echo $C->model('video')->getArt($video)?>" style="width:20px;height:20px;display: inline-block;"/>
+                            <span><b><?php echo $video['title']?></b></span>
+                        </a>
+                    </div>
+                    <div class="float-right">
+                        <?php echo $video['count']?>
+                    </div>
+                </div>
+            <?php endforeach;?>
+        </div>
+
+        <div class="col-md-3">
+            <h6><?php _l('most-liked')?></h6>
+            <?php $videos = $C->model('video::video')->getStatistics('likes', $strtime, 5)?>
+            <?php foreach($videos as $video):?>
+                <div class="clearfix mb-3 each-track-stats">
+                    <div class="float-left" style="width: 90%;">
+                        <a data-ajax="true" href="<?php echo $C->model('video::video')->videoUrl($video)?>">
+                            <img src="<?php echo $C->model('video::video')->getArt($video)?>" style="width:20px;height:20px;display: inline-block;"/>
+                            <span><b><?php echo $video['title']?></b></span>
+                        </a>
+                    </div>
+                    <div class="float-right">
+                        <?php echo $video['count']?>
+                    </div>
+                </div>
+            <?php endforeach;?>
+        </div>
+
+    </div>
+</div>

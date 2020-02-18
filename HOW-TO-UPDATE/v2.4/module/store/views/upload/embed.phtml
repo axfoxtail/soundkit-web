@@ -1,0 +1,32 @@
+<div id="pricing" class="tab-pane fade "  role="tabpanel" aria-labelledby="pricing-tab">
+    <div class="alert alert-info text-center" id="upload-store-info"><?php _l('select-track-to-set-price')?></div>
+    <div class="upload-pricing" style="display: none;">
+        <div class="alert alert-warning ">
+
+            <?php _l('set-price-upload-info')?>
+            <span style="font-size: 11px;">(<?php _l('2min-maximum')?>)</span>
+        </div>
+
+        <div class="upload-pricing-temp hide">
+            <div class="the-price-container hide">
+
+                <div  style='padding:15px 0'>
+
+                    <div class="each-upload-track-price clearfix">
+                        <div class="content">
+                            <label><?php _l('price')?>:</label>
+                            <input step="0.01" placeholder="<?php _l('price')?>(<?php echo model('user')->getUserCurrency()?>)"   formnovalidate="formnovalidate" type="number" class="form-control each-track-price"/>
+                            <?php if(config('admin-track-share', 10) > 0):?>
+                                <div class="text-muted" style="font-size: 10px;margin: 4px 0;">(<?php _l('track-profile_share-off', array('value' => config('admin-track-share', 10)))?>)</div>
+                            <?php endif?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="inputs">
+
+        </div>
+    </div>
+
+</div>

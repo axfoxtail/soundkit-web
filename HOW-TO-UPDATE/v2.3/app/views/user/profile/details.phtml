@@ -1,0 +1,4 @@
+<?php Hook::getInstance()->fire('user.profile.all.detail', null, array($user))?>
+<div class="track-list" data-type-id="<?php echo $user['id']?>" data-type="my-stream" data-offset="0">
+    <?php echo $C->view('track/placeholder')?>
+</div>

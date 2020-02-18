@@ -1,0 +1,82 @@
+<hr/>
+<h6><?php _l('video::videos')?></h6>
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('who-can-add-video')?></label>
+    <div class="col-sm-5">
+        <select name="val[can-add-video]">
+            <option <?php echo (config('can-add-video',1) == 1) ? 'selected' : null?> value="1"><?php _l('all')?></option>
+            <option <?php echo (config('can-add-video',1) == 2) ? 'selected' : null?> value="2"><?php _l('authors')?></option>
+            <option <?php echo (config('can-add-video',1) == 3) ? 'selected' : null?> value="3"><?php _l('pro-authors-only')?></option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('allow-video-sell')?></label>
+    <div class="col-sm-5">
+        <select name="val[allow-video-sell]">
+            <option <?php echo (config('allow-video-sell',1) == 0) ? 'selected' : null?> value="0"><?php _l('off')?></option>
+            <option <?php echo (config('allow-video-sell',1) == 1) ? 'selected' : null?> value="1"><?php _l('authors')?></option>
+            <option <?php echo (config('allow-video-sell',1) == 2) ? 'selected' : null?> value="2"><?php _l('pro-authors-only')?></option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-video-upload')?></label>
+    <div class="col-sm-5">
+        <input type="hidden" name="val[enable-video-upload]" value="0"/>
+        <div class="switch">
+            <input  id="cmn-toggle-enable-video-upload" value="1" name="val[enable-video-upload]" <?php echo (config('enable-video-upload', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+            <label for="cmn-toggle-enable-video-upload"></label>
+        </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-video-import')?></label>
+    <div class="col-sm-5">
+        <input type="hidden" name="val[enable-video-import]" value="0"/>
+        <div class="switch">
+            <input  id="cmn-toggle-enable-video-import" value="1" name="val[enable-video-import]" <?php echo (config('enable-video-import', false)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+            <label for="cmn-toggle-enable-video-import"></label>
+        </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('allow-play-before-purchase')?></label>
+    <div class="col-sm-5">
+        <input type="hidden" name="val[video-allow-play-before-buy]" value="0"/>
+        <div class="switch">
+            <input id="cmn-toggle-videoallow-play-before-buy" value="1" name="val[video-allow-play-before-buy]" <?php echo (config('video-allow-play-before-buy', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+            <label for="cmn-toggle-videoallow-play-before-buy"></label>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('allow-video-size')?>(MB)</label>
+    <div class="col-sm-5">
+        <input type="text"  name="val[video-file-size]" class="form-control form-control-sm"  value="<?php echo config('video-file-size', 55)?>">
+    </div>
+</div>
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('allow-video-format')?></label>
+    <div class="col-sm-5">
+        <input type="text"  name="val[video-file-types]" class="form-control form-control-sm"  value="<?php echo config('video-file-types', 'mp4,mov,wmv,3gp,avi,flv,f4v,webm')?>">
+        <small class="form-text text-muted"><?php _l('allow-video-format-help')?></small>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('youtube-api-key')?></label>
+    <div class="col-sm-5">
+        <input type="text"  name="val[youtube-api-key]" class="form-control form-control-sm"  value="<?php echo config('youtube-api-key', 'AIzaSyBTwxpmr5EraHyEolTDPiSx7axFS-0CE5s')?>">
+    </div>
+</div>
+
+
+

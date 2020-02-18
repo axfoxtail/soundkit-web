@@ -1,0 +1,38 @@
+    <div class="each-inline-track track-mini-inline track track-hover-display-container each-track-<?php echo $track['id']?> track-<?php echo $track['id']?>" id="track-<?php echo $track['id']?>">
+    <?php
+    $user = $C->model('user')->getUser($track['userid']);
+    ?>
+        <a href=""
+           data-id="<?php echo $track['id']?>"
+           data-art="<?php echo $C->model('track')->getArt($track)?>"
+           data-title="<?php echo str_limit( $track['title'], 50)?>"
+           data-link="<?php echo url('track/'.$track['id'])?>"
+           data-owner="<?php echo $user['full_name']?>"
+           data-type="<?php echo $type?>"
+           data-typeid="<?php echo $typeId?>"
+           data-owner-link="<?php echo $C->model('user')->profileUrl($user)?>"
+           data-wave="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave'] : '' ?>"
+           data-wave-colored="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave_colored'] : '' ?>"
+           class=" play-button track-play-button-<?php echo $track['id']?>" id="track-play-button-<?php echo $track['id']?>" >
+
+            <div class="art" style="background-image: url(<?php echo $C->model('track')->getArt($track)?>);">
+
+            </div>
+            <div class="content">
+
+                <h6 class="title">
+                                    <span class="title-info">
+
+                                        <b><?php Hook::getInstance()->fire('track.album.mini.list', null, array($track))?>
+                                            <?php echo format_output_text($user['full_name'])?> - <?php echo format_output_text(str_limit($track['title'], 100))?></b>
+                                    </span>
+                </h6>
+
+            </div>
+        </a>
+        <div class="play-control" data-wave="">
+            <div class="play-controls">
+
+            </div>
+        </div>
+</div>

@@ -1,0 +1,44 @@
+<?php $playlists = $C->model('track')->listPlaylists($type, $typeId, 20)?>
+<?php if(count($playlists) < 1):?>
+    <div class="empty-content">
+        <?php if($type == 'album'):?>
+            <i class="fa fa-list-alt"></i>
+            <span><?php _l('no-albums-display')?></span>
+        <?php elseif($type == 'playlist'):?>
+            <i class="fa fa-list-alt"></i>
+            <span><?php _l('no-playlist-display')?></span>
+        <?php endif?>
+    </div>
+<?php else:?>
+
+    <div
+            data-paginate-url="playlist/paginate"
+            data-offset="0"
+            data-param="<?php echo perfectSerialize(array('type' => $type, 'typeId' => $typeId, 'limit' => 20))?>"
+            class="playlists-container grid-container clearfix"
+            id="playlists-<?php echo $type?>-<?php echo $typeId?>">
+
+
+
+        <?php foreach($playlists as $playlist):?>
+            <?php
+            $allowOwner = false;
+            if (preg_match('#profile-#', $typeId)) $allowOwner = true;
+            $canDisplay = model('track')->displayItem($playlist, $allowOwner);
+            ?>
+            <?php if($canDisplay):?>
+                <?php echo $C->view('playlist/display', array('playlist' => $playlist))?>
+                <?php endif?>
+        <?php endforeach;?>
+
+        <?php if(count($playlists) >19):?>
+            <div class="load-more-button-container" id="playlists-<?php echo $type?>-<?php echo $typeId?>-load-more-container">
+                <a href=""
+                   data-size="s" data-style="zoom-in"
+                   class="load-more-button  btn btn-outline-dark btn-sm ladda-button"
+                   data-container="playlists-<?php echo $type?>-<?php echo $typeId?>"
+                   id="playlists-<?php echo $type?>-<?php echo $typeId?>-loadmore-button"><?php _l('load-more')?></a>
+            </div>
+        <?php endif?>
+    </div>
+<?php endif?>

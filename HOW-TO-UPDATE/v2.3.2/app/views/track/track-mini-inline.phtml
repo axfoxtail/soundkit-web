@@ -1,0 +1,32 @@
+<div class="each-inline-track track-mini-inline track-hover-display-container each-track-<?php echo $track['id']?> track-<?php echo $track['id']?>" id="track-<?php echo $track['id']?>">
+    <?php
+    $user = $C->model('user')->getUser($track['userid']);
+    ?>
+    <div class="art" style="background-image: url(<?php echo $C->model('track')->getArt($track)?>);">
+        <div class="track-hover-display">
+
+        </div>
+    </div>
+    <div class="track-content">
+        <div class="clearfix">
+            <div class="float-left" style="width: 75%">
+                <div class="media">
+                    <div class="track-position mr-3"><?php echo $offset + 1?></div>
+                    <div class="media-body">
+                         <span class="title-info">
+                             <a data-ajax="true" class="user-link "  data-id="<?php echo $user['id']?>"  href="<?php echo $C->model('user')->profileUrl($user)?>">
+                                 <?php echo format_output_text($user['full_name'])?>
+                                 <?php echo $C->view('user/badge', array('userid'=> $user['id']))?>
+                             </a>
+                        </span>
+                        <h6 class="media-heading">
+                            <a data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track,$track['id'])?>">
+                                <?php echo format_output_text(str_limit($track['title'], 100))?>
+                            </a>
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

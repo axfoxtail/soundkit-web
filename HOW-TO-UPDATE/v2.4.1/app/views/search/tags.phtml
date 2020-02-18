@@ -1,0 +1,16 @@
+<div class="card-list mt-3 ">
+    <div class="clearfix title">
+        <div class="float-left">
+            <div class="">
+                <?php _l('trending-tags')?>
+            </div>
+        </div>
+    </div>
+
+    <div class="list people-list-container">
+        <?php foreach($C->model('track')->getTrendingTags() as $tag):$tag['title'] = str_replace('#','',$tag['title'])?>
+            <a style="display: inline-block;margin: 7px 10px;font-size: 15px;" href="<?php echo url('search', array('term' => $tag['title']))?>" data-ajax="true">#<?php echo $tag['title']?></a>
+        <?php endforeach;?>
+    </div>
+
+</div>

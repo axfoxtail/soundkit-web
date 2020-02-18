@@ -1,0 +1,97 @@
+<div style="position:relative;">
+    <form data-upload="#trackUploadProgress" enctype="multipart/form-data" action="<?php echo getFullUrl(true)?>" method="post" class="general-form">
+        <div class="inner-container mt-3" style="">
+
+            <div id="video-form-container" class="">
+                <div class="row ">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label><?php _l('video-title')?></label>
+                            <input type="text" name="val[title]" value="<?php echo $video['title']?>"  class="form-control video-title"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php _l('video-description')?></label>
+                            <textarea name="val[desc]" rows="5" class="form-control video-description"><?php echo $video['description']?></textarea>
+                        </div>
+
+
+
+                        <div class="form-group ">
+                            <label><?php _l('genre')?></label>
+                            <select data-ui-select="true" class=" select-input" name="val[genre]">
+                                <?php foreach ($C->model('admin')->getGenres() as $genre):?>
+                                    <option <?php echo ($video['genre'] == $genre['id']) ? 'selected' : null?> value="<?php echo $genre['id']?>"><?php echo $genre['name']?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </div>
+
+                        <?php if($video['upload_file'] and model('video::video')->canSell()):?>
+                            <div class="form-group">
+                                <label><?php _l('price')?></label>
+                                <input step="0.01" value="<?php echo $video['price']?>" type="number" autocomplete="off"  name="val[price]" class=" form-control" >
+                            </div>
+                        <?php endif?>
+
+                        <div class="form-group">
+                            <label><?php _l('tags')?></label>
+                            <input autocomplete="off" type="text" name="val[tags]" value="<?php echo $video['tags']?>" class=" input-tags video-tags" >
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php _l('link-to-your-track')?></label>
+                            <select name="val[track_id]"  data-url="track/track-tags" class="trackinput input-tags-fetch">
+                                <?php if($video['track_id']): $track = model('track')->findTrack($video['track_id']);if($track):?>
+                                    <option selected value="<?php echo $track['id']?>"><?php echo $track['title']?></option>
+                                <?php endif;endif?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php _l('privacy')?></label>
+                            <select name="val[privacy]" class="form-control">
+                                <option <?php echo ($video['public'] == 1) ? 'selected' : null?> value="1"><?php _l('public')?></option>
+                                <option <?php echo ($video['public'] == 2) ? 'selected' : null?> value="2"><?php _l('private')?></option>
+                            </select>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="avatar-placeholder mt-4" style="width: 100%;height:170px;border-style:dashed">
+                            <div id="songAvatar" style="<?php echo ($video['art']) ? 'background-image:url('.model('video::video')->getArt($video).');display:block' : null?>"></div>
+                            <i class="la la-photo"></i>
+                        </div>
+
+                        <div class="input-picker mb-3">
+                            <button class="btn btn-secondary btn-sm btn-block round-sm"><?php _l('select-image')?></button>
+                            <input id="songAvatar-input"  data-placeholder="#songAvatar" onchange="validate_file_size(this, 'image')" type="file" name="img"/>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-6 col-form-label"><?php _l('enable-comments')?></label>
+                            <div class="col-sm-6">
+                                <input type="hidden" name="val[comments]" value="0"/>
+                                <div class="switch">
+                                    <input id="cmn-toggle-comments" <?php echo ($video['comments'] == 1) ? 'checked' : null?> value="1" name="val[comments]"  checked class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                    <label for="cmn-toggle-comments"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="progress mt-1 hide" id="trackUploadProgress" style="margin: 7px 0; height:2px;">
+                    <div class="progress-bar" role="progressbar" style="width: 0%;background:#FF533E;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <button class="btn btn-primary round-sm" type="submit"><?php _l('save-video')?></button>
+                <a class="btn btn-danger round-sm float-right confirm" data-ajax-action="true" href="<?php echo model('video::video')->videoUrl($video, '/delete')?>"><?php _l('delete-video')?></a>
+            </div>
+
+        </div>
+
+
+    </form>
+</div>

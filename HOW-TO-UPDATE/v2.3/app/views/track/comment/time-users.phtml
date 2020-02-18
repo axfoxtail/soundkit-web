@@ -1,0 +1,12 @@
+<?php foreach($comments as $comment): $user = $C->model('user')->getUser($comment['userid']);$track = $C->model('track')->findTrack($comment['typeid'])?>
+    <?php
+        $left  = ($track['track_duration']) ? round(($comment['track_at'] * 100) / $track['track_duration']) : 0;
+    ?>
+    <a
+
+        onclick="return reply_time_comment('<?php echo $track['id']?>','<?php echo $user['username']?>','<?php echo $comment['id']?>', '<?php echo $comment['track_at']?>')"
+        title="<a data-ajax='true' class='colored' href='<?php echo $C->model('user')->profileUrl($user)?>'><?php echo $user['full_name']?></a>
+        <span style='color:grey;font-size:11px'><?php echo $C->model('track')->formatDuration($comment['track_at'])?></span> - <?php echo str_limit($comment['message'], 50)?>"  href="javascript:void(0)" class="mtitle-light time-comment-<?php echo $left?>-<?php echo $track['id']?>" style="left:<?php echo $left?>% !important;">
+        <img src="<?php echo $C->model('user')->getAvatar($user)?>"/>
+    </a>
+<?php endforeach?>

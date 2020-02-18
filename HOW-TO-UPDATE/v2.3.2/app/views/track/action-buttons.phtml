@@ -1,0 +1,48 @@
+<?php
+$actionType = 'track';
+$actionId = $track['id'];
+$repostAction = "repost-track";
+?>
+<div class="actions-container dropdown">
+    <button <?php echo ($track['public'] == 3) ? 'disabled':null?> data-toggle="tooltip" title="<?php _l('like')?>" class="btn like-button-<?php echo $actionType?>-<?php echo $actionId?> ajax-action <?php echo ($C->model('track')->hasLiked($actionType, $actionId)) ? 'liked' : null?>" href="<?php echo url('like/item', array('type' => $actionType, 'type_id' => $actionId))?>"><i class="la la-heart"></i></button>
+    <?php if((isset($playlist) and $playlist['userid'] != $C->model('user')->authId) or ($track['userid'] != $C->model('user')->authId)):?>
+        <?php $hasReposted = $C->model('track')->hasReposted($actionId, (isset($playlist)) ? $playlist['id'] : 0, $repostAction)?>
+        <a
+            <?php echo ($track['public'] == 3) ? 'disabled':null?>
+                data-toggle="tooltip" title="<?php echo ($hasReposted) ? l('remove-repost') : l('repost')?>"
+                href="<?php echo url('repost/item', array('action' => $repostAction, 'track' => $track['id'], 'playlist_id' => (isset($track['playlist_id']) and $track['playlist_id']) ? $track['playlist_id']: 0))?>"
+                class="btn ajax-action repost-button-<?php echo $actionType?>-<?php echo $actionId?> <?php echo $hasReposted ? 'reposted' : null?>">
+            <i class="la la-retweet <?php echo ($hasReposted) ? 'colored' : null?>"></i>
+        </a>
+    <?php endif?>
+
+    <?php if($track['embed']  and $track['public'] != 2):?>
+        <button <?php echo ($track['public'] == 3) ? 'disabled':null?>
+                onclick="return share(<?php echo $track['id']?>, 'track')"
+                data-toggle="tooltip" title="<?php _l('share')?>" class="btn "><i class="la la-external-link"></i></button>
+    <?php endif?>
+    <?php if($track['public'] == 2):?>
+        <button class="btn colored-bg mtitle" title="<?php _l('private-track-only-you')?>" style="color: #ffffff;"><i class="la la-lock"></i></button>
+    <?php endif?>
+    <?php if(model('track')->canDownload($track)):?>
+        <a onclick="addDownload(<?php echo $track['id']?>)" class="btn" href="<?php echo model('track')->getDownloadUrl($track)?>" download>
+            <i class="la la-cloud-download"></i>
+        </a>
+    <?php endif?>
+    <button class="btn dropdown-toggle no-caret" data-toggle="dropdown"><i class="fa  fa-ellipsis-h"></i></button>
+    <div class="dropdown-menu  mt-2" style="width: 200px;" aria-labelledby="dropdownMenuButton">
+        <a <?php echo ($track['public'] == 3) ? 'disabled':null?> class="dropdown-item <?php echo ($track['public'] == 3) ? 'disabled':null?>" href="#" onclick="return changePlaylistModal('.playlists', <?php echo $actionId?>)"><i class="la la-plus-circle"></i> <?php _l('add-to-playlist')?></a>
+        <a <?php echo ($track['public'] == 3) ? 'disabled':null?> class="dropdown-item ajax-action track-later <?php echo ($track['public'] == 3) ? 'disabled':null?>" href="<?php echo url('track/add/later', array('track' => $actionId))?>"  ><i class="la la-music"></i> <span><?php echo ($C->model('track')->existInLater($actionId)) ? l('remove-listen-later') : l('listen-later')?></span></a>
+        <?php if(model('track')->canDownload($track)):?>
+            <div class="dropdown-divider"></div>
+            <a onclick="addDownload(<?php echo $track['id']?>)" class="dropdown-item" href="<?php echo model('track')->getDownloadUrl($track)?>"  download>
+                <i class="la la-cloud-download"></i>
+                <?php _l('download-track')?></a>
+        <?php endif?>
+        <div class="dropdown-divider"></div>
+        <?php if($track['userid'] != $C->model('user')->authId):?>
+            <a onclick="return showReportTrack(<?php echo $actionId?>)" class="dropdown-item <?php echo ($track['public'] == 3) ? 'disabled':null?>" href="#"><i class="fa fa-flag"></i> <?php _l('report-copyright-infringment')?></a>
+        <?php endif?>
+        <a class="dropdown-item" data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track,$actionId)?>"><i class="la la-eye"></i> <?php _l('go-to-track')?></a>
+    </div>
+</div>

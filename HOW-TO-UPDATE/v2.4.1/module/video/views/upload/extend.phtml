@@ -1,0 +1,21 @@
+<?php if(model('video::video')->canAddVideo()):?>
+    <?php if(config('enable-video-upload', true)):?>
+        <div class="col-md-4">
+            <a href="<?php echo ($C->request->input('id')) ? url('videos/upload', array('id' => $C->request->input('id'))) : url('videos/upload')?>" data-ajax="true" class="each">
+                <i class="la la-film colored"></i>
+                <h6><?php _l('video')?></h6>
+
+            </a>
+        </div>
+    <?php endif?>
+
+    <?php if(config('enable-video-import', true)):?>
+        <div class="col-md-4">
+            <a  href="<?php echo ($C->request->input('id')) ? url('videos/import', array('id' => $C->request->input('id'))) : url('videos/import')?>" data-ajax="true" class="each">
+                <i class="fa fa-cloud-download colored"></i>
+                <h6><?php _l('import-video')?></h6>
+
+            </a>
+        </div>
+    <?php endif?>
+<?php endif?>

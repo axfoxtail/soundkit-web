@@ -1,0 +1,51 @@
+<div class="profile-menu">
+    <div class="inner-container">
+        <div class="clearfix">
+            <div class="float-left">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($page == 'overview') ? 'active': null?>" data-ajax="true"  href="<?php echo url('discover')?>" ><?php _l('overview')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($page == 'latest') ? 'active': null?>" data-ajax="true"  href="<?php echo url('discover/latest')?>" ><?php _l('latest-tracks')?></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a data-toggle="dropdown" class="nav-link dropdown-toggle <?php echo ($page == 'genre') ? 'active': null?>" href="#" ><?php _l('genre')?></a>
+                        <div class="dropdown-menu">
+                            <?php foreach($C->model('admin')->getGenres() as $dgenre):?>
+                                <a data-ajax="true" href="<?php echo url('discover/genre/'.$dgenre['id'].'-'.toAscii($dgenre['name']))?>" style="font-weight: normal;" class="dropdown-item"><?php echo l($dgenre['name'])?></a>
+                            <?php endforeach;?>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($page == 'artists') ? 'active': null?>" data-ajax="true"  href="<?php echo url('discover/artists')?>" ><?php _l('artists')?></a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($page == 'playlists') ? 'active': null?>" data-ajax="true"  href="<?php echo url('discover/playlists')?>" ><?php _l('playlists')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($page == 'albums') ? 'active': null?>" data-ajax="true"  href="<?php echo url('discover/albums')?>" ><?php _l('albums')?></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="inner-container">
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <?php echo config('ad-unit1')?>
+            <?php Hook::getInstance()->fire('global.top')?>
+            <?php echo $content?>
+        </div>
+        <div class="col-md-4">
+            <?php echo $C->view('search/tags')?>
+
+            <?php echo $C->view('home/general-right', array('completion' => false))?>
+        </div>
+
+
+    </div>
+</div>

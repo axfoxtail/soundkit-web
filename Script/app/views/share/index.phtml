@@ -1,0 +1,139 @@
+<div class="share-container">
+    <ul class="nav nav-tabs exception" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#share" role="tab" aria-controls="general" aria-selected="true"><?php _l('share')?></a>
+        </li>
+
+        <?php if($type == 'track' or $type == 'playlist'):?>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#embed" role="tab" aria-controls="metadata" aria-selected="false"><?php _l('embed')?></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#message" role="tab" aria-controls="permissions" aria-selected="true"><?php _l('message')?></a>
+            </li>
+        <?php endif?>
+    </ul>
+
+    <div class="tab-content" id="myTabContent" style="">
+        <div class="tab-pane fade show active" id="share" role="tabpanel" aria-labelledby="share-tab">
+            <h6 class="mt-2"><?php _l('share-on-social-networks')?></h6>
+            <?php
+                $title = '';
+                $link = '';
+                $art = '';
+            $defaultEmbedUrl = '';
+                if ($type == 'track') {
+                    $track  = $C->model('track')->findTrack($id);
+                    $title = $track['title'];
+                    $link = $C->model('track')->trackUrl($track);
+                    $art = $C->model('track')->getArt($track, 200);
+                    $defaultEmbedUrl = 'embed/track/'.$track['id'].'-'.toAscii($track['title']);
+                } elseif($type == 'playlist') {
+                    $playlist  = $C->model('track')->findPlaylist($id);
+                    $title = $playlist['name'];
+                    $link = $C->model('track')->playlistUrl($playlist);
+                    $art = $C->model('track')->getPlaylistArt($playlist, 200);
+                    $defaultEmbedUrl = 'embed/playlist/'.$playlist['id'].'-'.toAscii($playlist['name']);
+                } elseif($type == 'profile') {
+                    $user = $C->model('user')->getUser($id);
+                    $title = $user['full_name'];
+                    $link = $C->model('user')->profileUrl($user);
+                    $art = $C->model('user')->getAvatar($user);
+                } elseif($type == 'video') {
+                    $video = model('video::video')->find($id);
+                    $title = $video['title'];
+                    $link = model('video::video')->videoUrl($video);
+                    $art = model('video::video')->getArt($video);
+                } else {
+                    $shareDetails = Hook::getInstance()->fire('share.details', array(
+                            'title' => '',
+                        'link' => '',
+                        'art' => ''
+                    ), array($type, $id));
+                    $title = $shareDetails['title'];
+                    $link = $shareDetails['link'];
+                    $art = $shareDetails['art'];
+                }
+
+
+            ?>
+
+            <ul class="social-links">
+                <li><a class="facebook" onclick="return socialShare(1, '<?php echo $link?>','<?php echo str_replace("'",'',$title)?>','<?php echo $art?>')" href=""><i class="la la-facebook"></i></a> </li>
+                <li><a class="twitter" onclick="return socialShare(2, '<?php echo $link?>','<?php echo str_replace("'",'',$title)?>','<?php echo $art?>')" href=""><i class="la la-twitter"></i></a> </li>
+                <li><a class="google" onclick="return socialShare(3, '<?php echo $link?>','<?php echo str_replace("'",'',$title)?>','<?php echo $art?>')" href=""><i class="la la-google"></i></a> </li>
+                <li><a class="pinterest" onclick="return socialShare(4, '<?php echo $link?>','<?php echo str_replace("'",'',$title)?>','<?php echo $art?>')" href=""><i class="la la-pinterest"></i></a> </li>
+                <li><a class="mail" onclick="return socialShare(5, '<?php echo $link?>','<?php echo str_replace("'",'',$title)?>','<?php echo $art?>')" href=""><i class="la la-envelope"></i></a> </li>
+            </ul>
+
+            <h6 class="mt-3"><?php _l('share-url')?></h6>
+            <input type="text" readonly class="form-control" value="<?php echo $link?>"/>
+        </div>
+
+        <div class="tab-pane fade " id="embed" role="tabpanel" aria-labelledby="embed-tab">
+            <div class="embed-types row">
+                <div class="col-md-4" ><a href="" onclick="return changeEmbedType(this, '','<?php echo $type?>')" class="active"><i class="la la-square"></i> <?php _l('picture-widget')?></a> </div>
+                <div class="col-md-4"><a href="" onclick="return changeEmbedType(this, 'classic','<?php echo $type?>')"><i class="la la-th-large"></i> <?php _l('classic-widget')?></a> </div>
+                <div class="col-md-4">
+                    <?php if($C->model('user')->subscriptionActive()):?>
+                        <a href="" onclick="return changeEmbedType(this, 'mini','<?php echo $type?>')"><i class="la la-minus"></i> <?php _l('mini-widget')?></a>
+                    <?php else:?>
+                        <a href="javascript:void(0)" title="<?php _l('upgrade-to-mini-widget')?>" class="disabled mtitle-light" ><i class="la la-minus"></i> <?php _l('mini-widget')?></a>
+                    <?php endif?>
+                </div>
+            </div>
+
+            <hr/>
+            <?php
+                $height = ($type == 'track') ? 250 : 400;
+            ?>
+            <div class="preview-container hide-mobile-sm">
+                <iframe width="100%"
+                        height="<?php echo $height?>"
+                        frameborder="no"
+                        scrolling="no" src="<?php echo url($defaultEmbedUrl)?>"></iframe>
+            </div>
+
+
+            <h6><?php _l('code')?></h6>
+            <input id="embed-code" data-url="<?php echo $defaultEmbedUrl?>" data-type="<?php echo $type?>" data-id="<?php $id?>" type="text" readonly class="form-control mb-3"
+                   value='<iframe width="100%" height="300" frameborder="no" scrolling="no" src="<?php echo url($defaultEmbedUrl)?>"></iframe>'/>
+
+            <h6><?php _l('options')?></h6>
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('color')?></label>
+                <div class="col-sm-5">
+                    <div id="cp1" class="input-group colorpicker-component cp" data-color="#FF6138">
+                        <input onchange="updateEmbedPreview();" value="#FF6138" id="embed-color" type="text" class="form-control input-lg"/>
+                        <span class="input-group-addon"><i></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('auto-play')?></label>
+                <div class="col-sm-5">
+                    <div class="switch">
+                        <input onchange="updateEmbedPreview();" id="cmn-toggle-s3" class="cmn-toggle cmn-toggle-round-flat autoplay-checkbox" type="checkbox">
+                        <label for="cmn-toggle-s3"></label>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="tab-pane fade " id="message" role="tabpanel" aria-labelledby="message-tab">
+            <form action="<?php echo url('message/form')?>" class="general-form mt-4" method="post">
+                <div class="mb-3 alert alert-dark">
+                    <?php if($type == 'track'): ?>
+                        <?php _l('track')?> - <?php echo $track['title']?>
+                    <?php else:?>
+                        <?php _l('playlist')?> - <?php echo $playlist['name']?>
+                    <?php endif?>
+                </div>
+                <input type="hidden" name="val[modal]" value="#shareModal"/>
+                <?php echo $C->view('message/form', array('track' => ($type == 'track') ? $id : null, 'playlist' => ($type=='playlist') ? $id : null))?>
+            </form>
+        </div>
+    </div>
+</div>

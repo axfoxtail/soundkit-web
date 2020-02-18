@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap core CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700" rel="stylesheet">
+    <link href="<?php echo assetUrl('assets/css/plugin.css')?>?time=<?php echo fileatime(path('assets/css/plugin.css'))?>" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="<?php echo assetUrl('styles/main/css/main.css')?>?time=<?php echo fileatime(path('styles/main/css/main.css'))?>" rel="stylesheet">
+</head>
+<body>
+<div style="width:100%;max-width: 400px;margin:0 auto;padding:30px">
+    <?php echo $view?>
+</div>
+
+<script>
+    var baseUrl = '<?php echo url()?>';
+    var permaLink = <?php echo config('permalink', false) ? 1 : 0?>;
+    var isLoggedIn = <?php echo $C->model('user')->isLoggedIn() ? 'true' : 'false'?>;
+    var strings = {
+        are_your_sure: "<?php _l("are-you-sure")?>",
+        ok : "<?php _l("ok")?>",
+        close : "<?php _l("close")?>",
+        notImageError : "<?php echo l("not-image-error")." : ". config("image-file-types", "jpg,png,gif,jpeg")?>",
+        allowImageSizeError : "<?php echo l("image-size-error")." : ". config("image-file-size", 2)?>MB",
+        notAudioError : "<?php echo l("not-audio-error")." : ". config("audio-file-types", "mp3,m4a,mp4")?>",
+        allowAudioSizeError : "<?php echo l("audio-size-error")." : ". $C->model("user")->getTrackSize()?>MB",
+        notVideoError : "<?php echo l("not-video-error")?>",
+        allowVideoSizeError : "<?php echo l("video-size-error")." : ". config("video-file-size", 55)?>MB",
+        processing : "<?php _l("processing")?>",
+        trans_any_moment : "<?php _l("any_moment")?>",
+        trans_less_than_minute : "<?php _l("few-secs")?> <?php _l("ago")?>",
+        trans_about_minute : "1min <?php _l("ago")?>",
+        trans_about_minutes :"%dmin <?php _l("ago")?>",
+        trans_about_hour : "1h <?php _l("ago")?>",
+        trans_about_hours : "%d h <?php _l("ago")?>",
+        trans_a_day : "1d <?php _l("ago")?>",
+        trans_about_days : "%dd <?php _l("ago")?>",
+        trans_about_month :"1m <?php _l("ago")?>",
+        trans_about_months : "%dm <?php _l("ago")?>",
+        trans_about_year : "1y <?php _l("ago")?>",
+        trans_about_years : "%dy <?php _l("ago")?>",
+        you_have_new : "<?php _l("you-have-new")?>",
+        "notifications": "<?php _l("notifications")?>",
+        add_price : "<?php _l('add-price')?>",
+        custom_url : "<?php _l('custom-url')?>",
+        alphanum_only : "<?php _l('alphanum_only')?>"
+        <?php Hook::getInstance()->fire("js.translation")?>
+    };
+    var supportImagesType = "<?php echo config("image-file-types", "jpg,png,gif,jpeg")?>";
+    var supportAudioType = "<?php echo config("audio-file-types", "mp3,m4a,mp4")?>";
+    var supportVideoType = "<?php echo (config('ffmpeg-path', '') == '') ? 'mp4' : config('video-file-types', 'mp4,mov,wmv,3gp,avi,flv,f4v,webm')?>";
+    var allowPhotoSize = <?php echo config("image-file-size", 2) * 1024 * 1000?>;
+    var allowAudioSize = <?php echo $C->model("user")->getTrackSize() * 1024 * 1000?>;
+    var allowVideoSize = <?php echo config('video-file-size', 55) * 1024 * 1000?>;
+    var defaultVolume = <?php echo config("default-value", 80)?>;
+    var updateTime = <?php echo config("update-time",10000)?>;
+    var lastTime = <?php echo time()?>;
+    var siteTitle = "<?php echo config("site-title")?>";
+    var stripeKey = "<?php echo config("stripe-publishable-key", "")?>";
+    var siteLogo = "<?php echo assetUrl(config("site_logo", "assets/images/logo.png"))?>";
+    var settingswaveColor = "<?php echo config('main-wave_color','#0F0710')?>";
+    var settingswaveColored = "<?php echo config('main-wave_colored','#FF5533')?>";
+    var playloop = true;
+    var currency = "<?php echo config('currency','USD')?>";
+</script>
+<script src="<?php echo assetUrl('assets/js/plugin.js')?>?time=<?php echo fileatime(path('assets/js/plugin.js'))?>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/0.0.11/push.min.js"></script>
+<script src="<?php echo assetUrl('styles/main/js/main.js')?>?time=<?php echo fileatime(path('styles/main/js/main.js'))?>"></script>
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<script>
+    <?php echo config('custom-js','')?>
+</script>
+</body>
+</html>

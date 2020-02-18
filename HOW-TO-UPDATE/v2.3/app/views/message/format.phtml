@@ -1,0 +1,59 @@
+<div class="each-chat clearfix">
+    <?php if($message['id'] == $C->model('user')->authId):?>
+        <div class="media float-right" style="width:100%">
+
+            <div class="media-body clearfix">
+                <div>
+                    <span class="text float-right"><?php echo $message['message']?></span>
+                </div>
+                <?php if($message['trackid'] or $message['playlistid']):?>
+                    <div class="chat-embed float-right">
+                        <?php if($message['trackid']): $track = $C->model('track')->findTrack($message['trackid'])?>
+                            <?php echo $C->view('track/track', array('track' => $track, 'type' => '', 'typeId' => ''))?>
+                        <?php else: $track = $C->model('track')->getPlaylistFirstTrack($message['playlistid']); $track['playlist_id'] = $message['playlistid']?>
+                            <?php echo $C->view('track/track', array('track' => $track, 'type' => '', 'typeId' => ''))?>
+                        <?php endif?>
+                    </div>
+                <?php endif?>
+                <div class="">
+                    <span class="float-right">
+                       <span class="timeago " title="<?php echo date('c', $message['chattime']) ?>"><?php echo date('c', $message['chattime']) ?></span>
+                        <?php if($message['is_read']):?>
+                            <span class="mtitle" title="<?php _l('seen')?>">
+                                <i class="la la-check" style="font-size: 11px;"></i>
+                            <i class="la la-check" style="font-size: 11px;position: relative;left: -10px;display: inline-block;"></i>
+                            </span>
+                        <?php else:?>
+                            <i class="la la-check mtitle" title="<?php echo _l('sent')?>" style="color: lightgray;font-size: 11px;"></i>
+                        <?php endif?>
+                    </span>
+
+                </div>
+            </div>
+            <div class="avatar mt-1" style="background-image: url(<?php echo $C->model('user')->getAvatar($message, 75)?>);"></div>
+        </div>
+    <?php else:?>
+        <?php $C->model('message')->markSeen($message['chatid'])?>
+        <div class="media float-left">
+            <div class="avatar mt-1" style="background-image: url(<?php echo $C->model('user')->getAvatar($message, 75)?>);"></div>
+            <div class="media-body clearfix">
+                <div>
+                    <span class="text colored-bg float-left"><?php echo $message['message']?></span>
+                </div>
+                <?php if($message['trackid'] or $message['playlistid']):?>
+                    <div class="chat-embed float-left">
+                        <?php if($message['trackid']): $track = $C->model('track')->findTrack($message['trackid'])?>
+                            <?php echo $C->view('track/track', array('track' => $track, 'type' => '', 'typeId' => ''))?>
+                        <?php else: $track = $C->model('track')->getPlaylistFirstTrack($message['playlistid']); $track['playlist_id'] = $message['playlistid']?>
+                            <?php echo $C->view('track/track', array('track' => $track, 'type' => '', 'typeId' => ''))?>
+                        <?php endif?>
+                    </div>
+                <?php endif?>
+                <div>
+                    <span class="timeago float-left" title="<?php echo date('c', $message['chattime']) ?>"><?php echo date('c', $message['chattime']) ?></span>
+
+                </div>
+            </div>
+        </div>
+    <?php endif?>
+</div>

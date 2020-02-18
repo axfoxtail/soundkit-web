@@ -1,0 +1,76 @@
+<div class="getstarted-header">
+    <div class="inner-container">
+        <div class="progress-container">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 0%;background-color: grey;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="float-left">
+                <a href="" class="btn disabled" id="getstarted-back" onclick="go_welcomePage(2)"><i class="la la  la-angle-left"></i><?php _l('back')?></a>
+            </div>
+
+            <div class="float-right">
+                <a href="<?php echo url()?>" class="btn"><?php _l('skip')?> <i class="la la  la-angle-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="inner-container" >
+
+    <div class="getstarted-content">
+        <div class="step-1 step">
+            <h1><?php _l('good-to-see-you')?></h1>
+
+            <span><?php _l('good-to-see-you-note')?></span>
+
+
+            <a href="" onclick="return go_welcomePage(2)" class="btn btn-primary round-sm pr-5 pl-5"><?php _l('start')?></a>
+        </div>
+        <div class="step-2 step" style="display: none;">
+            <div class="title">
+                <h1><?php _l('what-kind-music-like')?></h1>
+                <span><?php _l('what-kind-music-like-note')?></span>
+            </div>
+
+            <?php $colors = array(
+                '255,56,83',
+                '255,228,56',
+                '30,184,121',
+                '83,157,218',
+                '140,103,151',
+                '254,59,83',
+                '1,201,243',
+                '216,199,96'
+            );?>
+
+            <div class="clearfix mt-4 mb-4">
+                <?php foreach($C->model('admin')->getGenres() as $genre): $color = $colors[rand(0,7)];?>
+                    <div onclick="return select_genre(<?php echo $genre['id']?>)" class="each-genre each-genre-<?php echo $genre['id']?>" style="background-color:rgba(<?php echo $color?>,0.7)">
+                        <input type="checkbox" style="display: none;" name="genre[]" value="<?php echo $genre['id']?>"/>
+                        <span><?php echo $genre['name']?></span>
+
+                        <i class="la la-check"> </i>
+                    </div>
+                <?php endforeach;?>
+            </div>
+
+
+            <a href="" id="getstarted-step-2-btn" onclick="return go_welcomePage(3)" disabled class="btn btn-primary round-sm pr-5 pl-5 disabled mt-5 ml-1"><?php _l('continue')?></a>
+        </div>
+
+        <div class="step-3 step" style="display: none;">
+            <div class="title">
+                <h1><?php _l('like-any-of-this-artists')?></h1>
+            </div>
+
+            <div class="users-list-container clearfix" id="getstarted-users">
+
+            </div>
+
+            <a href="" id="getstarted-step-3-btn" onclick="return go_welcomePage(4)" disabled class="btn btn-primary round-sm pr-5 pl-5 disabled mt-3 ml-1"><?php _l('pick-5-finish')?></a>
+
+        </div>
+    </div>
+</div>

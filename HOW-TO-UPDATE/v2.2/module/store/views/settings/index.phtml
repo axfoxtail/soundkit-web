@@ -1,0 +1,27 @@
+<h5><?php _l('how-will-receive-payment')?></h5>
+<hr/>
+<form action="<?php echo getFullUrl(true)?>" method="post" class="general-form">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="form-group">
+                <label><?php _l('paypal')?></label>
+                <input type="email" name="val[paypal]" value="<?php echo (preg_match('#paypal-#', model('user')->authUser['payment_details']))? str_replace('paypal-','', model('user')->authUser['payment_details']) : null?>" class="form-control" placeholder="<?php _l('your-paypal-email')?>"/>
+            </div>
+
+            <?php if(config('bank-details', true)):?>
+                <h5><?php _l('or')?></h5>
+                <hr/>
+                <div class="form-group">
+                    <label><?php _l('bank-details')?></label>
+                    <textarea rows="5" name="val[bank-details]" class="form-control" placeholder="<?php _l('your-bank-details')?>"><?php echo (preg_match('#bank-#', model('user')->authUser['payment_details']))? str_replace('bank-','', model('user')->authUser['payment_details']) : null?></textarea>
+                </div>
+            <?php endif?>
+
+        </div>
+    </div>
+
+    <hr/>
+
+    <button data-size="s" data-style="zoom-in" class="btn btn-info  ladda-button mt-3" id="account-submit" type="submit"><?php _l('save')?></button>
+
+</form>

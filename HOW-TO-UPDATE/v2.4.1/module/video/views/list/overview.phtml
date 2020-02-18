@@ -1,0 +1,120 @@
+<?php $lastVideo = model('video::video')->lastVideo();?>
+<?php if($lastVideo):?>
+
+    <div class="inner-container mt-3">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="last-video-container">
+                    <div class="blur-container">
+                        <div class="blur" style="background-image: url(<?php echo model('video::video')->getArt($lastVideo, 600)?>)"></div>
+                    </div>
+                    <div class="inner-contain">
+                        <div class="thumbnail">
+                            <a data-ajax="true" style="display: block;color: #ffffff;width: 100%;" href="<?php echo model('video::video')->videoUrl($lastVideo)?>">
+
+                                <img src="<?php echo model('video::video')->getArt($lastVideo, 920)?>"/>
+
+                                <span class="icon"><i class=" fa-flash fa"></i></span>
+
+                                <div class="foot clearfix">
+                                    <div class="float-left">
+                                        <h4><?php echo $lastVideo['title']?></h4>
+                                        <?php $user = model('user')->getUser($lastVideo['userid'])?>
+                                        <div class="user media lists">
+                                            <div class="avatar" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 200)?>)"></div>
+                                            <div class="media-body">
+                                                <div class="clearfix">
+                                                    <div class="float-left">
+                                                        <h5 class="mt-2 media-heading">
+                                        <span >
+                                            <?php echo $user['full_name']?>
+                                            <?php echo $C->view('user/badge', array('userid'=> $user['id']))?>
+                                        </span></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="float-right  hide-mobile-sm">
+                                        <?php
+                                        $actionType = 'video';
+                                        $actionId = $lastVideo['id'];
+                                        ?>
+                                        <ul class="track-stats mt-3">
+                                            <?php $countLikes = $C->model('track')->countLikes($actionType, $actionId)?>
+                                            <li ><a href="javascript:void(0)"  class="like-count-<?php echo $actionType?>-<?php echo $actionId?>" style="<?php echo ($countLikes < 1) ? 'display:none': null?>"><i class="la la-heart-o"></i> <span><?php echo $countLikes?></span></a></li>
+                                            <li ><a  href=javascript:void(0)"" style=""><i class="la la-eye"></i> <span><?php echo $lastVideo['views']?></span></a></li>
+                                            <?php $countViews = $C->model('video::video')->countPlays($actionId)?>
+                                            <li ><a  href=javascript:void(0)"" style="<?php echo ($countViews < 1) ? 'display:none': null?>"><i class="la la-play"></i> <span><?php echo $countViews?></span></a></li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 hide-tablet" style="padding-left: 0;">
+                <div class="video-lists-overview-side">
+                    <?php foreach(model('video::video')->getVideos('latest', null, 1,3) as $video):?>
+                        <?php echo view('video::display/list', array('video' => $video))?>
+                    <?php endforeach;?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="inner-container mt-3">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="video-widget">
+                    <div class="title clearfix">
+                    <?php _l('latest-videos')?>
+                    </div>
+
+                    <div class="video-lists clearfix">
+                        <?php foreach(model('video::video')->getVideos('latest', null, 0,4) as $video):?>
+                            <?php echo view('video::display/list', array('video' => $video))?>
+                        <?php endforeach;?>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="video-widget">
+                    <div class="title"><?php _l('top-videos')?></div>
+                    <div class="video-lists clearfix">
+                        <?php foreach(model('video::video')->getVideos('top', null, 0,4) as $video):?>
+                            <?php echo view('video::display/list', array('video' => $video))?>
+                        <?php endforeach;?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <?php foreach ($C->model('admin')->getGenres() as $genre): $videos = model('video::video')->getVideos('category', $genre['id'], 0,10)?>
+            <?php if($videos):?>
+                <div class="video-widget video-inline-widget">
+                    <div class="title clearfix">
+                        <div class="float-left">
+                            <?php echo $genre['name']?> <?php _l('videos')?>
+                        </div>
+                        <div class="float-right">
+                            <a href="<?php echo url('videos/category/'.$genre['id'])?>" data-ajax="true" ><i class="la la-angle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="video-lists clearfix">
+                        <?php foreach($videos as $video):?>
+                            <?php echo view('video::display/list', array('video' => $video))?>
+                        <?php endforeach;?>
+                    </div>
+                </div>
+            <?php endif?>
+        <?php endforeach;?>
+    </div>
+<?php else:?>
+<?php endif?>

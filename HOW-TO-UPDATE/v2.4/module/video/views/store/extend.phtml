@@ -1,0 +1,19 @@
+<div class="store-title clearfix mt-4">
+    <div class="float-left">
+        <?php _l('new-videos')?>
+    </div>
+    <div class="float-right">
+        <a  href="<?php echo url('videos/latest', array('premium' => 1))?>" data-ajax="true"><?php _l('see-all')?> <i class="la la-chevron-right "></i></a>
+    </div>
+</div>
+
+<?php  $videos = model('video::video')->getVideos('latest', true, 0,10)?>
+    <?php if($videos):?>
+        <div class="video-widget video-inline-widget">
+            <div class="video-lists clearfix">
+                <?php foreach($videos as $video):?>
+                    <?php echo view('video::display/list', array('video' => $video))?>
+                <?php endforeach;?>
+            </div>
+        </div>
+    <?php endif?>

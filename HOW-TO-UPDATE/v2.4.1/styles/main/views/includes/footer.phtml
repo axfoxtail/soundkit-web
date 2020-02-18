@@ -1,0 +1,579 @@
+
+</div>
+<a href="" class="btn btn-primary scrollup-btn"><i class="la la-angle-up"></i></a>
+<div class="full-loader"></div>
+<div id="music-player" class="jp-jplayer"></div>
+<div id="sound-playlists">
+    <div class="playlist-header clearfix">
+        <div class="float-left">
+            <div class="title"><?php _l('next-up')?></div>
+        </div>
+        <div class="float-right">
+            <a href="" onclick="return toogleSoundPlaylist()"><i class="la la-times"></i></a>
+        </div>
+    </div>
+    <div class="sound-playlist-content">
+        <div class="content"></div>
+    </div>
+</div>
+<?php if(config('enable-gdpr', true)):?>
+    <div class="gdpr-container" data-animation="slideInLeft" data-animation-delay="400">
+        <div><?php _l('gdpr-text')?></div>
+        <div class="buttons mt-2">
+            <a href="" onclick="return acceptCookie()" class="btn btn-primary"><?php _l('got-it')?></a>
+        </div>
+    </div>
+<?php endif?>
+<div id="" class="jp-audio  sound-container sound-player">
+    <div class="player-lyrics-container colored">
+
+    </div>
+
+    <div class="sound-info-pane">
+        <div class="media detail">
+            <a href="" class="player-img-link" data-ajax="true">
+                <div class="mr-3 img" ></div>
+            </a>
+            <div class="media-body">
+                <h6 class="title" style="height: 15px;overflow: hidden;"><a data-ajax="true" id="title-link" href=""></a></h6>
+                <div class="player-track-buttons"></div>
+            </div>
+        </div>
+    </div>
+    <div class="the-content clearfix">
+
+        <div class="sound-left">
+            <div class="middle-content">
+                <ul class="nav">
+
+                    <li><a href="" onclick="return playprev()"><i class="fa fa-step-backward "></i></a></li>
+                    <li>
+                        <div class="play-icon music-play jp-play"><i class="fa fa-play "></i></div>
+                        <div class="play-icon music-pause jp-pause"><i class="la la-pause "></i></div>
+                    </li>
+                    <?php if(moduleExists('radio')):?>
+                        <li>
+                            <a data-toggle="tooltip" title="<?php _l('radio::current-listener')?>" href="" class="btn btn-sm btn-secondary round-sm player-radio-listener" style="position: relative;top:2px;width:40px;font-size:12px;color:white !important;height:25px;display:none"><i class="la la-headphones"></i> <span class=""></span> </a>
+                        </li>
+                    <?php endif?>
+
+                    <li>
+                        <a href="" class="btn btn-sm btn-primary round-sm hide skip-ads-button" onclick="return skipAds();" style="position: relative;top:2px;width:60px;font-size:12px;color:white !important;height:25px;display: none;">Skip ad</a>
+                    </li>
+                    <li><a href="" onclick="return playNext(true)"><i class="fa fa-step-forward "></i></a></li>
+
+                </ul>
+            </div>
+
+            <ul class="nav right-play-controls">
+                <li class="">
+                    <div class="jp-time-holder">
+                        <div class="jp-current-time hide"></div>
+                        <div class="jp-progress-container">
+                            <div class="jp-progress">
+                                <div class="jp-seek-bar">
+                                    <div class="jp-play-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="jp-duration hide"></div>
+                    </div>
+                </li>
+
+
+            </ul>
+        </div>
+    </div>
+    <div class=" sound-right">
+        <ul class="nav right-play-controls ">
+            <li class="hide-tablet">
+                <a href="" class="volume-btn mute jp-mute"><i class="la  la-volume-up"></i></a>
+                <a href="" class="volume-btn unmute jp-unmute"><i class="la  la-volume-off"></i></a>
+            </li>
+            <li class="hide-tablet">
+                <div class="progress jp-volume-bar" style="height: 4px;width:100px">
+                    <div class="progress-bar jp-volume-bar-value" role="progressbar"  aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </li>
+            <li class="tools-btn-container"><a data-toggle="tooltip" title="<?php _l('repeat-song')?>"  style="margin-right: 0;" href="" onclick="return repeatSongTrigger(this)" class="repeat-song-trigger tools-btn"><i class="la la-repeat "></i></a></li>
+            <li class="tools-btn-container"><a data-toggle="tooltip" title="<?php _l('shuffle')?>" style="margin-right: 0;" href="" onclick="return randomSongTrigger(this)" class=" tools-btn"><i class="la la-random "></i></a></li>
+            <li class="tools-btn-container"><a data-toggle="tooltip" title="<?php _l('speed')?>"  style="margin-right: 0;font-size:15px;position: relative;top:0px;font-weight: bold;" href="" onclick="return playerSpeedTrigger(this)" class="tools-btn hide-mobile">1x</a></li>
+            <li><a data-toggle="tooltip" class="tools-btn tools-btn-playlist" title="<?php _l('next-up')?>" href="" onclick="return toogleSoundPlaylist()"><i class="la la-indent "></i></a></li>
+
+        </ul>
+    </div>
+</div>
+
+<div id="seek-template" style="display: none;">
+    <div id="" class="jp-audio sound-player">
+        <div class="play-icon jp-play"><i class="fa fa-play "></i></div>
+        <div class="play-icon jp-pause"><i class="la la-pause "></i></div>
+        <div class="jp-progress">
+            <div class="jp-seek-bar">
+                <div class="jp-play-bar"></div>
+            </div>
+            <div class="jp-time-holder">
+                <div class="jp-current-time"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade smallModal" id="authModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <ul class="nav">
+                    <li class="active auth-login-title"><a onclick="return changeAuthModal('.login-form')" href=""><?php _l('log-in')?></a></li>
+                    <?php if(config('user-signup', true)):?>
+                        <li class="auth-signup-title"><a onclick="return changeAuthModal('.signup-form')" href=""><?php _l('sign-up')?></a></li>
+                    <?php endif?>
+                </ul>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="login-form">
+                    <form action="<?php echo url('login')?>" class="general-form" method="post">
+                        <?php if(config('enable-facebook', false)):?>
+                            <a href="<?php echo url('auth/facebook')?>" class="btn btn-block fb-button"><i class="la la-facebook-f"></i> <?php _l('login-with-facebook')?></a>
+                            <div class="content-line">
+                                <span><?php _l('or')?></span>
+                            </div>
+                        <?php endif?>
+
+
+
+                        <div class="form-group">
+                            <input name="val[username]" class="form-control " placeholder="<?php _l('username-email')?>"/>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="password" name="val[password]" class="form-control" placeholder="<?php _l('password')?>"/>
+                        </div>
+
+                        <button type="submit" data-style="zoom-in" data-size="s" class="btn btn-block btn-primary ladda-button" id="login-submit"><?php _l('login')?></button>
+                    </form>
+
+                    <p class="text-center mt-4">
+                        <?php _l('new-to')?> <strong class="colored"><?php echo config('site-title')?></strong> <a style="font-weight: 600;" onclick="return changeAuthModal('.signup-form')" href=""><?php _l('signup-here')?></a>
+                        <br/><br/>
+                        <?php _l('forgot-your-password')?> <a onclick="return changeAuthModal('.forgot-form')" href=""  style="font-weight: 600;"><?php _l('reset-here')?></a>
+                    </p>
+                </div>
+
+                <div class="forgot-form">
+                    <form action="<?php echo url('forgot')?>" class="general-form" method="post">
+
+
+                        <div class="form-group">
+                            <input name="email" class="form-control " placeholder="<?php _l('username-email')?>"/>
+                        </div>
+
+                        <button type="submit" data-style="zoom-in" data-size="s" class="btn btn-block btn-primary ladda-button" id="forgot-submit"><?php _l('reset-password')?></button>
+                    </form>
+
+                </div>
+
+                <?php if(config('user-signup', true)):?>
+                <div class="signup-form" style="display: none;">
+                    <form action="<?php echo url('signup')?>" class="general-form" method="post">
+                        <?php if(config('enable-facebook', false)):?>
+
+                            <a href="<?php echo url('auth/facebook')?>" class="btn btn-block fb-button"><i class="la la-facebook-f"></i> <?php _l('login-with-facebook')?></a>
+                            <div class="content-line">
+                                <span><?php _l('or')?></span>
+                            </div>
+                        <?php endif?>
+
+
+                        <div class="form-group">
+                            <input type="text" name="val[full_name]" class="form-control " placeholder="<?php _l('full_name')?>"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="val[username]" class="form-control " placeholder="<?php _l('username')?>"/>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="email" name="val[email]" class="form-control " placeholder="<?php _l('email_address')?>"/>
+                        </div>
+
+                        <div class="form-group">
+                            <input name="val[password]" type="password" class="form-control" placeholder="<?php _l('password')?>"/>
+                        </div>
+                        <?php Hook::getInstance()->fire('user.signup.form')?>
+                        <?php if(config('user-signup-artist', true)):?>
+                            <label class="custom-control custom-checkbox">
+                                <input name="val[artist]"  value="1" type="checkbox" class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description mt-1"><?php _l('i-am-artist')?></span>
+                            </label>
+                        <?php endif?>
+
+                        <?php if(config('enable-captcha', true)):?>
+                            <div class="captch-form mb-4">
+                                <div class="clearfix mb-3">
+                                    <img class="float-left" style="width: 80%;" id="captcha" src="<?php echo assetUrl('captcha/securimage_show.php')?>" alt="CAPTCHA Image" />
+                                    <a class="float-right" style="font-size: 20px;" href="#" onclick="document.getElementById('captcha').src = '<?php echo assetUrl('captcha/securimage_show.php')?>?' + Math.random(); return false">
+                                        <i class="la  la-refresh"></i>
+                                    </a>
+                                </div>
+                                <input type="text" autocomplete="off" placeholder="<?php _l('enter-captcha-code')?>" class="form-control" name="captcha"/>
+                            </div>
+                        <?php endif?>
+                        <button type="submit" data-size="s" data-style="zoom-in" class="btn btn-block btn-primary ladda-button" id="signup-submit"><?php _l('submit')?></button>
+                    </form>
+
+                    <p class="text-center mt-4">
+                        <?php _l('already-a-member')?>  <a onclick="return changeAuthModal('.login-form')" style="font-weight: 600;" href=""><?php _l('login-here')?></a>
+                    </p>
+                </div>
+                <?php endif?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade smallModal" id="playlistModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <ul class="nav">
+                    <li class="active playlist-title"><a onclick="return changePlaylistModal('.playlists')" href=""><?php _l('playlist')?> / <?php _l('album')?></a></li>
+                    <li class="add-playlist-title"><a onclick="return changePlaylistModal('.add-playlist')" href=""><?php echo str_limit(l('add-playlist'), 13)?></a></li>
+                </ul>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="playlists">
+
+                </div>
+
+                <div class="add-playlist" style="display: none;">
+                    <form action="<?php echo url('playlist/add')?>" class="general-form" method="post">
+                        <input type="hidden" name="val[id]" id="add-playlist-id"/>
+                        <div class="form-group">
+                            <input type="text" name="val[title]" class="form-control " placeholder="<?php _l('title')?>"/>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="val[desc]" class="form-control" placeholder="<?php _l('description')?>"></textarea>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col">
+                                <label><?php _l('public')?></label>
+
+                                <input type="hidden" name="val[public]" value="0"/>
+                                <div class="switch">
+                                    <input id="cmn-toggle-premium" value="1" name="val[public]" checked class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                    <label for="cmn-toggle-premium"></label>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <button type="submit" data-size="s" data-style="zoom-in" class="mt-4 btn  btn-primary ladda-button" id="playlist-submit"><?php _l('save')?></button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="reportTrack" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form action="<?php echo url('report/track')?>" method="post" class="general-form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><?php _l('report-track')?></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="val[id]" value="" id="report-track"/>
+                    <div class="form-group">
+                        <label><?php _l('description')?></label>
+                        <textarea rows="5" name="val[description]" class="form-control"></textarea>
+                        <div class="text-muted mt-3"><?php _l('report-details-note')?></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" name="val[good]" value="1" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description"><?php _l('report-good-faith')?></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" name="val[info]" value="1" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description"><?php _l('report-info-correct')?></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" name="val[us]" value="1" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description"><?php _l('us-report-confirm')?></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" type="submit" id="reportbutton" data-size="s" data-style="zoom-in" class="ladda-button btn btn-primary"><?php _l('send-report')?></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="bankTransferModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form action="<?php echo url('payment/bank/transfer')?>" method="post" enctype="multipart/form-data" class="general-form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><?php _l('bank-transfer')?></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="val[price]" value="" id="transfer-price"/>
+                    <input type="hidden" name="val[type]" value="" id="transfer-type"/>
+                    <input type="hidden" name="val[typeid]" value="" id="transfer-typeid"/>
+
+                    <div class="bank-details-container">
+                        <h3><?php echo config('bank-name')?></h3>
+
+                        <h5><strong><?php echo config('bank-acc-number')?></strong></h5>
+                        <h6><?php _l('account-number')?></h6>
+
+                        <h5><strong><?php echo config('bank-acc-name')?></strong></h5>
+                        <h6><?php _l('account-name')?></h6>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><strong><?php echo config('bank-routing-code')?></strong></h5>
+                                <h6><?php _l('routing-code')?></h6>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h5><strong><?php echo config('bank-country')?></strong></h5>
+                                <h6><?php _l('bank-country')?></h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 mb-2" style="font-weight: bold">
+                        <?php _l('bank-transfer-note')?>
+                    </div>
+
+                    <div class="track-selector video-selector pb-4">
+                        <i class="fa fa-image"></i>
+                        <h5><?php _l('drag-drop-receipt-file')?></h5>
+                        <span class="mb-4"><?php _l('select-receipt-note')?></span>
+                        <input required  onchange="validate_file_size(this, 'image')" class="" type="file" name="file"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" type="submit" id="bankbutton" data-size="s" data-style="zoom-in" class="ladda-button btn round-sm btn-primary"><?php _l('submit-receipt')?></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="editPlaylistModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <form action="<?php echo url('load/playlist/form')?>" method="post" class="general-form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><?php _l('edit-playlist')?></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" type="submit" id="playlistsavebutton" data-size="s" data-style="zoom-in" class="ladda-button btn btn-primary"><?php _l('save')?></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php Hook::getInstance()->fire("footer.extend")?>
+
+<div class="modal" id="keyboard-shorts-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><?php _l('keyboard-shortcuts')?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center" style="border-top:none">
+                    <?php _l('play-pause-song')?>
+                   <h5> <span class="badge badge-secondary badge-pill"><?php _l('space-bar')?></span></h5>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <?php _l('next-song')?>
+                    <h5><span class="badge badge-secondary badge-pill"><?php _l('arrow-right')?></span></h5>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <?php _l('previous-song')?>
+                    <h5><span class="badge badge-secondary badge-pill"><?php _l('arrow-left')?></span></h5>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <?php _l('mute-unmute-song')?>
+                    <h5><span class="badge badge-secondary badge-pill">M</span></h5>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <?php _l('repeat-song')?>
+                    <h5><span class="badge badge-secondary badge-pill">R</span></h5>
+                </li>
+            </ul>
+            <div class="modal-footer" style="border-top:none">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="paymentMethodModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="loader"><?php _l('please-wait')?>....</div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><?php _l('payment-method')?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="shareModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="messageModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><?php _l('send-message')?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="<?php echo url('message/form')?>" class="general-form" method="post">
+                <input type="hidden" name="val[modal]" value="#messageModal"/>
+                <div class="modal-body">
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="popover-default" class="hide" ><?php _l('loading')?>....</div>
+<script>
+    var baseUrl = '<?php echo url()?>';
+    var permaLink = <?php echo config('permalink', false) ? 1 : 0?>;
+    var isLoggedIn = <?php echo $C->model('user')->isLoggedIn() ? 'true' : 'false'?>;
+    var loaderImage = '<?php echo assetUrl('assets/images/loading.gif')?>';
+    var strings = {
+        are_your_sure: "<?php _l("are-you-sure")?>",
+        ok : "<?php _l("ok")?>",
+        close : "<?php _l("close")?>",
+        notImageError : "<?php echo l("not-image-error")." : ". config("image-file-types", "jpg,png,gif,jpeg")?>",
+        allowImageSizeError : "<?php echo l("image-size-error")." : ". config("image-file-size", 2)?>MB",
+        notAudioError : "<?php echo l("not-audio-error")." : ". config("audio-file-types", "mp3,m4a,mp4")?>",
+        allowAudioSizeError : "<?php echo l("audio-size-error")." : ". $C->model("user")->getTrackSize()?>MB",
+        notVideoError : "<?php echo l("not-video-error")?>",
+        allowVideoSizeError : "<?php echo l("video-size-error")." : ". config("video-file-size", 55)?>MB",
+        processing : "<?php _l("processing")?>",
+        trans_any_moment : "<?php _l("any_moment")?>",
+        trans_less_than_minute : "<?php _l("few-secs")?> <?php _l("ago")?>",
+        trans_about_minute : "1<?php _l('min_time')?> <?php _l("ago")?>",
+        trans_about_minutes :"%d<?php _l('min_time')?> <?php _l("ago")?>",
+        trans_about_hour : "1<?php _l('h_time')?> <?php _l("ago")?>",
+        trans_about_hours : "%d<?php _l('h_time')?> <?php _l("ago")?>",
+        trans_a_day : "1<?php _l('d_time')?> <?php _l("ago")?>",
+        trans_about_days : "%d<?php _l('d_time')?> <?php _l("ago")?>",
+        trans_about_month :"1<?php _l('m_time')?> <?php _l("ago")?>",
+        trans_about_months : "%d<?php _l('m_time')?> <?php _l("ago")?>",
+        trans_about_year : "1<?php _l('y_time')?> <?php _l("ago")?>",
+        trans_about_years : "%d<?php _l('y_time')?> <?php _l("ago")?>",
+        you_have_new : "<?php _l("you-have-new")?>",
+        "notifications": "<?php _l("notifications")?>",
+        add_price : "<?php _l('add-price')?>",
+        custom_url : "<?php _l('custom-url')?>",
+        alphanum_only : "<?php _l('alphanum_only')?>",
+        featuring : "<?php _l('featuring')?>",
+        featuring_note : "<?php _l('featuring-note')?>",
+        add_lyrics : "<?php _l('add-lyrics')?>",
+        add_lyrics_note : "<?php _l('add-lyrics-note')?>",
+        remove_lyrics_file : "<?php _l('remove-lyrics-file')?>",
+        notLyricError : "<?php _l('lyric-file-error')?>",
+        add_preview_version: "<?php _l('add-preview-version')?>",
+        remove_preview_version: "<?php _l('remove-preview-version')?>",
+        <?php Hook::getInstance()->fire("js.translation")?>
+    };
+    var supportImagesType = "<?php echo config("image-file-types", "jpg,png,gif,jpeg")?>";
+    var supportAudioType = "<?php echo config("audio-file-types", "mp3,m4a,mp4")?>";
+    var supportVideoType = "<?php echo (config('ffmpeg-path', '') == '') ? 'mp4' : config('video-file-types', 'mp4,mov,wmv,3gp,avi,flv,f4v,webm')?>";
+    var allowPhotoSize = <?php echo config("image-file-size", 2) * 1024 * 1000?>;
+    var allowAudioSize = <?php echo $C->model("user")->getTrackSize() * 1024 * 1000?>;
+    var allowVideoSize = <?php echo config('video-file-size', 55) * 1024 * 1000?>;
+    var defaultVolume = <?php echo config("default-value", 80)?>;
+    var updateTime = <?php echo config("update-time",10000)?>;
+    var lastTime = <?php echo time()?>;
+    var siteTitle = "<?php echo config("site-title")?>";
+    var stripeKey = "<?php echo config("stripe-publishable-key", "")?>";
+    var siteLogo = "<?php echo assetUrl(config("site_logo", "assets/images/logo.png"))?>";
+    var settingswaveColor = "<?php echo config('main-wave_color','#0F0710')?>";
+    var settingswaveColored = "<?php echo config('main-wave_colored','#FF5533')?>";
+    var playloop = true;
+    var currency = "<?php echo model('user')->getUserCurrency()?>";
+    var enableFeaturing = <?php echo config('enable-artist-featuring', true) ? 1 : 0?>;
+    var enableLyrics = <?php echo config('enable-lyrics-upload', true) ? 1 : 0?>;
+    var waveGenerator = '<?php echo config('wave-generator', 'browser')?>';
+    <?php if(moduleExists('radio')):?>
+    var listenerInterval = '<?php echo config('live-current-listener-interval', 60)?>';
+    <?php endif?>
+</script>
+<script src="<?php echo assetUrl('assets/js/plugin.js')?>?time=<?php echo fileatime(path('assets/js/plugin.js'))?>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/0.0.11/push.min.js"></script>
+<?php if(getController()->useEditor):?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote-bs4.js"></script>
+<?php endif?>
+<script src="<?php echo assetUrl('styles/main/js/main.js')?>?time=<?php echo fileatime(path('styles/main/js/main.js'))?>"></script>
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<script>
+    <?php echo config('custom-js','')?>
+</script>
+<?php  Hook::getInstance()->fire('footer.end')?>
+</body>
+</html>

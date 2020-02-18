@@ -1,0 +1,14 @@
+<?php $activeMenu = getController()->activeMenu;?>
+<li class="clearfix <?php echo ( $activeMenu == 'videos') ? 'active' : null?>">
+    <a id="videos-menu" class="sub-menu  float-left <?php echo ( $activeMenu == 'videos') ? 'active' : null?> " href="<?php echo url('videos')?>"  data-ajax="true"> <i class="la la-film "></i> <?php _l('videos')?></a>
+    <?php if(model('user')->isLoggedIn() and model('video::video')->canAddVideo()):?>
+        <span class="float-right mr-2 mt-2">
+            <?php if(config('enable-video-upload', true)):?>
+            <a href="<?php echo url('videos/upload')?>"  data-ajax="true" class="badge badge-primary colored-bg action-buttons"><i class="la la-plus" style="color: #ffffff !important;"></i></a>
+            <?php endif?>
+            <?php if(config('enable-video-import', true)):?>
+                <a href="<?php echo url('videos/import')?>" style="color: #ffffff !important;" data-ajax="true" class="badge badge-secondary action-buttons"><i class="fa fa-cloud-download" style="color: #ffffff !important;"></i></a>
+            <?php endif?>
+        </span>
+    <?php endif?>
+</li>

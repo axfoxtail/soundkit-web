@@ -1,0 +1,42 @@
+<div class="each-comment media" id="comment-<?php echo $comment['id']?>">
+    <?php $user = $C->model('user')->getUser($comment['userid'])?>
+    <img class="mr-4 avatar" src="<?php echo $C->model('user')->getAvatar($user, 75)?>" alt="Generic placeholder image">
+    <div class="media-body ">
+        <div class="clearfix" style="min-height: 30px;">
+            <div class="float-left">
+                <a href="<?php echo $C->model('user')->profileUrl($user)?>" data-ajax="true" class="user-link "  data-id="<?php echo $user['id']?>" ><h5 class="mt-0">
+                    <?php echo $user['full_name']?>
+                        <?php echo $C->view('user/badge', array('userid'=> $user['id']))?>
+
+                        <?php if($comment['track_at']):?>
+                            <span style="font-size:10px;color:grey"><?php _l('at')?> <?php echo $C->model('track')->formatDuration($comment['track_at'])?></span>
+                        <?php endif?>
+
+                    </h5>
+                </a>
+
+            </div>
+            <div class="float-right">
+                <span class="timeago " title="<?php echo date('c', $comment['time']) ?>"><?php echo date('c', $comment['time']) ?></span>
+                <div class="actions " style="display: inline-block;" id="comment-<?php echo $comment['id']?>-actions">
+                    <?php if($comment['userid'] == $C->model('user')->authId):?>
+                        <a href="<?php echo url('comment/delete', array('id' => $comment['id']))?>" data-ajax-action="true" class="confirm"  ><i class="la la-trash"></i></a>
+                    <?php endif?>
+                    <?php if($C->model('user')->isLoggedIn()):?>
+                        <?php if($comment['type'] != 'comment'):?>
+                            <a href="" class="reply-button" ><i class="fa fa-reply" ></i></a>
+                        <?php endif?>
+
+                        <?php if($comment['userid'] != $C->model('user')->authId):?>
+                            <a href="<?php echo url('report/comment', array('id' => $comment['id']))?>" class="ajax-action" ><i class="fa fa-flag" ></i></a>
+                        <?php endif?>
+                    <?php endif?>
+                </div>
+            </div>
+        </div>
+        <div class="wrap" ><?php echo $comment['message']?></div>
+        <?php if($comment['type'] != 'comment'):?>
+            <?php echo $C->view('track/comment/display', array('type' => 'comment', 'typeId' => $comment['id'], 'title' => l('reply-this-comment')))?>
+        <?php endif?>
+    </div>
+</div>

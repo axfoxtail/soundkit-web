@@ -1,0 +1,218 @@
+<div class="profile-header clearfix" >
+    <div class="bg-container" style="background-image: url(<?php echo $C->model('user')->getCover($user) ?>);"></div>
+    <div class="cover"></div>
+    <div class="inner-container">
+        <div class=" content">
+            <div class="profile-info-container">
+                <div style="background-image: url(<?php  echo $C->model('user')->getAvatar($user, 200)?>)" class="avatar mr-3"></div>
+                <div style="    text-shadow: 2px 2px 1px #000;">
+                    <h5 class="mt-0"><?php echo $user['full_name']?> <?php echo $C->view('user/badge', array('userid'=> $user['id']))?></h5>
+                    <div><span class="followers-count-<?php echo $user['id']?>"><?php $countFollowers = $C->model('user')->countFollowers($user['id']); echo $countFollowers?></span> <?php _l('followers')?></div>
+                    <?php if($user['bio']):?>
+                        <div class="mt-3">
+                            <?php echo str_limit($user['bio'], 60)?>
+                        </div>
+                    <?php endif?>
+                </div>
+
+
+                <div class="right-buttons dropdown">
+                    <button class="btn each mtooltip" title="<?php _l('share-profile')?>" onclick="return share(<?php echo $user['id']?>, 'profile')"> <?php _l('share')?></button>
+                    <?php if($user['id'] != $C->model('user')->authId):?>
+                        <button class="btn each" onclick="return showMessage(<?php echo $user['id']?>)"> <i class="la la-envelope"></i></button>
+                        <button class="btn each dropdown-toggle no-caret hover-show" data-toggle="dropdown"><i class="fa  fa-ellipsis-h"></i></button>
+                        <div class="dropdown-menu dropdown-menu-right  mt-2" aria-labelledby="dropdownMenuButton">
+
+                            <a class="dropdown-item confirm" data-message="<?php _l('confirm-block-user')?>" data-ajax-action="true"  href="<?php echo url('block', array('id' => $user['id']))?>"><i class="la la-lock"></i> <?php _l('block-user')?></a>
+                        </div>
+                    <?php else:?>
+                        <a style="background: #ffffff;" href="<?php echo url('settings/profile')?>" data-ajax="true" class="btn mtooltip each" title="<?php _l('edit-profile')?>"> <i class="fa fa-edit"></i></a>
+                    <?php endif?>
+                </div>
+                <?php if($C->model('user')->isLoggedIn()):?>
+                    <?php if($user['id'] != $C->model('user')->authId): $isFollowing = $C->model('user')->isFollowing($user['id'])?>
+                        <a style="text-shadow: none;" href="<?php echo url('follow', array('id' => $user['id']))?>" class="btn btn-primary round-sm mt-3 follow-<?php echo $user['id']?>-btn <?php echo !$isFollowing ? 'follow' : null?> ajax-action " > <?php echo $isFollowing ? l('following') : l('follow')?></a>
+                    <?php endif?>
+                <?php endif?>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="profile-menu">
+        <div class=" inner-container">
+
+            <ul class="nav nav-tabs responsive-nav" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link <?php echo ($page == 'stream') ? 'active': null?>" data-ajax="true"  href="<?php echo $C->model('user')->profileUrl($user,'')?>" ><?php _l('all')?></a>
+                </li>
+                <?php if(model('user')->isAuthor($user)):?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($page == 'tracks') ? 'active': null?>"  data-ajax="true"  href="<?php echo $C->model('user')->profileUrl($user,'tracks')?>" ><?php _l('tracks')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($page == 'albums') ? 'active': null?>"  data-ajax="true"  href="<?php echo $C->model('user')->profileUrl($user,'albums')?>" ><?php _l('albums')?></a>
+                    </li>
+                <?php endif?>
+
+                <li class="nav-item">
+                    <a class="nav-link <?php echo ($page == 'playlists') ? 'active': null?>"  data-ajax="true"  href="<?php echo $C->model('user')->profileUrl($user,'playlists')?>" ><?php _l('playlists')?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php echo ($page == 'reposts') ? 'active': null?>"  data-ajax="true"  href="<?php echo $C->model('user')->profileUrl($user,'reposts')?>" ><?php _l('reposts')?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php echo ($page == 'liked') ? 'active': null?>"  data-ajax="true"  href="<?php echo $C->model('user')->profileUrl($user,'liked')?>" ><?php _l('liked')?></a>
+                </li>
+                <?php Hook::getInstance()->fire('profile.menus', null, array($user,$page))?>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="profile-content clearfix" style="" >
+    <div class="inner-container">
+       <div class="row mt-3">
+           <div class="col-md-8">
+               <?php echo $content?>
+           </div>
+           <div class="col-md-4">
+                <div class="">
+                    <div class="row profile-statistics">
+                        <div class="col-sm-4">
+                            <?php _l('followers')?>
+                            <a href="<?php echo $C->model('user')->profileUrl($user,'followers')?>" data-ajax="true"><span class="count followers-count-<?php echo $user['id']?>"><?php echo $countFollowers?></span></a>
+                        </div>
+                        <div class="col-sm-4">
+                            <?php _l('following')?>
+                            <a href="<?php echo $C->model('user')->profileUrl($user,'following')?>" data-ajax="true">
+                            <span class="count"><?php $countFollowing = $C->model('user')->countFollowing($user['id']);echo $countFollowing?></span>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <?php _l('tracks')?>
+                            <a href="<?php echo $C->model('user')->profileUrl($user,'tracks')?>" data-ajax="true">
+                                <span class="count"><?php echo $C->model('track')->countTracks($user['id'])?></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <?php if($user['country'] or $user['city']):?>
+                        <div class="profile-info">
+                            <span class="title"><?php _l('location')?> : </span> <?php echo ($user['country']) ? ucwords($user['country']).',' : ''?>
+                            <?php echo ($user['city']) ? $user['city'] : ''?>
+                        </div>
+                    <?php endif?>
+
+                    <?php if($user['bio']):?>
+                        <div class="profile-info">
+                            <span class="title"><?php _l('bio')?> : </span>
+                            <?php echo $user['bio']?>
+                        </div>
+                    <?php endif?>
+
+                    <?php if($user['website']):?>
+                        <?php
+                            $website = $user['website'];
+                            if(!preg_match('#http#', $website)) $website = 'http://'.$website;
+                        ?>
+                        <div class="profile-info">
+                            <span class="title"><?php _l('website')?> : </span>
+                            <a style="background: none;width:auto;height:auto;color: #000;" href="<?php echo $website?>" target="_blank"><?php echo $user['website']?></a>
+                        </div>
+                    <?php endif?>
+
+                    <?php if($user['facebook'] or $user['twitter'] or $user['soundcloud'] or $user['youtube'] or $user['vimeo']):?>
+                        <div class="profile-info">
+                            <span class="title"><?php _l('social')?> : </span>
+                            <?php if($user['facebook']):?>
+                                <a target="_blank" rel="nofollow" href="http://facebook.com/<?php echo $user['facebook']?>"><i class="fa fa-facebook"></i></a>
+                            <?php endif?>
+
+
+                            <?php if($user['twitter']):?>
+                                <a target="_blank" rel="nofollow" href="http://twitter.com/<?php echo $user['twitter']?>"><i class="fa fa-twitter"></i></a>
+                            <?php endif?>
+
+                            <?php if($user['soundcloud']):?>
+                                <a target="_blank" rel="nofollow" href="http://soundcloud.com/<?php echo $user['soundcloud']?>"><i class="fa fa-soundcloud"></i></a>
+                            <?php endif?>
+
+                            <?php if($user['youtube']):?>
+                                <a target="_blank" rel="nofollow" href="http://youtube.com/<?php echo $user['youtube']?>"><i class="fa fa-youtube"></i></a>
+                            <?php endif?>
+
+                            <?php if($user['vimeo']):?>
+                                <a target="_blank" rel="nofollow" href="http://vimeo.com/<?php echo $user['vimeo']?>"><i class="fa fa-vimeo"></i></a>
+                            <?php endif?>
+
+                            <?php if($user['instagram']):?>
+                                <a target="_blank" rel="nofollow" href="http://instagram.com/<?php echo $user['instagram']?>"><i class="fa fa-instagram"></i></a>
+                            <?php endif?>
+                        </div>
+                    <?php endif?>
+
+
+                    <?php $followers = $C->model('user')->getFollows($user['id'], 2)?>
+                    <?php if(count($followers) > 0):?>
+
+                        <div class="inline-card-list">
+                            <div class="clearfix title">
+                                <div class="float-left">
+                                    <div class="">
+                                        <i class="la la-users"></i>
+                                        <?php _l('followers')?>
+                                    </div>
+                                </div>
+                                <div class="float-right">
+                                    <a href="<?php echo $C->model('user')->profileUrl($user,'followers')?>" data-ajax="true" class=""><span><?php echo $countFollowers?></span>  <i class="la-angle-right la"></i></a>
+                                </div>
+                            </div>
+
+
+                            <ul class="clearfix">
+                                <?php foreach($followers as $duser):?>
+                                    <li><a href="<?php echo $C->model('user')->profileUrl($duser)?>" data-ajax="true" style="background-image: url(<?php echo $C->model('user')->getAvatar($duser, 75)?>)"> </a></li>
+                                <?php endforeach;?>
+                            </ul>
+
+                        </div>
+                    <?php endif?>
+
+                    <?php $following = $C->model('user')->getFollows($user['id'])?>
+                    <?php if(count($following) > 0):?>
+
+                        <div class="inline-card-list">
+                            <div class="clearfix title">
+                                <div class="float-left">
+                                    <div class="">
+                                        <i class="la la-users"></i>
+                                        <?php _l('following')?>
+                                    </div>
+                                </div>
+                                <div class="float-right">
+                                    <a href="<?php echo $C->model('user')->profileUrl($user,'following')?>" data-ajax="true" class=""><span><?php echo $countFollowing?></span>  <i class="la-angle-right la"></i></a>
+                                </div>
+                            </div>
+
+
+                            <ul class="clearfix">
+                                <?php foreach($following as $duser):?>
+                                    <li><a href="<?php echo $C->model('user')->profileUrl($duser)?>" data-ajax="true" style="background-image: url(<?php echo $C->model('user')->getAvatar($duser, 75)?>)"> </a></li>
+                                <?php endforeach;?>
+                            </ul>
+
+                        </div>
+                    <?php endif?>
+                    <?php Hook::getInstance()->fire('global.sidebar')?>
+
+                    <?php echo config('ad-unit2')?>
+                </div>
+           </div>
+       </div>
+    </div>
+</div>

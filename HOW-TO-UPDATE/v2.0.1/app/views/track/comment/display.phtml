@@ -1,0 +1,65 @@
+<div class="comments-<?php echo $type?>-<?php echo $typeId?>">
+    <?php if($C->model('user')->isLoggedIn()): ?>
+        <?php
+
+            if (!isset($form)) {
+                if ($type == 'comment') {
+                    $comment = $C->model('track')->findComment($typeId);
+                    if ($comment['type'] == 'track') {
+                        $track = $C->model('track')->findTrack($comment['typeid']);
+                        $form = $C->model('track')->canComment($track);
+                    } else {
+                        $form = true;
+                    }
+                }else {
+                    $form = true;
+                }
+            }
+        ?>
+        <?php if($form):?>
+            <div class="comment-form comments-form-<?php echo $type?>-<?php echo $typeId?>">
+                <form action="<?php echo url('comment/add')?>" method="post" class="general-form">
+                    <input type="hidden" name="val[id]" value="<?php echo $typeId?>"/>
+                    <input type="hidden" name="val[type]" value="<?php echo $type?>"/>
+                    <div class="media">
+                        <img class="mr-3 avatar" src="<?php echo $C->model('user')->getAvatar(null, 200)?>" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <textarea class="form-control" name="val[comment_text]" placeholder="<?php echo $title?>" rows="3"></textarea>
+                            <div class="clearfix">
+                                <button type="submit"  data-size="s" data-style="zoom-in" class="btn btn-secondary btn-sm float-right ladda-button" id="comment-button-<?php echo $type?>-<?php echo $typeId?>">
+                                    <?php echo ($type == 'comment') ? l('reply'): l('post-comment')?>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        <?php endif?>
+    <?php else:?>
+        <?php if($type != 'comment'):?>
+            <div class="alert alert-warning mt-4" style="text-align: center;"><?php _l('please-login-comment')?></div>
+        <?php endif?>
+    <?php endif?>
+
+    <div
+        data-paginate-url="comment/paginate"
+        data-param="<?php echo perfectSerialize(array('type' => $type, 'typeId' => $typeId))?>"
+        id="comments-<?php echo $type?>-<?php echo $typeId?>"
+        <?php echo ($type == 'comment') ? 'data-loaded="true"':null?> class="comments-container  comments-container-<?php echo $type?>-<?php echo $typeId?>" data-type="<?php echo $type?>" data-type-id="<?php echo $typeId?>" data-offset="0">
+        <?php if($type == 'comment'):$comments = $C->model('track')->getComments($type, $typeId, 0)?>
+            <?php foreach($comments as $comment):?>
+                <?php echo $C->view('track/comment/format', array('comment' => $comment))?>
+            <?php endforeach;?>
+
+            <?php if(count($comments) > config('comment-limit', 5) - 1):?>
+                <div class="load-more-button-container" id="comments-<?php echo $type?>-<?php echo $typeId?>-load-more-container">
+                    <a href=""
+                       data-size="s" data-style="zoom-in"
+                       class="load-more-button  btn btn-outline-dark btn-sm ladda-button"
+                       data-container="comments-<?php echo $type?>-<?php echo $typeId?>"
+                       id="comments-<?php echo $type?>-<?php echo $typeId?>-loadmore-button"><?php _l('load-more')?></a>
+                </div>
+            <?php endif?>
+        <?php endif?>
+    </div>
+</div>

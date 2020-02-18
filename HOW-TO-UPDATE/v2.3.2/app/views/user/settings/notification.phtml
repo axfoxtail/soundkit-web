@@ -1,0 +1,135 @@
+<form enctype="multipart/form-data" class="general-form" method="post" action="<?php echo getFullUrl(true)?>">
+    <?php $user = $C->model('user')->authUser?>
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('newsletter')?></label>
+                <span class="form-text text-muted"><?php _l('receive-newletter-emails')?></span>
+            </div>
+            <div class="col-sm-8">
+                <input type="hidden" name="val[email_letter]" value="0"/>
+                <div class="switch">
+                    <input id="cmn-toggle-premium" value="1" name="val[email_letter]" <?php echo ($user['email_letter']) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                    <label for="cmn-toggle-premium"></label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr/>
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('likes')?></label>
+                <span class="form-text text-muted"><?php _l('receive-like-note')?></span>
+            </div>
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <input type="hidden" name="val[notifyl]" value="0"/>
+                    <label class="custom-control custom-checkbox">
+                        <input type="checkbox" <?php echo ($user['notifyl']) ? 'checked' : null?>  name="val[notifyl]" value="1" class="custom-control-input" >
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description"><?php _l('site-notification')?></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <input type="hidden" name="val[email_l]" value="0"/>
+                    <label class="custom-control custom-checkbox">
+                        <input type="checkbox"  <?php echo ($user['email_l']) ? 'checked' : null?> name="val[email_l]" value="1" class="custom-control-input" >
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description"><?php _l('email-notification')?></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('new-friends')?></label>
+                <span class="form-text text-muted"><?php _l('receive-friend-note')?></span>
+            </div>
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <input type="hidden" name="val[notifyf]" value="0"/>
+                    <label class="custom-control custom-checkbox">
+                        <input type="checkbox" <?php echo ($user['notifyf']) ? 'checked' : null?>  name="val[notifyf]" value="1" class="custom-control-input" >
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description"><?php _l('site-notification')?></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <input type="hidden" name="val[email_f]" value="0"/>
+                    <label class="custom-control custom-checkbox">
+                        <input type="checkbox"  <?php echo ($user['email_f']) ? 'checked' : null?> name="val[email_f]" value="1" class="custom-control-input" >
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description"><?php _l('email-notification')?></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('comments')?></label>
+                <span class="form-text text-muted"><?php _l('receive-comment-note')?></span>
+            </div>
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <input type="hidden" name="val[notifyc]" value="0"/>
+                    <label class="custom-control custom-checkbox">
+                        <input type="checkbox" <?php echo ($user['notifyc']) ? 'checked' : null?>  name="val[notifyc]" value="1" class="custom-control-input" >
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description"><?php _l('site-notification')?></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <input type="hidden" name="val[email_c]" value="0"/>
+                    <label class="custom-control custom-checkbox">
+                        <input type="checkbox"  <?php echo ($user['email_c']) ? 'checked' : null?> name="val[email_c]" value="1" class="custom-control-input" >
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description"><?php _l('email-notification')?></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr/>
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('chat')?></label>
+                <span class="form-text text-muted"><?php _l('receive-chat-note')?></span>
+            </div>
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <input type="hidden" name="val[notifym]" value="0"/>
+                    <label class="custom-control custom-checkbox">
+                        <input type="checkbox" <?php echo ($user['notifym']) ? 'checked' : null?>  name="val[notifym]" value="1" class="custom-control-input" >
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <hr/>
+
+    <button data-size="s" data-style="zoom-in" class="btn btn-info  ladda-button mt-3" id="account-submit" type="submit"><?php _l('save')?></button>
+
+</form>

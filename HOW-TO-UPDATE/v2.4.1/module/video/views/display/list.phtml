@@ -1,0 +1,22 @@
+<div class="each each-video">
+    <a href="<?php echo model('video::video')->videoUrl($video)?>" data-ajax="true">
+        <div class="art" style="background-image: url(<?php echo model('video::video')->getArt($video,600)?>);">
+            <?php if($video['price'] > 0):?>
+                <span class="price colored-bg"><?php echo formatMoney($video['price'])?></span>
+            <?php endif?>
+            <div class="play-container">
+                <span class="play"><i class="la la-play"></i></span>
+            </div>
+            <span class="time"><?php echo $video['duration']?></span>
+        </div>
+    </a>
+    <div class="info">
+        <h5 class="video-title"> <a href="<?php echo model('video::video')->videoUrl($video)?>" data-ajax="true"><b><?php echo $video['title']?></b></a></h5>
+        <?php $user = model('user')->getUser($video['userid'])?>
+        <a href="<?php echo model('user')->profileUrl($user)?>"><?php echo $user['full_name']?></a>
+        <div>
+            <?php echo $video['views']?> <?php _l('views')?> -
+            <span class="timeago " title="<?php echo date('c', $video['time']) ?>"><?php echo date('c', $video['time']) ?></span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+
+<div class="inner-container">
+    <h6 style="color:#A7A59D" class="mb-4 mt-4"><?php _l('your-watch-history')?></h6>
+    <?php $type = 'history';$typeid = ''?>
+    <?php $videos = model('video::video')->getVideos('history','',0,config('video-limit', 20))?>
+    <?php if(count($videos) > 0):?>
+        <div class="main-loadmore-container" data-container="videos-list-container">
+            <div
+                data-paginate-url="videos/paginate"
+                data-param="<?php echo perfectSerialize(array('type' => $type, 'typeId' => $typeid))?>"
+                id="videos-list-container"
+                class="videos-list-container " data-type="<?php echo $type?>" data-type-id="<?php echo $typeid?>" data-offset="0">
+
+                <?php foreach($videos as $video):?>
+                    <?php echo view('video::display/list', array('video' => $video))?>
+                <?php endforeach;?>
+                <?php if(count($videos) > config('video-limit', 20) - 1):?>
+                    <div class="load-more-button-container" id="videos-list-container-load-more-container">
+                        <a href=""
+                           data-size="s" data-style="zoom-in"
+                           class="load-more-button  btn btn-outline-dark btn-sm ladda-button"
+                           data-container="videos-list-container"
+                           id="videos-list-container-loadmore-button"><?php _l('load-more')?></a>
+                    </div>
+                <?php endif?>
+            </div>
+        </div>
+    <?php else:?>
+        <div class="empty-content">
+            <i class="la la-film"></i>
+            <span><?php _l('no-videos-display')?></span>
+
+        </div>
+    <?php endif?>
+</div>

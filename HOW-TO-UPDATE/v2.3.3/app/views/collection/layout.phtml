@@ -1,0 +1,14 @@
+
+<div class="inner-container">
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <?php Hook::getInstance()->fire('global.top')?>
+            <?php echo $content?>
+        </div>
+        <div class="col-md-4">
+            <?php echo $C->view('home/general-right', array('completion' => false))?>
+        </div>
+
+
+    </div>
+</div>

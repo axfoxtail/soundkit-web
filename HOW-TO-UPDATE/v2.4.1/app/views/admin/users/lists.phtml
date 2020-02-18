@@ -1,0 +1,122 @@
+<div class="inner-container mt-5">
+    <div class="title clearfix" style="margin-bottom: 20px">
+        <div class="float-left">
+            <?php _l('users-artists')?>
+        </div>
+        <div class="float-right">
+            <form class="form-inline" method="post">
+                <div class="input-group mb-2 mb-sm-0">
+                    <div class="input-group-addon"><i class="la la-search"></i></div>
+                    <input type="text" name="term" class="form-control" id="inlineFormInputGroup" placeholder="<?php _l('search')?>">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <a data-ajax="true" href="<?php echo url('admin/users', array('type' => 1))?>"  class="btn btn-sm <?php echo $type == 1? 'btn-primary' : 'btn-secondary'?>">
+        <?php _l('users')?> <span class="badge badge-light"><?php echo $C->model('user')->countUsers(1)?></span>
+    </a>
+
+    <a data-ajax="true" href="<?php echo url('admin/users', array('type' => 2))?>"  class="btn btn-sm <?php echo $type == 2? 'btn-primary' : 'btn-secondary'?>">
+        <?php _l('artists')?> <span class="badge badge-light"><?php echo $C->model('user')->countUsers(2)?></span>
+    </a>
+
+    <div class="row">
+        <div class="col-md-7">
+            <?php if($users->total > 0):?>
+                <div class="mt-5">
+                    <?php foreach($users->results() as $user):?>
+                        <div class="media" style="margin-bottom: 10px;">
+                            <img class="mr-3 avatar" style="width: 100px;" src="<?php echo $C->model('user')->getAvatar($user,200)?>" >
+                            <div class="media-body clearfix">
+                                <div class="float-left">
+                                    <h5 class="mt-0"><a data-ajax='true' href="<?php echo url('admin/user/edit', array('id' => $user['id']))?>"><?php echo $user['full_name']?></a></h5>
+                                    <span><?php echo $user['email']?></span>
+                                    <?php if($user['banned']):?>
+                                        <h4 class="badge badge-secondary" style="font-size: 15px;"><?php _l('banned')?></h4>
+                                    <?php endif?>
+                                </div>
+                                <div class="float-right">
+                                    <div class="dropdown show">
+                                        <?php if($type == 2):?>
+                                         <a data-ajax="true" href="<?php echo url('upload', array('id' => $user['id']))?>" class="btn btn-sm btn-secondary round-sm"><?php _l('upload')?></a>
+                                        <?php endif?>
+                                        <a class="dropdown-toggle no-caret" href="#" role="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-ellipsis-h icon-lg " style="font-size: 20px"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-right" >
+                                            <a class="dropdown-item" data-ajax='true' href="<?php echo $C->model('user')->profileUrl($user)?>"><?php _l('view-profile')?></a>
+                                            <a class="dropdown-item" data-ajax='true' href="<?php echo url('admin/user/edit', array('id' => $user['id']))?>"><?php _l('edit')?></a>
+                                            <a class="dropdown-item confirm" href="<?php echo url('admin/user/action', array('id' => $user['id'], 'action' => ($user['banned']) ? 'unban' : 'ban'))?>"><?php ($user['banned']) ? _l('unban') : _l('ban')?></a>
+                                            <a class="dropdown-item confirm" href="<?php echo url('admin/user/action', array('id' => $user['id'], 'action' => 'delete'))?>"><?php _l('delete')?></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach;?>
+                </div>
+
+                <?php echo $users->links()?>
+            <?php else:?>
+                <div class="alert alert-warning mt-5" ><?php _l('no-users-display')?></div>
+            <?php endif?>
+        </div>
+        <div class="col-md-5">
+            <div class="box" >
+                <?php if($message):?>
+                    <div class="alert alert-danger"><?php echo $message?></div>
+                <?php endif?>
+                <div class="box-title"><?php _l('add-account')?></div>
+
+                <form action="<?php echo getFullUrl(true)?>" class="general-form" method="post">
+                    <?php Hook::getInstance()->fire('user.form.extend')?>
+                    <div class="form-group">
+                        <input autocomplete="off" name="val[full_name]" type="text" class="form-control"   placeholder="<?php _l('full_name')?>">
+                    </div>
+                    <div class="form-group">
+                        <input autocomplete="off" name="val[username]" type="text" class="form-control"   placeholder="<?php _l('username')?>">
+                    </div>
+
+                    <div class="form-group">
+                        <input autocomplete="off" name="val[email]" type="email" class="form-control email-field"   placeholder="<?php _l('email_address')?>">
+                    </div>
+
+                    <div class="form-group">
+                        <input autocomplete="off" name="val[password]" type="password" class="form-control password-field"   placeholder="<?php _l('password')?>">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox"  name="val[artist]" value="1" class="custom-control-input admin-artist-toggle">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description mt-1"><?php _l('artist')?></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" name="val[admin]" value="1" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description mt-1"><?php _l('administrator')?> (<?php _l('full-access')?>)</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label><?php _l('user-role')?></label>
+                        <select class="form-control" name="val[role]">
+                            <option value="0"><?php _l('default')?></option>
+                            <?php foreach(model('admin')->getRoles() as $role):?>
+                                <option  value="<?php echo $role['id']?>"><?php echo $role['title']?></option>
+                            <?php endforeach?>
+                        </select>
+                    </div>
+
+
+                    <button type="submit" data-size="s" data-style="zoom-in" type="submit" class="btn round-sm btn-primary btn-sm ladda-button" id="user-edit-button"><?php _l('submit')?></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

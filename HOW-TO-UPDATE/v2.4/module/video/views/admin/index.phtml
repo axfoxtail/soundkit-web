@@ -1,0 +1,146 @@
+<div class="inner-container">
+    <div class="title clearfix mt-4">
+        <div class="float-left">
+            <h6><?php _l('manage-videos')?></h6>
+        </div>
+        <div class="float-right">
+            <form class="form-inline" method="post" >
+                <div style="display: inline-block;position: relative;bottom: 4px;">
+                    <div class="input-group mb-2 mb-sm-0">
+                        <div class="input-group-addon"><i class="la la-search"></i></div>
+                        <input type="text" value="<?php echo $term?>" name="term" class="form-control" id="inlineFormInputGroup" placeholder="<?php _l('search')?>">
+                    </div>
+                </div>
+                <div style="display: inline-block;margin-left: 4px;">
+                    <select data-ui-select="true" class=" select-input" name="genre" style="width: 100px;position: relative;">
+                        <?php foreach ($C->model('admin')->getGenres() as $g):?>
+                            <option <?php echo ($genre == $g['id']) ? 'selected':null?> value="<?php echo $g['id']?>"><?php echo $g['name']?></option>
+                        <?php endforeach;?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary round-sm" style="position: relative;bottom: 4px;margin-left: 4px;"><?php _l('filter')?></button>
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-striped mt-3 table-responsive-sm">
+        <thead>
+        <tr>
+            <th scope="col" style="width: 10%;"><?php _l('id')?></th>
+            <th scope="col" style="width: 20%;"><?php _l('by')?></th>
+            <th scope="col" style="width: 25%;"><?php _l('title')?></th>
+            <th scope="col" style="width: 10%;"><?php _l('genre')?></th>
+            <th scope="col" style="width: 10%;"><?php _l('status')?></th>
+            <th scope="col" style="width: 10%;"><?php _l('added-on')?></th>
+            <th scope="col" style="width: 15%;"><?php _l('action')?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($videos->results() as $video):?>
+            <tr>
+                <td><?php echo $video['id']?></td>
+                <td>
+                    <?php $theUser = $C->model('user')->getUser($video['userid'])?>
+                    <a href="<?php echo $C->model('user')->profileUrl($theUser)?>" data-ajax="true"><img src="<?php echo $C->model('user')->getAvatar($theUser)?>" style="width:20px;height:20px;border-radius:100px"/> <?php echo $theUser['full_name']?></a>
+                </td>
+                <td>
+                    <a data-ajax="true" href="<?php echo $C->model('video::video')->videoUrl($video)?>"><?php echo $video['title']?></a>
+                </td>
+                <td>
+                    <?php $theGenre = $C->model('admin')->findGenre($video['genre'])?>
+                    <?php echo $theGenre['name']?>
+                </td>
+                <td>
+                    <span class="badge badge-dark"><?php echo $video['status'] ? l('active') : l('not-active')?></span>
+                </td>
+                <td>
+                    <?php echo date('d/m/Y', $video['time'])?>
+                </td>
+                <td>
+                    <?php Hook::getInstance()->fire('admin.video.action', null, array($video))?>
+                    <a href="" title="<?php _l('edit-video')?>" class="mtitle btn btn-secondary btn-sm " data-target="#editVideoModal-<?php echo $video['id']?>" data-toggle="modal"><i class="la la-pencil"></i></a>
+                    <div class="modal" id="editVideoModal-<?php echo $video['id']?>" tabindex="-1" role="dialog">
+                        <div class="modal-dialog " role="document">
+                            <form action="<?php echo getFullUrl(true)?>" method="post" class="general-form">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"><?php _l('edit-video')?></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <input type="hidden" name="val[id]" value="<?php echo $video['id']?>"/>
+
+                                    <div class="p-4">
+                                        <div class="form-group">
+                                            <label><?php _l('name')?></label>
+                                            <input class="form-control" type="text" name="val[title]" value="<?php echo $video['title']?>"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label><?php _l('description')?></label>
+                                            <textarea  class="form-control" rows="5" type="text" name="val[description]"><?php echo $video['description']?></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label><?php _l('tags')?><span class="important">*</span></label>
+                                            <input value="<?php echo $video['tags']?>" autocomplete="off" type="text" name="val[tags]" class=" input-tags" >
+                                        </div>
+
+                                        <div class="form-group ">
+                                            <label><?php _l('genre')?></label>
+                                            <select data-ui-select="true" class=" select-input" name="val[genre]">
+                                                <?php foreach ($C->model('admin')->getGenres() as $genre):?>
+                                                    <option <?php echo $genre['id'] == $video['genre'] ? 'selected': null?> value="<?php echo $genre['id']?>"><?php echo $genre['name']?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+
+
+
+                                        <div class="form-group row">
+                                            <label for="staticEmail" class="col-sm-6 col-form-label"><?php _l('enable-comments')?></label>
+                                            <div class="col-sm-6">
+                                                <input type="hidden" name="val[comments]" value="0"/>
+                                                <div class="switch">
+                                                    <input id="cmn-toggle-comments" <?php echo ($video['comments'] == 1) ? 'checked' : null?> value="1" name="val[comments]"  checked class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                                    <label for="cmn-toggle-comments"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label><?php _l('privacy')?></label>
+                                            <select name="val[privacy]" class="form-control">
+                                                <option <?php echo ($video['public'] == 1) ? 'selected' : null?> value="1"><?php _l('public')?></option>
+                                                <option <?php echo ($video['public'] == 2) ? 'selected' : null?> value="2"><?php _l('private')?></option>
+                                            </select>
+                                        </div>
+
+                                        <button type="submit" data-style="zoom-in" data-size="s" class="btn round-sm  btn-primary ladda-button" id="save-track-submit-<?php echo $video['id']?>"><?php _l('save-changes')?></button>
+
+                                    </div>
+
+
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <a href="<?php echo url('admin/videos', array('action'=> 'delete', 'id'=> $video['id']))?>" class="btn btn-sm btn-secondary confirm mtitle" title="<?php _l('delete')?>" ><i class="la la-trash"></i></a>
+
+                </td>
+            </tr>
+        <?php endforeach;?>
+        </tbody>
+    </table>
+    <?php if($videos->total < 1):?>
+        <div class="empty-content">
+            <i class="la la-music"></i>
+            <span><?php _l('no-contents-show')?></span>
+        </div>
+    <?php else:?>
+        <?php echo $videos->links()?>
+    <?php endif?>
+
+</div>

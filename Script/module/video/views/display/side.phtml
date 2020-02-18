@@ -1,0 +1,8 @@
+<div class="each">
+    <a class=" art" style="background-image: url(<?php echo model('video::video')->getArt($video)?>);" href="<?php echo model('video::video')->videoUrl($video)?>" data-ajax="true"></a>
+    <div class="content">
+        <a href="<?php echo model('video::video')->videoUrl($video)?>" data-ajax="true"><h5 class="mt-0"><?php echo $video['title']?></h5></a>
+        <i class="la la-eye"></i> <strong><?php echo $video['views']?></strong>
+        <i class="la la-play"></i> <strong><?php echo model('video::video')->countPlays($video['id'])?></strong>
+    </div>
+</div>

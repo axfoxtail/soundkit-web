@@ -1,0 +1,438 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>MusicEngine Documentation</title>
+    <link href="assets/bootstrap.min.css" rel="stylesheet"/>
+    <script src="assets/bootstrap.min.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="assets/logo.png" width="150" height="30" class="d-inline-block align-top" alt="">
+            <span style="font-size: 9px;">Documentation</span>
+        </a>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="#preparing">Preparing</a>
+                <a class="nav-item nav-link" href="#installation">Installation</a>
+                <a class="nav-item nav-link" href="#configuration">Quick Setup & Configuration</a>
+                <a class="nav-item nav-link" href="#faqs">Faqs</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container pt-5">
+    <div class="alert alert-success mb-4">
+        Thank you for purchasing MusicEngine.
+        If you have any questions that are beyond the scope of this documentation, please feel free to contact us through this
+        <a href="https://music.krea8iv.com/contact">form</a>.
+    </div>
+
+    <hr/>
+    <h4>Table of Contents</h4>
+    <ol>
+        <li><a href="#preparing">Preparing...</a></li>
+        <li><a href="#installation">Installation process...</a></li>
+        <li><a href="#configuration">Quick Setup...</a></li>
+        <li><a href="#faqs">FAQ...</a></li>
+
+    </ol>
+
+    <hr/>
+    <section id="preparing">
+        <h5>1. Preparing</h5>
+        <p>
+            Make sure you have the following:</p>
+        <ul>
+            <li>Apache 2 or higher, with:</li>
+            <li>mod_rewrite</li>
+            <li>PHP 5.4 or higher, with:</li>
+            <li>MySQLi</li>
+            <li>cURL</li>
+            <li>OpenSSL</li>
+            <li>GD</li>
+            <li>mbstring</li>
+            <li>MySQL 5 or higher</li>
+        </ul>
+
+    </section>
+    <hr/>
+
+    <section id="installation">
+        <h5>1. Installation</h5>
+        <p>
+            Do the following to complete the installation process</p>
+        <ul>
+            <li>Import the musicEngine.SQL file from the "<strong>MySQL</strong>" folder into your MySQL database using the import function available in MySQL.</li>
+            <li>With a text editor open the following file located inside the 'Script/' folder: config.php, and replace what's between the quotes (e.g: 'YOURDBNAME') with your MySQL settings:</li>
+            <li>As shown in this image </li>
+            <li><img src="assets/1.png" style="max-width: 700px;margin: 20px;border-radius:10px"/></li>
+            <li>'db_host' => '<strong>YOURDBHOST</strong>',</li>
+            <li>'db_username' => '<strong>YOURDBUSER</strong>',</li>
+            <li>'db_name' => '<strong>YOURDBNAME</strong>',</li>
+            <li>'db_password' => '<strong>YOURDBPASSWORD</strong>',</li>
+            <li>Upload the files from the "Script" folder on the FTP server (usually public_html folder when installing it on a domain).</li>
+            <li><img src="assets/2.png" style="max-width: 700px;margin: 20px;border-radius:10px"/></li>
+            <li>
+                Set the CHMOD to 777, 775 or 775 (depending on the server configuration) to the following folders:  '<strong>/uploads</strong>'.
+
+            </li>
+            <li><img src="assets/3.png" style="max-width: 700px;margin: 20px;border-radius:10px"/></li>
+        </ul>
+
+        <h6>Activate Your License</h6>
+
+        <p>You need to activate your license, you can get your purchase code at codecanyon under your downloads check the image below</p>
+        <img src="assets/12.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+
+        <p>Open the downloaded file and you can see the Item purchase code example below in the image</p>
+        <img src="assets/13.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+
+        <p>
+            Now copy the code and insert into /license.txt on your root folder as shown below
+
+            <strong>Make sure the code is on the first line without space, just one line</strong>
+        </p>
+        <img src="assets/14.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+
+        <h6>Now Login to the admin panel of your site</h6>
+        <p>
+            The default username for the Admin is "<strong>adminuser</strong>", and the password is "<strong>123456</strong>" without quotes .
+        </p>
+        <p style="color:red;">
+          Remove the purchase code from license.txt and   Change it  to <strong>VALIDATED</strong>
+        </p>
+    </section>
+
+    <hr/>
+    <section id="configuration">
+        <h5>1. Quick Startup & Configuration</h5>
+        <p>
+            The default username for the Admin is "<strong>adminuser</strong>", and the password is "<strong>123456</strong>" without quotes .
+        </p>
+        <ul>
+            <li>
+                <h6>Dashboard</h6>
+                <p>
+                    The dashboard show you the statistics of your website like total users, artists , tracks e.t.c as shown below
+                </p>
+            </li>
+            <li><img src="assets/4.png" style="max-width: 700px;margin: 20px;border-radius:10px"/></li>
+
+            <li>
+                <h6>Settings</h6>
+                <p>
+                    You can manage the site settings through the settings page
+                </p>
+            </li>
+            <li>
+                <h6>Change Logo</h6>
+                <p>
+                    To change the site logo  go to  <strong>settings -> General -> Site Logo</strong> as shown below
+                </p>
+
+                <div>
+                    <img src="assets/5.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+                </div>
+            </li>
+
+            <li>
+                <h6>Change Favicon</h6>
+                <p>
+                    To change the site Favicon  go to  <strong>settings -> General -> Favicon</strong>
+                </p>
+            </li>
+
+            <li>
+                <h6>Google Analytics Code</h6>
+                <p>
+                    To set your google analytics code  go to  <strong>settings -> General -> Google Analytic code</strong> as shown below
+                </p>
+
+                <div>
+                    <img src="assets/6.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+                </div>
+            </li>
+            <li>
+                <h6>Setup Email</h6>
+                <p>
+                    You can set up email by going to <strong>Settngs -> email</strong> as shown below
+                </p>
+                <div>
+                    <img src="assets/7.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+                </div>
+                <ol>
+                    <li>Select the email driver, <strong>Mail</strong> is php built in email while <strong>SMTP</strong> driver is for SMTP email configuration</li>
+                    <li>If you choose smtp , make sure you set the value for SMTP username, host, password and port</li>
+                    <li>You can also change the charset for the email</li>
+                    <li>Set the from Address as well to your site email like admin@yourdomain.com or any other emails</li>
+                </ol>
+            </li>
+
+            <li>
+                <h6>Pro Accounts</h6>
+                <p>Allows you to enable or disable Pro Accounts, change settings such as upload size, monthly plans, currency, etc.</p>
+                <h6>How to enable PayPal Payments</h6>
+                <p>
+                    Login into your PayPal account and click on <a target="_blank" href="https://www.paypal.com/webapps/customerprofile/summary.view">Profile.</a>
+                </p>
+                <p>Then go to <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_profile-display-handler&tab_id=SELLER_PREFERENCES">My Selling Tools</a> and Update your <a href="https://www.paypal.com/cgi-bin/customerprofileweb?cmd=%5fprofile%2dapi%2daccess&upgrade.x=1" target="_blank">API Access.</a></p>
+                <p>Pick Option 2 which is Request API credentials.</p>
+                <p>Now choose Request API signature, hit Agree and Submit and copy the "API Username", "API Password" and "Signature".</p>
+                <p>
+                    You can now enable Pro Accounts from the Admin Panel by adding the "API Username", "API Password", and "API Signature" under settings -> integration and enabling Pro Accounts under settings -> premium accounts.
+
+                </p>
+                <h6>How to enable PayPal IPN</h6>
+                <p>Login into your PayPal account and click on <a target="_blank" href="https://www.paypal.com/webapps/customerprofile/summary.view">Profile.</a></p>
+                <p>Then go to <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_profile-display-handler&tab_id=SELLER_PREFERENCES">My Selling Tools</a> and Update your <a href="https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_profile-ipn-notify" target="_blank">Instant payment notifications.</a></p>
+                <p>
+                    Click the Choose IPN Settings, set Notification URL to http://yoursite.com/paypal/ipn and choose Receive IPN messages (Enabled), save.
+
+                </p>
+            </li>
+
+            <li>
+                <h6> Enabling Amazon S3 Storage</h6>
+                <p><a href="http://docs.aws.amazon.com/AmazonS3/latest/gsg/SigningUpforS3.html" target="_blank">Sign up for Amazon S3</a></p>
+                <p><a href="http://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html" target="_blank"> Create a Bucket</a></p>
+                <p><a href="https://console.aws.amazon.com/iam/home#/security_credential" target="_blank">Get your Access Key ID and Secret Access Key</a></p>
+                <p>
+                    You can now enable the Amazon S3 storage from the Admin Panel by adding the Key, Secret, Region, Bucket and enabling Amazon S3 Storage under settings -> integration.
+                </p>
+            </li>
+
+            <li>
+                <h6>Setup Stripe Recurring Subscription</h6>
+                <p>Make sure you have setup  your stripe secret and publishable key , you can get that by going to <a href="https://stripe.com">https://stripe.com</a> register and get your keys</p>
+                <p>
+                    To set up recurring , login to your stripe dashboard at  <a href="https://dashboard.stripe.com" target="_blank">https://dashboard.stripe.com</a>
+                </p>
+                <p>
+                    Head to billing menu from the side bar as shown below
+
+                    <img src="assets/15.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+                </p>
+                <p>
+                    Add a product by going to products , you can give the product name your site name as show below and click the create product button
+
+                    <img src="assets/16.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+                </p>
+
+                <p>
+                    After successful creating a product, go to the product and add pricing plan as shown in the image below, you will need to both yearly and monthly plan with their pricing
+
+                    <img src="assets/17.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+                </p>
+
+                <p>
+                    Now that you have added your pricing plans you will need to copy each of the plan ID and set it your site admin panel
+
+                    <br/>
+                    See the image how to copy plan ID, make sure what you copy start with plan_*
+
+                    <img src="assets/18.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+
+                    <br/>
+                    Now go to your admin panel -> settings -> integration -> stripe <br/>
+
+                    Enable Stripe recurring payments
+
+                    and paste the plan ID according to the yearly and month plan created as shown below
+
+                    <img src="assets/19.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+                </p>
+            </li>
+
+            <li>
+                <h6>Setup Facebook Login</h6>
+
+                <p>Before you set up facebook please make sure you have enabled permalinks <a href="#permalins">read about it here</a></p>
+
+                <p>Also facebook only allow https , so make sure you enable https to setup facebook</p>
+
+                <p>Head to <a href="https://developers.facebook.com/" target="_blank">https://developers.facebook.com/</a> to create your facebook app and get the </p>
+
+                <p>
+                    Now go to products in the side bar , click the facebook login -> settings and set the Valid OAuth Redirect URIs as shown below
+
+                    <img src="assets/20.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+
+                    <br/>
+                    Make sure you change music.krea8iv.com/demo/ to your site domain, it should be like this <strong>https://mydomain.com/auth/facebook</strong>
+                </p>
+
+                <p>
+                    Now set your app ID and secret at your admin panel -> settings -> registration as shown below
+
+                    <img src="assets/21.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+                </p>
+            </li>
+        </ul>
+
+    </section>
+
+    <hr/>
+    <section id="faqs">
+        <h5>1. Faqs</h5>
+
+        <ul>
+            <li>
+                <h6>Can't upload tracks</h6>
+                <p>
+                    Make sure you have set the following php settings to higher value in your php.in
+
+                    <code>
+
+                        <li>memory_limit 656M</li>
+                        <li>post_max_size 656M</li>
+                        <li>upload_max_filesize 604M</li>
+                        <li>max_input_vars 200000</li>
+                        <li>max_execution_time 30000</li>
+                        <li>max_input_time 600000</li>
+                    </code>
+                </p>
+
+                <p>
+                    Also you need to increase the default audio size in the admin panel -> settings -> limit
+                </p>
+
+
+                <h6>Disable mod_security </h6>
+                <p>
+                    Disable mod-security if enabled on your server, you can contact your hosting to disable it
+                </p>
+
+                <p>
+                    You can also disable it by inserting this in your .htaccess file
+                </p>
+                <code>
+                    &lt;IfModule mod_security.c><br/>
+                        SecFilterEngine Off<br/>
+                    &lt;/IfModule><br/>
+
+                </code>
+            </li>
+
+            <li>
+                <h6>Facebook Login Not Working</h6>
+
+                <p>
+                    Please make sure you have enabled permalinks because non-permalinks cause redirect loop
+                </p>
+            </li>
+            <li>
+                <h6>How to Change Logo</h6>
+                <p>
+                    To change the site logo  go to  <strong>settings -> General -> Site Logo</strong>
+                </p>
+            </li>
+
+            <li>
+                <h6>How to Change Favicon</h6>
+                <p>
+                    To change the site Favicon  go to  <strong>settings -> General -> Favicon</strong>
+                </p>
+            </li>
+
+            <li>
+                <h6>How to set Google Analytics Code</h6>
+                <p>
+                    To set your google analytics code  go to  <strong>settings -> General -> Google Analytic code</strong>
+                </p>
+            </li>
+
+            <li>
+                <h6 id="permalins">How to Change the Url to Permalinks</h6>
+                <p>
+                    1. To change links to permalinks  go to  <strong>config.php</strong> change false to true as shown below
+                </p>
+
+                <div>
+                    <img src="assets/8.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+                </div>
+                <p>
+                    2. Create an .htaccess file on your root folder and copy this content below into it
+                </p>
+                <code>
+                    IndexIgnore *<br/>
+
+                    &lt;IfModule mod_rewrite.c&gt;<br/>
+
+                    #Options +FollowSymLinks<br/>
+                    RewriteEngine On<br/>
+                    RewriteCond %{REQUEST_FILENAME} !-d<br/>
+                    RewriteCond %{REQUEST_FILENAME} !-f<br/>
+                    RewriteRule ^ index.php [L]<br/>
+                    &lt;/IfModule&gt;<br/>
+
+
+
+                    &lt;FilesMatch “.(ttf|otf|eot|woff)$”&gt;<br/>
+                    &lt;IfModule mod_headers.c&gt;<br/>
+                    Header set Access-Control-Allow-Origin “*”<br/>
+                    &lt;/IfModule&gt;<br/>
+                    &lt;/FilesMatch&gt;
+                </code>
+                <p><strong>Make sure mod_rewrite is enabled on your server to prevent any error</strong></p>
+            </li>
+
+            <li>
+                <h6>How to Enable HTTPS </h6>
+                <p>
+                    Go to config.php set https to true as show below
+                </p>
+                <img src="assets/9.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+
+                <h6>How to Force HTTP to  HTTPS through .htaccess </h6>
+                <p>
+                    If you don't have the .htaccess file please follow the instruction given above at permalinks setup,
+                    copy this into your htaccess file right after <strong>RewriteEngine On</strong> as show in the image below
+                </p>
+
+                <code>
+                    RewriteCond %{HTTPS} off<br/>
+                    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+                </code>
+
+                <img src="assets/10.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+            </li>
+
+            <li>
+                <h6>How to add New Language</h6>
+                <p>
+                   1. You will need to create a new file in the languages/ folder like en.php for English, fr.php for french
+                </p>
+                <p>
+                    2. After creating the file , copy the content from en.php into this file and start translating
+                </p>
+                <p>
+                    3. To set your language as default language follow the instruction below
+                </p>
+            </li>
+
+            <li>
+                <h6>How to Change Default Language</h6>
+                <p>
+                    GO to config.php set default_language to any other language that you have added for example fr for french, ar for arabic e.t.c as shown below
+                </p>
+                <img src="assets/11.png" style="max-width: 700px;margin: 20px;border-radius:10px"/>
+            </li>
+        </ul>
+
+    </section>
+
+
+    <hr/>
+
+    <div class="pt-5">
+        <p>Copyright © 2018 <a href="https://musicengine.krea8iv.com">MusicEngine</a>. All rights reserved.</p>
+        <p> A product by krea8iv.</p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<div class="page-title">
+    <?php _l($type)?>
+</div>
+
+<?php $users = $C->model('track')->getPeople($type, $pageType, $pageId);?>
+
+<div
+    data-paginate-url="track/people/paginate"
+    data-param="<?php echo perfectSerialize(array('type' => $type, 'page' => $pageType, 'pageId' => $pageId))?>"
+    class="people-list-container clearfix" data-offset="0" id="people-<?php echo $pageType?>-<?php echo $pageId?>">
+    <?php foreach($users as $u):$u = (!isset($u['full_name'])) ? model('user')->getUser($u['userid']) : $u?>
+        <?php echo $C->view('user/display-inline', array('user' => $u))?>
+    <?php endforeach;?>
+
+    <?php if(count($users) > config('users-limit', 20) - 1):?>
+        <div class="load-more-button-container" id="people-<?php echo $pageType?>-<?php echo $pageId?>-load-more-container">
+            <a href=""
+               data-size="s" data-style="zoom-in"
+               class="load-more-button  btn btn-outline-dark btn-sm ladda-button"
+               data-container="people-<?php echo $pageType?>-<?php echo $pageId?>"
+               id="people-<?php echo $pageType?>-<?php echo $pageId?>-loadmore-button"><?php _l('load-more')?></a>
+        </div>
+    <?php endif?>
+</div>

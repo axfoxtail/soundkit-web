@@ -1,0 +1,147 @@
+<div class="inner-container">
+    <div class="row">
+        <div class="col-md-3 ">
+            <div class="flat-stat clearfix">
+                <div class="left"><i  class="la la-music"></i></div>
+                <div class="content">
+                    <h5><?php _l('tracks-number')?></h5>
+                    <div class="count"><?php echo model('store::store')->countTotalSold('tracks')?></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 ">
+            <div class="flat-stat clearfix" style="background: #2597EC;">
+                <div class="left"><i  class="la-folder-open la "></i></div>
+                <div class="content">
+                    <h5><?php _l('total-albums-sold')?></h5>
+                    <div class="count"><?php echo model('store::store')->countTotalSold('albums')?></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 ">
+            <div class="flat-stat clearfix" style="background: #EA1A62;">
+                <div class="left"><i  class="la la-music"></i></div>
+                <div class="content">
+                    <h5><?php _l('tracks-number')?></h5>
+                    <div class="count"><?php echo formatMoney(model('store::store')->countTotalAmountSold('tracks'))?></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 ">
+            <div class="flat-stat clearfix" style="background: #8AC35D;">
+                <div class="left"><i  class="la-folder-open la "></i></div>
+                <div class="content">
+                    <h5><?php _l('total-albums-sold')?></h5>
+                    <div class="count"><?php echo formatMoney(model('store::store')->countTotalAmountSold('albums'))?></div>
+                </div>
+            </div>
+        </div>
+
+        <?php if(moduleExists('video')):?>
+            <div class="col-md-3 ">
+                <div class="flat-stat clearfix" style="background: #FF5739;">
+                    <div class="left"><i  class="la-video-camera la "></i></div>
+                    <div class="content">
+                        <h5><?php _l('total-video-sold')?></h5>
+                        <div class="count"><?php echo model('store::store')->countTotalSold('video')?></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 ">
+                <div class="flat-stat clearfix" style="background: #38E1FF;">
+                    <div class="left"><i  class="la-video-camera la "></i></div>
+                    <div class="content">
+                        <h5><?php _l('total-video-sold')?></h5>
+                        <div class="count"><?php echo formatMoney(model('store::store')->countTotalAmountSold('video'))?></div>
+                    </div>
+                </div>
+            </div>
+        <?php endif?>
+    </div>
+</div>
+<div class="profile-menu">
+    <div class="inner-container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link <?php echo $type == 'tracks' ? 'active' : null?>" data-ajax="true" href="<?php echo url('admin/sales', array('type' => 'tracks'))?>" ><?php _l('tracks-sold')?></a>
+            </li>
+            <?php if(moduleExists('video')):?>
+                <li class="nav-item">
+                    <a class="nav-link <?php echo $type == 'video' ? 'active' : null?>" data-ajax="true" href="<?php echo url('admin/sales', array('type' => 'video'))?>" ><?php _l('videos-sold')?></a>
+                </li>
+            <?php endif?>
+
+            <li class="nav-item">
+                <a class="nav-link <?php echo $type == 'albums' ? 'active' : null?>"  data-ajax="true" href="<?php echo url('admin/sales', array('type' => 'albums'))?>"><?php _l('albums-sold')?></a>
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+<div class="inner-container mt-3">
+    <?php echo $type?>
+    <table class="table table-responsive-sm">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col" style="width: 10%">#</th>
+            <th scope="col"  style="width: 10%"><?php _l('by')?></th>
+            <th scope="col"  style="width: 35%"><?php _l('name')?></th>
+            <th scope="col"  style="width: 15%"><?php _l('date')?></th>
+            <th scope="col"  style="width: 10%"><?php _l('total-amount')?></th>
+            <th scope="col"  style="width: 10%"><?php _l('seller-profit')?></th>
+            <th scope="col"  style="width: 10%"><?php _l('status')?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php $transactions = model('store::store')->getAllTransactions($type)?>
+        <?php foreach($transactions->results() as $transaction): $user = model('user')->getUser($transaction['userid'])?>
+            <tr>
+                <td><?php echo $transaction['id']?></td>
+                <td>
+                    <a href="<?php echo model('user')->profileUrl($user)?>" data-ajax="true"><strong><?php echo $user['username']?></strong></a>
+                </td>
+                <td>
+                    <?php if($type == 'tracks'):?>
+                        <?php $track = model('track')->findTrack($transaction['type_id']);?>
+                        <a data-ajax="true" href="<?php echo model('track')->trackUrl($track)?>"><?php echo $track['title']?></a>
+                    <?php elseif($type == 'video'):?>
+
+                        <?php $video = model('video::video')->find($transaction['type_id']);?>
+                        <a data-ajax="true" href="<?php echo model('video::video')->videoUrl($video)?>"><?php echo $video['title']?></a>
+
+                    <?php else:?>
+                        <?php $playlist = model('track')->findPlaylist($transaction['type_id']);?>
+                        <a data-ajax="true" href="<?php echo model('track')->playlistUrl($playlist)?>"><?php echo $playlist['name']?></a>
+                    <?php endif?>
+
+                </td>
+                <td>
+                    <?php echo date('m - d - Y', $transaction['time'])?>
+                </td>
+                <td>
+                    <?php echo formatMoney($transaction['amount'])?>
+                </td>
+                <td>
+                    <?php echo formatMoney($transaction['amount_credited'])?>
+                </td>
+                <td>
+                    <?php if($transaction['status'] == 3):?>
+                        <span class="badge"><?php _l('pending')?></span>
+                    <?php else:?>
+                        <span class="badge <?php echo ($transaction['status']) ? 'badge-success' : 'badge-danger'?>"><?php echo ($transaction['status']) ? l('successful') : l('failed')?></span>
+                    <?php endif?>
+                </td>
+            </tr>
+        <?php endforeach?>
+        </tbody>
+    </table>
+    <?php if($transactions->total < 1):?>
+        <div class="empty-content" style="padding:5% 0">
+            <i class="la la-money"></i>
+            <span><?php _l('no-contents-show')?></span>
+        </div>
+    <?php else:?>
+        <?php echo $transactions->links()?>
+    <?php endif?>
+</div>

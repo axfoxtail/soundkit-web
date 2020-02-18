@@ -1,0 +1,54 @@
+<hr/>
+<h6><?php _l('store')?></h6>
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('minimum-withdraw-request')?></label>
+    <div class="col-sm-5">
+        <input type="number"  name="val[minimum-withdraw-request]" class="form-control form-control-sm"  value="<?php echo config('minimum-withdraw-request', 50)?>">
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('admin-track-share')?>(%)</label>
+    <div class="col-sm-5">
+        <input type="number"  name="val[admin-track-share]" class="form-control form-control-sm"  value="<?php echo config('admin-track-share', 10)?>">
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('admin-album-share')?> (%)</label>
+    <div class="col-sm-5">
+        <input type="number"  name="val[admin-album-share]" class="form-control form-control-sm"  value="<?php echo config('admin-album-share', 10)?>">
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('enable-bank-details')?></label>
+    <div class="col-sm-5">
+        <input type="hidden" name="val[bank-details]" value="0"/>
+        <div class="switch">
+            <input id="cmn-toggle-bank" value="1" name="val[bank-details]" <?php echo (config('bank-details', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+            <label for="cmn-toggle-bank"></label>
+        </div>
+
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('allow-play-before-purchase')?></label>
+    <div class="col-sm-5">
+        <input type="hidden" name="val[allow-play-before-buy]" value="0"/>
+        <div class="switch">
+            <input id="cmn-toggle-allow-play-before-buy" value="1" name="val[allow-play-before-buy]" <?php echo (config('allow-play-before-buy', true)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+            <label for="cmn-toggle-allow-play-before-buy"></label>
+        </div>
+
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label"><?php _l('play-percentage')?> (%)</label>
+    <div class="col-sm-5">
+        <input type="number"  name="val[play-percentage]" class="form-control form-control-sm"  value="<?php echo config('play-percentage', 30)?>">
+        <small><?php _l('play-percentage-helper')?></small>
+    </div>
+</div>

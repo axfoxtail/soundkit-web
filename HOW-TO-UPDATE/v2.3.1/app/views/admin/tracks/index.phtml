@@ -1,0 +1,235 @@
+<div class="inner-container">
+    <div class="title clearfix mt-4">
+        <div class="float-left">
+            <h6><?php _l('manage-tracks')?></h6>
+        </div>
+        <div class="float-right">
+            <form class="form-inline" method="post" >
+                <div style="display: inline-block;position: relative;bottom: 4px;">
+                    <div class="input-group mb-2 mb-sm-0">
+                        <div class="input-group-addon"><i class="la la-search"></i></div>
+                        <input type="text" value="<?php echo $term?>" name="term" class="form-control" id="inlineFormInputGroup" placeholder="<?php _l('search')?>">
+                    </div>
+                </div>
+                <div style="display: inline-block;margin-left: 4px;">
+                    <select data-ui-select="true" class=" select-input" name="genre" style="width: 100px;position: relative;">
+                        <?php foreach ($C->model('admin')->getGenres() as $g):?>
+                            <option <?php echo ($genre == $g['id']) ? 'selected':null?> value="<?php echo $g['id']?>"><?php echo $g['name']?></option>
+                        <?php endforeach;?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary round-sm" style="position: relative;bottom: 4px;margin-left: 4px;"><?php _l('filter')?></button>
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-striped mt-3 table-responsive-sm">
+        <thead>
+        <tr>
+            <th scope="col" style="width: 10%;"><?php _l('id')?></th>
+            <th scope="col" style="width: 20%;"><?php _l('by')?></th>
+            <th scope="col" style="width: 25%;"><?php _l('title')?></th>
+            <th scope="col" style="width: 10%;"><?php _l('genre')?></th>
+            <th scope="col" style="width: 10%;"><?php _l('status')?></th>
+            <th scope="col" style="width: 10%;"><?php _l('added-on')?></th>
+            <th scope="col" style="width: 15%;"><?php _l('action')?></th>
+        </tr>
+        </thead>
+        <tbody>
+            <?php foreach($tracks->results() as $track):?>
+                <tr>
+                    <td><?php echo $track['id']?></td>
+                    <td>
+                        <?php $theUser = $C->model('user')->getUser($track['userid'])?>
+                        <a href="<?php echo $C->model('user')->profileUrl($theUser)?>" data-ajax="true"><img src="<?php echo $C->model('user')->getAvatar($theUser)?>" style="width:20px;height:20px;border-radius:100px"/> <?php echo $theUser['full_name']?></a>
+                    </td>
+                    <td>
+                        <a data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track)?>"><?php echo $track['title']?></a>
+                    </td>
+                    <td>
+                        <?php $theGenre = $C->model('admin')->findGenre($track['genre'])?>
+                        <?php echo $theGenre['name']?>
+                    </td>
+                    <td>
+                        <span class="badge badge-dark"><?php echo $track['status'] ? l('active') : l('not-active')?></span>
+                    </td>
+                    <td>
+                        <?php echo date('d/m/Y', $track['time'])?>
+                    </td>
+                    <td>
+                        <?php Hook::getInstance()->fire('admin.track.action', null, array($track))?>
+                        <a href="" title="<?php _l('edit-track')?>" class="mtitle btn btn-secondary btn-sm " data-target="#editTrackModal-<?php echo $track['id']?>" data-toggle="modal"><i class="la la-pencil"></i></a>
+                        <div class="modal" id="editTrackModal-<?php echo $track['id']?>" tabindex="-1" role="dialog">
+                            <div class="modal-dialog " role="document">
+                                <form action="<?php echo getFullUrl(true)?>" enctype="multipart/form-data" method="post" class="general-form">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title"><?php _l('edit-track')?></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <input type="hidden" name="val[id]" value="<?php echo $track['id']?>"/>
+
+                                        <div class="p-4">
+                                            <div class="static-row mt-3 clearfix" style="min-height: 200px">
+                                                <div class="row-left" style="width: 150px;">
+                                                    <div class="avatar-placeholder">
+                                                        <div id="songAvatar" style="<?php echo ($track['art']) ? 'background-image:url('.$C->model('track')->getArt($track, 200).');display:block' : null?>"></div>
+                                                        <i class="la la-photo"></i>
+                                                    </div>
+
+                                                    <div class="input-picker mb-3">
+                                                        <button class="btn btn-secondary btn-sm btn-block round-sm"><?php _l('select-image')?></button>
+                                                        <input data-placeholder="#songAvatar" onchange="validate_file_size(this, 'image')" type="file" name="img"/>
+                                                    </div>
+                                                </div>
+                                                <div class="row-right" style="padding-left: 160px;">
+                                                    <div class="form-group">
+                                                        <label><?php _l('name')?></label>
+                                                        <input class="form-control" type="text" name="val[title]" value="<?php echo $track['title']?>"/>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label><?php _l('tags')?><span class="important">*</span></label>
+                                                        <input value="<?php echo $track['tag']?>" autocomplete="off" type="text" name="val[tags]" class=" input-tags" >
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label><?php _l('description')?></label>
+                                                <textarea  class="form-control" rows="7" type="text" name="val[description]"><?php echo $track['description']?></textarea>
+                                            </div>
+
+                                            <div class="form-group ">
+                                                <label><?php _l('genre')?></label>
+                                                <select data-ui-select="true" class=" select-input" name="val[genre]">
+                                                    <?php foreach ($C->model('admin')->getGenres() as $genre):?>
+                                                        <option <?php echo $genre['id'] == $track['genre'] ? 'selected': null?> value="<?php echo $genre['id']?>"><?php echo $genre['name']?></option>
+                                                    <?php endforeach;?>
+                                                </select>
+                                            </div>
+
+                                            <?php if(config('enable-lyrics-upload', true)):?>
+                                                <div class="form-group">
+                                                    <label><?php _l('lyrics')?></label>
+                                                    <input type="hidden" name="val[lyrics]" value="<?php echo $track['lyrics']?>"/>
+                                                    <input type="file" onchange="return validate_file_size(this, 'lyric-file')" class="form-control" name="lyrics_file"/>
+                                                    <small><?php _l('add-lyrics-note')?><a target='_blank' href='https://en.wikipedia.org/wiki/LRC_(file_format)'>en.wikipedia.org/wiki/LRC_(file_format)</a></small>
+                                                </div>
+                                            <?php endif?>
+
+                                            <div class="form-group">
+                                                <label><?php _l('purchase-link')?></label>
+                                                <input value="<?php echo $track['buy']?>" autocomplete="off" type="text" name="val[link]" class="form-control form-control-sm" >
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label><?php _l('record-label')?></label>
+                                                <input <?php echo $track['record']?> autocomplete="off" type="text" name="val[label]" class="form-control form-control-sm" >
+                                            </div>
+
+                                            <div class="form-group mb-5">
+                                                <?php
+                                                $day=null;$month=null;$year=null;
+                                                if ($track['track_release']) {
+                                                    list($year,$month,$day) = explode('-', $track['track_release']);
+                                                }
+                                                ?>
+                                                <label><?php _l('release-date')?></label>
+                                                <select name="val[day]">
+                                                    <option value=""><?php _l('day')?></option>
+                                                    <?php $i =1; while($i <= 31):?>
+                                                        <option <?php echo $day==$i?'selected':null?>  value="<?php echo $i?>"><?php echo $i?></option>
+                                                        <?php $i++; endwhile;?>
+                                                </select>
+                                                <select name="val[month]">
+                                                    <option value=""><?php _l('month')?></option>
+                                                    <?php $i=1;foreach (getMonths() as $month):?>
+                                                        <option <?php echo $month==$i?'selected':null?> value="<?php echo $i?>"><?php _l($month)?></option>
+                                                        <?php $i++; endforeach;?>
+                                                </select>
+                                                <select name="val[year]">
+                                                    <option value=""><?php _l('year')?></option>
+                                                    <?php $i =2018; while($i >= 1910):?>
+                                                        <option <?php echo $year==$i?'selected':null?> value="<?php echo $i?>"><?php echo $i?></option>
+                                                        <?php $i--; endwhile;?>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('allow-downloads')?></label>
+                                                <div class="col-sm-5">
+                                                    <input <?php echo ($track['downloads'] == 1) ? 'checked':null?> type="hidden" name="val[download]" value="0"/>
+                                                    <div class="switch">
+                                                        <input id="cmn-toggle-premium-users<?php echo $track['id']?>" value="1" name="val[download]"  class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                                        <label for="cmn-toggle-premium-users<?php echo $track['id']?>"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('display-embeded-code')?></label>
+                                                <div class="col-sm-5">
+                                                    <input type="hidden" name="val[embed]" value="0"/>
+                                                    <div class="switch">
+                                                        <input id="cmn-toggle-embed-code<?php echo $track['id']?>" value="1" name="val[embed]"  <?php echo ($track['embed'] == 1) ? 'checked':null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                                        <label for="cmn-toggle-embed-code<?php echo $track['id']?>"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('comments')?></label>
+                                                <div class="col-sm-5">
+                                                    <select data-ui-select="true" class=" select-input" name="val[comments]">
+                                                        <option <?php echo ($track['comments'] == 1) ? 'selected':null?> value="1"><?php _l('public')?></option>
+                                                        <option <?php echo ($track['comments'] == 2) ? 'selected':null?> value="2"><?php _l('private-followers-only')?></option>
+                                                        <option <?php echo ($track['comments'] == 3) ? 'selected':null?> value="3"><?php _l('disabled')?></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('public-statistics')?></label>
+                                                <div class="col-sm-5">
+                                                    <input type="hidden" name="val[stats]" value="0"/>
+                                                    <div class="switch">
+                                                        <input id="cmn-toggle-stats<?php echo $track['id']?>" value="1" name="val[stats]"  <?php echo ($track['stats'] == 1) ? 'checked':null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                                        <label for="cmn-toggle-stats<?php echo $track['id']?>"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php Hook::getInstance()->fire('admin.track.edit', null, array($track))?>
+
+                                            <button type="submit" data-style="zoom-in" data-size="s" class="btn round-sm  btn-primary ladda-button" id="save-track-submit-<?php echo $track['id']?>"><?php _l('save-changes')?></button>
+
+                                        </div>
+
+
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <a href="<?php echo url('admin/tracks', array('action'=> 'delete', 'id'=> $track['id']))?>" class="btn btn-sm btn-secondary confirm mtitle" title="<?php _l('delete')?>" ><i class="la la-trash"></i></a>
+
+                    </td>
+                </tr>
+            <?php endforeach;?>
+        </tbody>
+    </table>
+    <?php if($tracks->total < 1):?>
+        <div class="empty-content">
+            <i class="la la-music"></i>
+            <span><?php _l('no-contents-show')?></span>
+        </div>
+    <?php else:?>
+        <?php echo $tracks->links()?>
+    <?php endif?>
+
+</div>

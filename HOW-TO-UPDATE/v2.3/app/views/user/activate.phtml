@@ -1,0 +1,22 @@
+<div class="getstarted-header">
+    <div class="inner-container">
+        <div class="clearfix">
+            <div class="float-left">
+                <a href="#" class="btn disabled" id="getstarted-back" ><?php _l('activate-your-account')?></a>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="inner-container" style="margin-bottom: 100px">
+    <div class="row mt-5">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="alert alert-success"><?php _l('activate-account-success-message')?></div>
+
+            <a href="<?php echo url('activate/account', array('id' => $user['id'], 'resend' => 1))?>" class="btn btn-primary btn-sm round-sm"><?php _l('resend-activation-link')?></a>
+        </div>
+    </div>
+</div>

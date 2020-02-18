@@ -1,0 +1,10 @@
+<?php foreach($users as $user):?>
+    <div class="each-welcome-user each-welcome-user-<?php echo $user['id']?>" onclick="return getstarted_selectUser(<?php echo $user['id']?>)">
+        <input type="checkbox" style="display: none;" name="user[]" value="<?php echo $user['id']?>"/>
+        <div class="cover">
+            <div class="avatar" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 200)?>);"></div>
+            <i class="la la-check"> </i>
+        </div>
+        <span><b><?php echo $user['full_name']?></b></span>
+    </div>
+<?php endforeach;?>

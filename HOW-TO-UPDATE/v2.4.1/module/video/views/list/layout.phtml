@@ -1,0 +1,29 @@
+<div class="profile-menu">
+    <div class="inner-container clearfix">
+        <ul class="nav nav-tabs float-left">
+            <li class="nav-item">
+                <a class="nav-link <?php echo $page == 'overview' ? 'active' : null?>" data-ajax="true" href="<?php echo url('videos')?>" ><?php _l('home')?></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo $page == 'latest' ? 'active' : null?>"  data-ajax="true" href="<?php echo url('videos/latest')?>"><?php _l('latest-videos')?></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo $page == 'top' ? 'active' : null?>"  data-ajax="true" href="<?php echo url('videos/top')?>"><?php _l('top-videos')?></a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle <?php echo $page == 'category' ? 'active' : null?>"href="" data-toggle="dropdown"><?php _l('categories')?></a>
+                <div class="dropdown-menu">
+                    <?php foreach ($C->model('admin')->getGenres() as $genre):?>
+                        <option value="<?php echo $genre['id']?>"></option>
+                            <a class="dropdown-item" href="<?php echo url('videos/category/'.$genre['id'])?>" data-ajax="true"><?php echo $genre['name']?></a>
+                    <?php endforeach;?>
+                </div>
+            </li>
+
+        </ul>
+
+
+    </div>
+</div>
+
+<?php echo $content?>

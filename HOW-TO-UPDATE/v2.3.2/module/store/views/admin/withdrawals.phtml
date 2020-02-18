@@ -1,0 +1,46 @@
+<table class="table table-striped mt-4 table-responsive-sm">
+    <thead>
+    <tr>
+        <th scope="col" style="width: 10%;"><?php _l('id')?></th>
+        <th scope="col" style="width: 20%;"><?php _l('by')?></th>
+        <th scope="col" style="width: 10%;"><?php _l('amount')?></th>
+        <th scope="col" style="width: 35%;"><?php _l('payment-details')?></th>
+        <th scope="col" style="width: 15%;"><?php _l('request-on')?></th>
+        <th scope="col" style="width: 20%;"><?php _l('action')?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php $withdraws = model('store::store')->getPendingWithdrawals()?>
+    <?php foreach($withdraws->results() as $withdraw):?>
+        <tr>
+            <td>
+                <?php echo $withdraw['id']?>
+            </td>
+            <td>
+                <?php $user = model('user')->getUser($withdraw['userid'])?>
+                <a href="<?php echo model('user')->profileUrl($user)?>"><?php echo $user['full_name']?></a>
+            </td>
+            <td>
+                <?php echo formatMoney($withdraw['amount'])?>
+            </td>
+            <td>
+                <?php echo $user['payment_details']?>
+            </td>
+            <td>
+                <?php echo date('m-d-Y', $withdraw['time'])?>
+            </td>
+            <td>
+                <a href="<?php echo url('admin/withdraw/mark', array('id' => $withdraw['id']))?>" class="btn btn-sm btn-outline-secondary mtitle ajax-action" title="<?php _l('mark-paid')?>"><i class="la la-check"></i></a>
+            </td>
+        </tr>
+    <?php endforeach;?>
+    </tbody>
+</table>
+<?php if($withdraws->total < 1):?>
+    <div class="empty-content">
+        <i class="la la-money"></i>
+        <span><?php _l('no-contents-show')?></span>
+    </div>
+<?php else:?>
+    <?php echo $withdraws->links()?>
+<?php endif?>

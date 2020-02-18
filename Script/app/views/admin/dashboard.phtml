@@ -1,0 +1,125 @@
+<div class="inner-container mt-3">
+
+    <div class="row">
+
+        <div class="col-md-8">
+            <div class="stats row">
+                <div class="col-md-4">
+                    <div class="stat">
+                        <div class="count-container clearfix">
+                            <div class="float-left"><i class="la la-users"></i></div>
+                            <div class="float-right">
+                                <div class="count" style="color: #2196F3;"><?php echo $C->model('admin')->countUsers('1')?></div>
+                            </div>
+                        </div>
+                        <div class="stat-title"><?php _l('users')?></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat">
+                        <div class="count-container clearfix">
+                            <div class="float-left"><i class="la la-users"></i></div>
+                            <div class="float-right">
+                                <div class="count" style="color: #FF5722;"><?php echo $C->model('admin')->countUsers('2')?></div>
+                            </div>
+                        </div>
+                        <div class="stat-title"><?php _l('artists')?></div>
+                    </div>
+                </div>
+
+                <?php Hook::getInstance()->fire('admin.dashboard.top')?>
+                <?php if(model('user')->hasRole('manage-sales')):?>
+                    <div class="col-md-4">
+                        <div class="stat">
+                            <div class="count-container clearfix">
+                                <div class="float-left"><i class="la la-money"></i></div>
+                                <div class="float-right">
+                                    <div class="count" style="color: #FF5722;"><?php echo $C->model('admin')->countPayments()?></div>
+                                </div>
+                            </div>
+                            <div class="stat-title"><?php _l('transactions')?></div>
+                        </div>
+                    </div>
+                <?php endif?>
+
+                <?php if(model('user')->hasRole('manage-tracks')):?>
+                <div class="col-md-4">
+                    <div class="stat">
+                        <div class="count-container clearfix">
+                            <div class="float-left"><i class="la la-music"></i></div>
+                            <div class="float-right">
+                                <div class="count" style="color: #FF5722;"><?php echo $C->model('admin')->countTracks()?></div>
+                            </div>
+                        </div>
+                        <div class="stat-title"><?php _l('tracks')?></div>
+                    </div>
+                </div>
+                <?php endif?>
+
+                <?php if(model('user')->hasRole('manage-albums')):?>
+                <div class="col-md-4">
+                    <div class="stat">
+                        <div class="count-container clearfix">
+                            <div class="float-left"><i class="la la-list"></i></div>
+                            <div class="float-right">
+                                <div class="count" style="color: #FF5722;"><?php echo $C->model('admin')->countPlaylists()?></div>
+                            </div>
+                        </div>
+                        <div class="stat-title"><?php _l('playlists')?></div>
+                    </div>
+                </div>
+                <?php endif?>
+
+                <div class="col-md-4">
+                    <div class="stat">
+                        <div class="count-container clearfix">
+                            <div class="float-left"><i class="la la-comment"></i></div>
+                            <div class="float-right">
+                                <div class="count" style="color: #00BCD4;"><?php echo $C->model('admin')->countComments()?></div>
+                            </div>
+                        </div>
+                        <div class="stat-title"><?php _l('comments')?></div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat">
+                        <div class="count-container clearfix">
+                            <div class="float-left"><i class="la la-thumbs-up"></i></div>
+                            <div class="float-right">
+                                <div class="count" style="color: #00BCD4;"><?php echo $C->model('admin')->countLikes()?></div>
+                            </div>
+                        </div>
+                        <div class="stat-title"><?php _l('likes')?></div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat">
+                        <div class="count-container clearfix">
+                            <div class="float-left"><i class="la la-info"></i></div>
+                            <div class="float-right">
+                                <div class="count" style="color: #FF5722;"><?php echo $C->model('admin')->countReports()?></div>
+                            </div>
+                        </div>
+                        <div class="stat-title"><?php _l('reports')?></div>
+                    </div>
+                </div>
+                <?php Hook::getInstance()->fire('admin.dashboard.bottom')?>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="box">
+                <div class="box-title"><strong><?php _l('version')?> : </strong> <?php echo VERSION?></div>
+            </div>
+            <div class="box">
+                <div class="box-title"><?php _l('useful-links')?></div>
+                <ul class="nav">
+                    <li><a href="https://music.krea8iv.com/help" target="_blank"><?php _l('get-help')?> <i class="la la-caret-right float-right"></i></a></li>
+                    <li><a href="https://music.krea8iv.com/documentation" target="_blank"><?php _l('documentation')?> <i class="la la-caret-right float-right"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

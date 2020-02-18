@@ -1,0 +1,26 @@
+<div class="inner-container mt-4">
+    <?php if($page['location'] == 'footer'):?>
+        <div class="row">
+            <div class="col-md-3 left-nav">
+                <div class="fixed-left-content">
+
+                    <ul class="nav">
+                        <?php foreach($C->model('admin')->getPagesMenu('footer') as $dPage):?>
+
+                            <li><a data-ajax="true" class="nav-link <?php echo $page['id'] == $dPage['id'] ? 'active' : null?>" href="<?php echo url('page/'.$dPage['url'])?>"> <?php _l($dPage['title'])?></a></li>
+
+                        <?php endforeach;?>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <?php _l($page['content'])?>
+            </div>
+
+        </div>
+    <?php else:?>
+        <?php _l($page['content'])?>
+    <?php endif?>
+
+</div>

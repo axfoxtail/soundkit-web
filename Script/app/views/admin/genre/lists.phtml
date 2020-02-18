@@ -1,0 +1,66 @@
+<div class="inner-container mt-4">
+    <div class="title clearfix" style="margin-bottom: 20px">
+        <div class="float-left">
+            <form class="form-inline" method="post">
+                <div class="input-group mb-2 mb-sm-0">
+                    <div class="input-group-addon"><i class="la la-search"></i></div>
+                    <input type="text" name="term" class="form-control" id="inlineFormInputGroup" placeholder="<?php _l('search')?>">
+                </div>
+            </form>
+        </div>
+        <div class="float-right">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-7">
+            <?php if(count($genres) > 0):?>
+                <div class="mt-5">
+                    <?php foreach($genres as $genre):?>
+                        <hr/>
+                        <div style="margin-bottom: 10px;">
+
+                            <div class=" clearfix">
+                                <div class="float-left">
+                                    <h5 class="mt-0"><a data-ajax="true" href="<?php echo url('')?>"><?php echo $genre['name']?></a></h5>
+                                    <span><?php _l('used-in')?> <?php echo $C->model('track')->countGenreTracks($genre['id'])?> <strong><?php _l('tracks')?></strong></span>
+                                </div>
+                                <div class="float-right">
+                                    <div class="">
+                                        <a class="btn btn-sm btn-primary" data-ajax="true" href="<?php echo url('admin/genres', array('action'=> 'edit', 'id' => $genre['id']))?>" role="button"  >
+                                            <i class="la la-edit"></i>
+                                        </a>
+                                        <a class="confirm no-caret btn btn-sm btn-danger" href="<?php echo url('admin/genres', array('action'=> 'delete', 'id' => $genre['id']))?>" role="button"  >
+                                            <i class="la la-trash-o"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php endforeach;?>
+                </div>
+            <?php else:?>
+                <div class="alert alert-warning mt-5" ><?php _l('no-genres-display')?></div>
+            <?php endif?>
+        </div>
+        <div class="col-md-5">
+            <div class="box mt-5" >
+                <?php if($message):?>
+                    <div class="alert alert-danger"><?php echo $message?></div>
+                <?php endif?>
+                <div class="box-title"><?php echo (!$dgenre) ? l('add-genre') : l('edit-genre')?></div>
+                <form action="<?php echo getFullUrl(true)?>" class="general-form" method="post">
+
+                    <div class="form-group">
+                        <input value="<?php echo ($dgenre) ? $dgenre['name'] : null?>" autocomplete="off" name="val[name]" type="text" class="form-control"   placeholder="<?php _l('name')?>">
+                    </div>
+
+                    <button type="submit" data-size="s" data-style="zoom-in" type="submit" class="btn round-sm btn-primary btn-sm ladda-button" id="user-edit-button"><?php _l('submit')?></button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

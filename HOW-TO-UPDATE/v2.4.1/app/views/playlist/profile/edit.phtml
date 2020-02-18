@@ -1,0 +1,93 @@
+<?php $user = $C->model('user')->getUser($playlist['userid'])?>
+<?php $trackFirst = $C->model('track')->getPlaylistFirstTrack($playlist['id'])?>
+<?php
+$image = model('track')->getPlaylistArt($playlist,$user, $trackFirst, 200);
+?>
+<div class="profile-menu mb-3">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#details" ><?php _l('details')?></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link"  data-toggle="tab" href="#order"><?php _l('re-order-tracks')?></a>
+        </li>
+        <?php if(model('user')->isLoggedIn() and $playlist['userid'] == $C->model('user')->authId):?>
+            <a style="position:absolute; right: 0;top:0" class="btn btn-sm btn-outline-danger mt-3 round-sm confirm"  data-toggle="tab" href="<?php echo url('playlist/delete', array('id' => $playlist['id']))?>"><i class="la la-trash"></i> <?php _l('delete-playlist')?></a>
+
+        <?php endif?>
+
+    </ul>
+</div>
+
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="details">
+        <form action="<?php echo url('load/playlist/form')?>" method="post" class="general-form">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="avatar-placeholder mt-4" style="width: 100%;height:170px;border-style:dashed">
+                        <div id="songAvatar" style="background-image: url(<?php echo $image?>);display:block"></div>
+                        <i class="la la-photo"></i>
+                    </div>
+
+                    <div class="input-picker mb-3">
+                        <button class="btn btn-secondary btn-sm btn-block round-sm"><?php _l('select-image')?></button>
+                        <input id="songAvatar-input"  data-placeholder="#songAvatar" onchange="validate_file_size(this, 'image')" type="file" name="img"/>
+                    </div>
+
+                </div>
+                <div class="col-md-8 pt-4">
+                    <input type="hidden" value="<?php echo $playlist['id']?>" name="id"/>
+                    <div class="form-group">
+                        <input type="text" value="<?php echo $playlist['name']?>" name="val[title]" class="form-control " placeholder="<?php _l('title')?>"/>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="val[desc]" class="form-control" placeholder="<?php _l('description')?>"><?php echo $playlist['description']?></textarea>
+                    </div>
+
+                    <?php Hook::getInstance()->fire('playlist.edit.content', null, array($playlist))?>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label><?php _l('public')?></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="hidden" name="val[public]" value="0"/>
+                            <div class="switch">
+                                <input id="cmn-toggle-premium"  <?php echo ($playlist['public'] == 1) ? 'checked':null?> value="1" name="val[public]" class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                <label for="cmn-toggle-premium"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mt-3">
+                <hr/>
+                <button type="submit" type="submit" id="playlistsavebutton" data-size="s" data-style="zoom-in" class="ladda-button round-sm btn btn-primary"><?php _l('save')?></button>
+            </div>
+        </form>
+    </div>
+
+    <div class="tab-pane fade" id="order">
+        <div class="alert alert-info"><?php _l('re-order-tracks-note')?></div>
+        <form action="<?php echo url('save/playlist/order')?>" method="post" class="general-form">
+            <input type="hidden" name="id" value="<?php echo $playlist['id']?>"/>
+            <div class="tracks-order-container" id="selected-songs-edit">
+                <?php foreach(model('track')->getPlaylistTracks($playlist['id'], 0) as $track):?>
+                    <div class="each-drag each-upload-track" >
+                        <input type="hidden" name="tracks[]" value="<?php echo $track['id']?>"/>
+                        <img style="width:20px;height:20px" src="<?php echo model('track')->getArt($track)?>"/>
+                        <?php echo $track['title']?>
+                    </div>
+                <?php endforeach;?>
+            </div>
+            <div class="mt-3">
+                <hr/>
+                <button type="submit" type="submit" id="playlistsavebutton" data-size="s" data-style="zoom-in" class="ladda-button round-sm btn btn-primary"><?php _l('save-order')?></button>
+            </div>
+        </form>
+    </div>
+
+</div>
+

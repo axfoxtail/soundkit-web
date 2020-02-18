@@ -1,0 +1,63 @@
+<div class="each-inline-track track-mini-inline track-hover-display-container each-track-<?php echo $track['id']?> track-<?php echo $track['id']?>" id="track-<?php echo $track['id']?>">
+    
+    <?php
+    $user = $C->model('user')->getUser($track['userid']);
+    ?>
+    <div class="art" style="background-image: url(<?php echo $C->model('track')->getArt($track)?>);">
+        <div class="track-hover-display">
+            <a href=""
+               data-id="<?php echo $track['id']?>"
+
+               data-art="<?php echo $C->model('track')->getArt($track)?>"
+               data-title="<?php echo str_limit( $track['title'], 50)?>"
+               data-link="<?php echo url('track/'.$track['id'])?>"
+               data-owner="<?php echo $user['full_name']?>"
+               data-type="<?php echo $type?>"
+               data-typeid="<?php echo $typeId?>"
+               data-owner-link="<?php echo $C->model('user')->profileUrl($user)?>"
+               data-wave="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave'] : '' ?>"
+               data-wave-colored="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave_colored'] : '' ?>"
+               class="play-button track-play-button track-play-button-<?php echo $track['id']?>" id="track-play-button-<?php echo $track['id']?>" ><i class="fa  fa-play"></i></a>
+
+            <div class="play-controls" data-wave="">
+            </div>
+        </div>
+    </div>
+    <div class="track-content">
+
+
+        <div class="clearfix">
+            <div class="float-left" style="width: 65%;">
+                <div class="media" >
+
+                    <div class="media-body" style="width:100%;">
+                        <h6 class="media-heading">
+                            <span class="title-info">
+                             <a data-ajax="true" class="user-link "  data-id="<?php echo $user['id']?>"  style="font-weight: lighter;font-size: 10px !important;" href="<?php echo $C->model('user')->profileUrl($user)?>"><b><?php echo $user['full_name']?></b></a>
+                            </span>
+                            <a class="title" style="width: 100%;display: block;" data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track,$track['id'])?>">
+                                <b style=""><?php echo str_limit($track['title'], 100)?></b>
+                            </a>
+                        </h6>
+
+                    </div>
+                </div>
+            </div>
+            <div class="float-right">
+                <div class="actions-container dropdown <?php echo (!isset($alwaysShow)) ? ' track-hover-display' : null?>">
+                    <button class="btn like-button-track-<?php echo $track['id']?> ajax-action <?php echo ($C->model('track')->hasLiked('track', $track['id'])) ? 'liked' : null?>" href="<?php echo url('like/item', array('type' => 'track', 'type_id' => $track['id']))?>"><i class="la la-heart"></i></button>
+                    <button class="btn dropdown-toggle no-caret " data-toggle="dropdown"><i class="fa  fa-ellipsis-h"></i></button>
+                    <div class="dropdown-menu   mt-2" style="min-width: 200px">
+                        <a class="dropdown-item" href="#" onclick="return changePlaylistModal('.playlists', <?php echo $track['id']?>)"><i class="la la-plus-circle"></i> <?php _l('add-to-playlist')?></a>
+                        <a class="dropdown-item ajax-action track-later" href="<?php echo url('track/add/later', array('track' => $track['id']))?>"  ><i class="la la-music"></i> <span><?php echo ($C->model('track')->existInLater($track['id'])) ? l('remove-listen-later') : l('listen-later')?></span></a>
+                        <div class="dropdown-divider"></div>
+                        <?php if($track['userid'] != $C->model('user')->authId):?>
+                            <a onclick="return showReportTrack(<?php echo $track['id']?>)" class="dropdown-item" href="#"><i class="fa fa-flag"></i> <?php _l('report-copyright-infringment')?></a>
+                        <?php endif?>
+                        <a class="dropdown-item" data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track,$track['id'])?>"><i class="la la-eye"></i> <?php _l('go-to-track')?></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

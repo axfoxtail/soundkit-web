@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="<?php echo $description?>">
+    <meta name="keywords" content="<?php echo $keywords?>">
+    <title><?php echo $title?></title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $favicon?>">
+    <link rel="shortcut icon" href="<?php echo $favicon?>">
+
+    <link rel="apple-touch-icon-precomposed" href="<?php echo $favicon?>">
+    <link rel="icon" href="<?php echo $favicon?>">
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700" rel="stylesheet">
+    <link href="<?php echo assetUrl('assets/css/plugin.css')?>?time=<?php echo fileatime(path('assets/css/plugin.css'))?>" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <?php if(getController()->useEditor):?>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.css" rel="stylesheet">
+    <?php endif?>
+    <link href="<?php echo assetUrl('styles/main/css/main.css')?>?time=<?php echo fileatime(path('styles/main/css/main.css'))?>" rel="stylesheet">
+    <?php echo $header_content?>
+    <meta name="twitter:card" content="<?php echo config('site-title')?>" />
+    <meta property="twitter:site" content="<?php echo url()?>">
+    <?php if(Request::instance()->segment(0) != 'track' and Request::instance()->segment(0) != 'set'):?>
+        <meta property="og:site_name" content="<?php echo config('site-title')?>">
+
+        <meta property="twitter:title" content="<?php echo config('site-title')?>">
+        <meta property="twitter:description" content="<?php echo $description?>">
+        <meta property="twitter:image" content="<?php echo assetUrl(config('site_logo', 'assets/images/logo.png'))?>">
+        <meta property="og:url" content="<?php echo url()?>">
+        <meta property="og:type" content="Website">
+        <meta property="og:title" content="<?php echo config('site-title')?>">
+        <meta property="og:description" content="<?php echo $description?>">
+        <meta property="og:image" content="<?php echo assetUrl(config('site_logo', 'assets/images/logo.png'))?>">
+    <?php endif?>
+    <?php
+
+    $theme = config('theme', 'main');
+    $colors = path('styles/'.config('theme', 'main').'/colors.php');
+    ?>
+    <?php if(file_exists($colors)): $colors = include $colors?>
+        <style>
+            <?php foreach($colors as $segment => $info):?>
+            <?php foreach($info['colors']  as $id => $detail):?>
+            <?php echo $detail['target']?>{
+            <?php  if($detail['type'] == 'background'):?>
+                background-color : <?php echo config($theme.'-'.$id, $detail['color'])?>
+                <?php elseif($detail['type'] == 'color'):?>
+                color : <?php echo config($theme.'-'.$id, $detail['color'])?> !important;
+            <?php elseif($detail['type'] == 'border'):?>
+                border-color : <?php echo config($theme.'-'.$id, $detail['color'])?>
+                <?php elseif($detail['type'] == 'border-bottom'):?>
+                border-bottom-color : <?php echo config($theme.'-'.$id, $detail['color'])?>
+            <?php endif?>
+            }
+            <?php endforeach?>
+            <?php endforeach?>
+
+            .each-upload-track .progress-wrapper .progress-bar {
+                background-color: <?php echo config('button-primary', '#FF5533')?> !important;
+            }
+            .topography-cover, .auth-container{
+            <?php $rgba = hexToRgb(config($theme.'-button-primary', '#FF5533'))?>
+                background-image: linear-gradient(90deg, <?php echo config($theme.'-button-primary', '#FF5533')?> 0%, rgba(<?php echo $rgba[0]?>,<?php echo $rgba[1]?>,<?php echo $rgba[2]?>,0.3) 55%, rgba(<?php echo $rgba[0]?>,<?php echo $rgba[1]?>,<?php echo $rgba[2]?>,0.7) 100%);
+            }
+        </style>
+    <?php endif?>
+
+    <?php Hook::getInstance()->fire("header.after.css")?>
+
+    <style>
+        <?php echo config('custom-css','')?>
+    </style>
+
+
+    <?php echo str_replace('&#39;', "'", config('google-analytic-code', ''))?>
+</head>
+<body class=" <?php echo ($collapsed) ? 'side-collapsed' :null?> <?php echo getThemeMode()?> <?php echo  (($C->request->segment(0) == '' AND !$C->model('user')->isLoggedIn() and
+        config('default-homepage') == 'splash')
+    or  ($C->request->segment(0) == 'welcome')
+    or ($C->request->segment(0) == 'login')
+    or ($C->request->segment(0) == 'signup')
+    or ($C->request->segment(0) == 'activate')
+    or ($C->request->segment(0) == 'reset')) ? 'plain-container' : null?>">

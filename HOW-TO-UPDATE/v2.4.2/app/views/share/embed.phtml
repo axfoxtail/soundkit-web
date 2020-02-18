@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<?php
+$track = null;
+$playlist = null;
+$title = '';
+
+if ($type == 'track') {
+    $track = $C->model('track')->findTrack($id);
+    $title = $track['title'];
+    $user = $C->model('user')->getUser($track['userid']);
+} else {
+    $playlist = $C->model('track')->findPlaylist($id);
+    $track = $C->model('track')->getPlaylistFirstTrack($id);
+    $title = $playlist['name'];
+}
+?>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title><?php echo $title?></title>
+    <meta name="description" content="<?php echo config('site-description', '')?>">
+    <meta name="keywords" content="<?php echo config('site-keywords', '')?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo url(config('site-favicon', 'favicon.png'))?>">
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700" rel="stylesheet">
+    <link href="<?php echo assetUrl('assets/css/plugin.css')?>?time=<?php echo time()?>" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="<?php echo assetUrl('styles/main/css/main.css')?>?time=<?php echo time()?>" rel="stylesheet">
+    <style>
+        .embed-body .embed-type-picture .art .play-icon {
+            background-color:  <?php echo $color?> !important;
+        }
+    </style>
+</head>
+<body class="embed-body" id="embed-body-container">
+<?php if($type == 'playlist'):?>
+<div class="each-track playlist-container-<?php echo $id?>">
+    <?php else:?>
+    <div class="each-track each-track-<?php echo $track['id']?> track-<?php echo $track['id']?>" id="track-<?php echo $track['id']?>">
+        <?php endif?>
+        <div class="embed-container embed-type-<?php echo $renderType?> <?php echo (config('player-progress-type','bar') == 'bar') ? 'track-bar-progress-type' : null?>" style="border-top-color: <?php echo $color?>">
+            <?php if($renderType == 'picture'):?>
+                <div class="art" style="background-image: url(<?php echo $C->model('track')->getArt($track,600) ?>);">
+                    <div class="info detail">
+                        <?php if($type == 'playlist'):?>
+                            <a href=""
+                               onclick="return playlist_play(<?php echo $id?>)"
+                               class="play-button playlist-button" ><i class="fa  fa-play"></i></a>
+
+                        <?php else:?>
+                            <a href=""
+                               style="background-color: <?php echo $color?> !important;"
+                               data-id="<?php echo $track['id']?>"
+                               data-url="<?php echo assetUrl($track['track_file'])?>"
+                               data-art="<?php echo $C->model('track')->getArt($track)?>"
+                               data-title="<?php echo str_limit( $track['title'], 50)?>"
+                               data-link="<?php echo url('track/'.$track['id'])?>"
+                               data-owner="<?php echo $user['full_name']?>"
+                               data-owner-link="<?php echo $C->model('user')->profileUrl($user)?>"
+                               data-wave="<?php echo $track['wave'] ?>"
+                               data-type="<?php echo $type?>"
+                               data-typeid="<?php echo $typeId?>"
+                               data-embed="true"
+                               data-wave-colored="<?php echo $track['wave_colored'] ?>"
+                               class="play-button track-play-button track-play-button-<?php echo $track['id']?>" id="track-play-button-<?php echo $track['id']?>" ><i class="fa  fa-play"></i></a>
+                        <?php endif?>
+                        <div class="info-body">
+                            <?php if($type == 'playlist'):
+                                $playlistOwner = $C->model('user')->getUser($playlist['userid']);
+                                ?>
+                                <span class="title-info">
+                             <a class="" target="_blank"  data-id="<?php echo $playlistOwner['id']?>" href="<?php echo $C->model('user')->profileUrl($playlistOwner)?>"><?php echo $playlistOwner['full_name']?></a>
+                        </span>
+                                <h6 class="media-heading">
+                                    <a target="_blank" href="<?php echo $C->model('track')->playlistUrl($playlist)?>">
+                                        <?php echo str_limit($playlist['name'], 100)?>
+                                    </a>
+
+                                </h6>
+                            <?php else:?>
+                                <span class="title-info">
+                             <a class="" target="_blank" data-id="<?php echo $user['id']?>" href="<?php echo $C->model('user')->profileUrl($user)?>"><?php echo $user['full_name']?></a>
+                        </span>
+                                <h6 class="media-heading">
+                                    <a target="_blank" href="<?php echo $C->model('track')->trackUrl($track,$track['id'])?>">
+                                        <?php echo str_limit($track['title'], 100)?>
+                                    </a>
+
+                                </h6>
+                            <?php endif?>
+                        </div>
+                    </div>
+
+                    <div class="play-controls wave-possible-play-control" data-wave="">
+                        <div class="playprogress">
+                            <?php if(config('player-progress-type','bar') != 'bar'):?>
+                                <img class="wave-image" src="<?php echo assetUrl($track['wave']) ?>"/>
+                            <?php endif?>
+                            <div class="track-time"><?php echo $C->model('track')->formatDuration($track['track_duration'])?></div>
+                        </div>
+                    </div>
+                    <?php if(config('player-progress-type','bar') == 'wave-revert'):?>
+                        <div class="playprogress-revert">
+                            <img src='<?php echo assetUrl($track['wave']) ?>' class='wave-image'/>
+                        </div>
+
+                    <?php endif?>
+
+
+                    <?php if(model('track')->canDownload($track)):?>
+                        <a href="<?php echo model('track')->getDownloadUrl($track)?>" target="_blank" onclick="addDownload(<?php echo $track['id']?>)" class="btn btn-sm btn-primary round-sm download-button"><i class="la la-download"></i></a>
+                    <?php endif?>
+                    <div class="site-title"><?php echo config('site-title', '')?></div>
+                    <?php if($type == 'playlist'):?>
+                        <div class="playlist-tracks-total">
+                            <?php $entries = $C->model('track')->getPlaylistEntries($playlist['id'])?>
+                            <div class="count"><?php echo count($entries)?></div>
+                            <?php _l('tracks')?>
+                        </div>
+                    <?php else:?>
+                        <?php
+                        $actionType = 'track';
+                        $actionId = $track['id'];
+                        $repostAction = "repost-track";
+                        ?>
+                        <ul class="track-stats">
+                            <?php if($track['stats'] OR $track['userid'] == $C->model('user')->authId):?>
+                                <?php $countLikes = $C->model('track')->countLikes($actionType, $actionId)?>
+                                <li ><a href="<?php echo $C->model('track')->trackUrl($track,null, 'likes')?>" target="_blank" class="like-count-<?php echo $actionType?>-<?php echo $actionId?>" style="<?php echo ($countLikes < 1) ? 'display:none': null?>"><i class="la la-heart-o"></i> <span><?php echo $countLikes?></span></a></li>
+
+                                <?php if(!isset($track['playlist_id']) or !$track['playlist_id']):?>
+                                    <?php $countComments = $C->model('track')->countComments('track', $actionId)?>
+                                    <li ><a href="#" class="comment-count-track-<?php echo $actionId?>" style="<?php echo ($countComments < 1) ? 'display:none': null?>"><i class="fa fa-comment"></i> <span><?php echo $countComments?></span></a></li>
+                                <?php endif?>
+                                <?php $countReposts = $C->model('track')->countReposts($actionId)?>
+                                <li ><a class="repost-count-track-<?php echo $actionId?>"  href="<?php echo $C->model('track')->trackUrl($track,null, 'reposters')?>" target="_blank" style="<?php echo ($countReposts < 1) ? 'display:none': null?>">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="13" viewBox="0 0 21 16"><path d="M20.72 7.29L18.43 9.4a1.06 1.06 0 0 1-1 .6h-.2a1 1 0 0 1-.53-.28l-2.42-2.6a1 1 0 0 1 0-1.33.9.9 0 0 1 1.29 0l.94.93V2h-12v1.5A.5.5 0 0 1 4 4H3a.5.5 0 0 1-.5-.5V1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v5.59l.72-.77a1.06 1.06 0 0 1 1.48 0 1 1 0 0 1 .02 1.47zm-17.92-1A1.05 1.05 0 0 1 3.56 6h.2a1 1 0 0 1 .53.28l2.45 2.61a1 1 0 0 1 0 1.34.89.89 0 0 1-1.29 0l-.94-.94V14h12v-1.5A.5.5 0 0 1 17 12h1a.5.5 0 0 1 .5.5V15a1 1 0 0 1-1 1h-14a1 1 0 0 1-1-1V9.42l-.72.77A1 1 0 0 1 .31 8.72l2.28-2.13a1.07 1.07 0 0 1 .21-.3z"></path></svg>
+                                        <span><?php echo $countReposts?></span>
+                                    </a></li>
+                                <?php if(!isset($track['playlist_id']) or !$track['playlist_id']):?>
+                                    <?php $countViews = $C->model('track')->countViews($actionId)?>
+                                    <li ><a  href="<?php echo $C->model('track')->trackUrl($track,null, 'listeners')?>" target="_blank" style="<?php echo ($countViews < 1) ? 'display:none': null?>"><i class="la la-headphones"></i> <span><?php echo $countViews?></span></a></li>
+                                <?php endif?>
+                            <?php endif?>
+                        </ul>
+                    <?php endif?>
+                </div>
+            <?php else:?>
+                <div class="art" style="background-image: url(<?php echo $C->model('track')->getArt($track,600) ?>);">
+                </div>
+                <div class="embed-details">
+                    <div class="info detail">
+                        <?php if($type == 'playlist'):?>
+                            <a href=""
+                               onclick="return playlist_play(<?php echo $id?>)"
+                               class="play-button playlist-button" ><i class="fa  fa-play"></i></a>
+
+                        <?php else:?>
+                            <a href=""
+                               style="background-color: <?php echo $color?> !important;"
+                               data-id="<?php echo $track['id']?>"
+                               data-url="<?php echo assetUrl($track['track_file'])?>"
+                               data-art="<?php echo $C->model('track')->getArt($track)?>"
+                               data-title="<?php echo str_limit( $track['title'], 50)?>"
+                               data-link="<?php echo url('track/'.$track['id'])?>"
+                               data-owner="<?php echo $user['full_name']?>"
+                               data-owner-link="<?php echo $C->model('user')->profileUrl($user)?>"
+                               data-wave="<?php echo $track['wave'] ?>"
+                               data-type="<?php echo $type?>"
+                               data-typeid="<?php echo $typeId?>"
+                               data-wave-colored="<?php echo $track['wave_colored'] ?>"
+                               class="play-button track-play-button track-play-button-<?php echo $track['id']?>" id="track-play-button-<?php echo $track['id']?>" ><i class="fa  fa-play"></i></a>
+                        <?php endif?>
+                        <div class="info-body">
+                            <?php if($type == 'playlist'):
+                                $playlistOwner = $C->model('user')->getUser($playlist['userid']);
+                                ?>
+                                <span class="title-info">
+                             <a class="" target="_blank"  data-id="<?php echo $playlistOwner['id']?>" href="<?php echo $C->model('user')->profileUrl($playlistOwner)?>"><?php echo $playlistOwner['full_name']?></a>
+                        </span>
+                                <h6 class="media-heading">
+                                    <a target="_blank" href="<?php echo $C->model('track')->playlistUrl($playlist)?>">
+                                        <?php echo str_limit($playlist['name'], 100)?>
+                                    </a>
+
+                                </h6>
+                            <?php else:?>
+                                <span class="title-info">
+                             <a class="" target="_blank" data-id="<?php echo $user['id']?>" href="<?php echo $C->model('user')->profileUrl($user)?>"><?php echo $user['full_name']?></a>
+                        </span>
+                                <h6 class="media-heading">
+                                    <a target="_blank" href="<?php echo $C->model('track')->trackUrl($track,$track['id'])?>">
+                                        <?php echo str_limit($track['title'], 100)?>
+                                    </a>
+
+                                </h6>
+                            <?php endif?>
+                        </div>
+                    </div>
+
+                    <div class="play-controls wave-possible-play-control" data-wave="">
+                        <div class="playprogress" style="">
+                            <?php if(config('player-progress-type','bar') != 'bar'):?>
+                                <img class="wave-image" src="<?php echo assetUrl($track['wave']) ?>"/>
+                            <?php endif?>
+                            <div class="track-time"><?php echo $C->model('track')->formatDuration($track['track_duration'])?></div>
+                        </div>
+                    </div>
+
+                    <?php if(model('track')->canDownload($track)):?>
+                        <a href="<?php echo model('track')->getDownloadUrl($track)?>" target="_blank" onclick="addDownload(<?php echo $track['id']?>)" class="btn btn-sm btn-primary round-sm download-button"><i class="la la-download"></i></a>
+                    <?php endif?>
+                    <div class="site-title"><?php echo config('site-title', '')?></div>
+
+                </div>
+                <?php if($renderType == 'classic'):?>
+                    <?php if($type == 'playlist'):?>
+                        <?php
+                        $actionType = 'playlist';
+                        $actionId = $id;
+                        $repostAction = ($playlist['playlist_type'] == 1) ? 'repost-playlist' : 'repost-album';
+                        ?>
+                    <?php else:?>
+                        <?php
+                        $actionType = 'track';
+                        $actionId = $track['id'];
+                        $repostAction = "repost-track";
+                        ?>
+
+                    <?php endif?>
+                    <ul class="track-stats">
+                        <?php if($track['stats'] OR $track['userid'] == $C->model('user')->authId):?>
+                            <?php $countLikes = $C->model('track')->countLikes($actionType, $actionId)?>
+                            <li ><a href="<?php echo $C->model('track')->trackUrl($track,null, 'likes')?>" target="_blank" class="like-count-<?php echo $actionType?>-<?php echo $actionId?>" style="<?php echo ($countLikes < 1) ? 'display:none': null?>"><i class="la la-heart-o"></i> <span><?php echo $countLikes?></span></a></li>
+
+                            <?php if(!isset($track['playlist_id']) or !$track['playlist_id']):?>
+                                <?php $countComments = $C->model('track')->countComments('track', $actionId)?>
+                                <li ><a href="#" class="comment-count-track-<?php echo $actionId?>" style="<?php echo ($countComments < 1) ? 'display:none': null?>"><i class="fa fa-comment"></i> <span><?php echo $countComments?></span></a></li>
+                            <?php endif?>
+                            <?php $countReposts = $C->model('track')->countReposts($actionId)?>
+                            <li ><a class="repost-count-track-<?php echo $actionId?>"  href="<?php echo $C->model('track')->trackUrl($track,null, 'reposters')?>" target="_blank" style="<?php echo ($countReposts < 1) ? 'display:none': null?>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="13" viewBox="0 0 21 16"><path d="M20.72 7.29L18.43 9.4a1.06 1.06 0 0 1-1 .6h-.2a1 1 0 0 1-.53-.28l-2.42-2.6a1 1 0 0 1 0-1.33.9.9 0 0 1 1.29 0l.94.93V2h-12v1.5A.5.5 0 0 1 4 4H3a.5.5 0 0 1-.5-.5V1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v5.59l.72-.77a1.06 1.06 0 0 1 1.48 0 1 1 0 0 1 .02 1.47zm-17.92-1A1.05 1.05 0 0 1 3.56 6h.2a1 1 0 0 1 .53.28l2.45 2.61a1 1 0 0 1 0 1.34.89.89 0 0 1-1.29 0l-.94-.94V14h12v-1.5A.5.5 0 0 1 17 12h1a.5.5 0 0 1 .5.5V15a1 1 0 0 1-1 1h-14a1 1 0 0 1-1-1V9.42l-.72.77A1 1 0 0 1 .31 8.72l2.28-2.13a1.07 1.07 0 0 1 .21-.3z"></path></svg>
+                                    <span><?php echo $countReposts?></span>
+                                </a></li>
+                            <?php if(!isset($track['playlist_id']) or !$track['playlist_id']):?>
+                                <?php $countViews = $C->model('track')->countViews($actionId)?>
+                                <li ><a  href="<?php echo $C->model('track')->trackUrl($track,null, 'listeners')?>" target="_blank" style="<?php echo ($countViews < 1) ? 'display:none': null?>"><i class="la la-headphones"></i> <span><?php echo $countViews?></span></a></li>
+                            <?php endif?>
+                        <?php endif?>
+                    </ul>
+                <?php endif?>
+            <?php endif?>
+        </div>
+
+        <?php if($type == 'playlist'):?>
+            <div class="playlists-tracks-container playlist-tracks-list-<?php echo $id?>">
+                <?php
+                $playlistTracks = $C->model('track')->getTracks('playlist', $id, 0, 50);
+                $tracksInPlaylist = $C->model('track')->countPlaylistTracks($id);
+                ?>
+                <?php $i=1; foreach($playlistTracks as $dTrack):?>
+                    <?php echo $C->view('track/track-playlist-inline', array('track' => $dTrack ,'offset' => $i, 'type' => 'playlist','typeId' => $id))?>
+                    <?php $i++; endforeach;?>
+
+                <?php if($tracksInPlaylist > 50):?>
+                    <a target="_blank" class="view-more-btn" href="<?php echo $C->model('track')->playlistUrl($playlist)?>"><?php _l('view-all-tracks')?></a>
+                <?php endif?>
+            </div>
+        <?php endif?>
+    </div>
+
+<div id="seek-template" style="display: none;">
+    <div id="" class="jp-audio sound-player">
+        <div class="play-icon jp-play"><i class="fa fa-play "></i></div>
+        <div class="play-icon jp-pause"><i class="la la-pause "></i></div>
+        <div class="jp-progress">
+            <div class="jp-seek-bar">
+                <div class="jp-play-bar"></div>
+            </div>
+            <div class="jp-time-holder">
+                <div class="jp-current-time"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="music-player" class="jp-jplayer"></div>
+<div id="sound-playlists">
+    <div class="playlist-header clearfix">
+        <div class="float-left">
+            <div class="title"><?php _l('next-up')?></div>
+        </div>
+        <div class="float-right">
+            <a href="" onclick="return toogleSoundPlaylist()"><i class="la la-times"></i></a>
+        </div>
+    </div>
+    <div class="sound-playlist-content">
+        <div class="content"></div>
+    </div>
+</div>
+<div id="" class="jp-audio  sound-container sound-player">
+    <div class="inner-container clearfix">
+        <div class="float-left">
+            <div class="middle-content">
+                <ul class="nav">
+                    <li><a href="" onclick="return toogleSoundPlaylist()"><i class="la la-indent "></i></a></li>
+
+                    <li><a href="" onclick="return playprev()"><i class="la la-fast-backward "></i></a></li>
+                    <li>
+                        <div class="play-icon music-play jp-play"><i class="fa fa-play "></i></div>
+                        <div class="play-icon music-pause jp-pause"><i class="la la-pause "></i></div>
+                    </li>
+                    <li><a href="" onclick="return playNext()"><i class="la la-fast-forward "></i></a></li>
+                    <li><a href="" onclick="return repeatSongTrigger(this)" class=""><i class="fa fa-undo "></i></a></li>
+                </ul>
+            </div>
+
+            <ul class="nav right-play-controls">
+                <li>
+                    <div class="jp-time-holder">
+                        <div class="jp-current-time hide"></div>
+                        <div class="jp-progress">
+                            <div class="jp-seek-bar">
+                                <div class="jp-play-bar"></div>
+                            </div>
+                        </div>
+                        <div class="jp-duration hide"></div>
+                    </div>
+                </li>
+
+
+            </ul>
+        </div>
+
+        <div class="float-right">
+            <div class="media detail hide">
+                <div class="mr-3 img" ></div>
+                <div class="media-body">
+                    <h6 class="title"><a id="title-link" href=""></a></h6>
+                </div>
+            </div>
+
+            <ul class="nav right-play-controls">
+                <li>
+                    <a href="" class="volume-btn mute jp-mute"><i class="la  la-volume-up"></i></a>
+                    <a href="" class="volume-btn unmute jp-unmute"><i class="la  la-volume-off"></i></a>
+                </li>
+                <li>
+                    <div class="progress jp-volume-bar" style="height: 4px;width:100px">
+                        <div class="progress-bar jp-volume-bar-value" role="progressbar"  aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    var baseUrl = '<?php echo url()?>';
+    var permaLink = <?php echo config('permalink', false) ? 1 : 0?>;
+    var isLoggedIn = <?php echo $C->model('user')->isLoggedIn() ? 'true' : 'false'?>;
+    var strings = {
+        are_your_sure: '<?php _l('are-you-sure')?>',
+        ok : '<?php _l('ok')?>',
+        close : '<?php _l('close')?>',
+        notImageError : '<?php echo l('not-image-error').' : '. config('image-file-types', 'jpg,png,gif,jpeg')?>',
+        allowImageSizeError : '<?php echo l('image-size-error').' : '. config('image-file-size', 2)?>MB',
+        notAudioError : '<?php echo l('not-audio-error').' : '. config('audio-file-types', 'mp3,m4a,mp4')?>',
+        allowAudioSizeError : '<?php echo l('audio-size-error').' : '. $C->model('user')->getTrackSize()?>MB',
+        processing : '<?php _l('processing')?>',
+        trans_any_moment : '<?php _l('any_moment')?>',
+        trans_less_than_minute : '<?php _l('few-secs')?> <?php _l('ago')?>',
+        trans_about_minute : '1min <?php _l('ago')?>',
+        trans_about_minutes :'%dmin <?php _l('ago')?>',
+        trans_about_hour : '1h <?php _l('ago')?>',
+        trans_about_hours : '%d h <?php _l('ago')?>',
+        trans_a_day : '1d <?php _l('ago')?>',
+        trans_about_days : '%dd <?php _l('ago')?>',
+        trans_about_month :'1m <?php _l('ago')?>',
+        trans_about_months : '%dm <?php _l('ago')?>',
+        trans_about_year : '1y <?php _l('ago')?>',
+        trans_about_years : '%dy <?php _l('ago')?>',
+        you_have_new : '<?php _l('you-have-new')?>',
+        'notifications': '<?php _l('notifications')?>'
+    };
+    var supportImagesType = '<?php echo config('image-file-types', 'jpg,png,gif,jpeg')?>';
+    var supportAudioType = '<?php echo config('audio-file-types', 'mp3,m4a,mp4')?>';
+    var allowPhotoSize = <?php echo config('image-file-size', 2) * 1024 * 1000?>;
+    var allowAudioSize = <?php echo $C->model('user')->getTrackSize() * 1024 * 1000?>;
+    var defaultVolume = <?php echo config('default-value', 80)?>;
+    var updateTime = <?php echo config('update-time',10000)?>;
+    var lastTime = <?php echo time()?>;
+    var siteTitle = '<?php echo config('site-title')?>';
+    var stripeKey = '<?php echo config('stripe-publishable-key', '')?>';
+    var siteLogo = '<?php echo assetUrl(config('site_logo', 'assets/images/logo.png'))?>';
+    var playloop = false;
+
+</script>
+<script src="<?php echo assetUrl('assets/js/plugin.js')?>?time=<?php echo time()?>"></script>
+<script src="<?php echo assetUrl('styles/main/js/main.js')?>?time=<?php echo time()?>"></script>
+    <script>
+        <?php if($autoplay):?>
+        $(document).ready(function() {
+            setTimeout(function() {
+                $(".embed-body .play-button").trigger('click');
+            },10);
+        });
+
+        <?php endif?>
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<div class="getstarted-header">
+    <div class="inner-container">
+        <div class="clearfix" style="text-align: center">
+            <a href="#" class="btn disabled" style="font-weight: bold;" id="getstarted-back" ><?php _l('enter-your-two-factor-code')?></a>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="inner-container" style="margin-bottom: 100px">
+    <div class="row mt-5">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="alert alert-info mt-2 mt-3"><?php _l('two-factor-code-sent-you')?></div>
+           <form action="" method="post">
+               <div class="form-group">
+                    <input type="text" class="form-control" name="code"/>
+               </div>
+
+               <button class="btn btn-sm btn-secondary round-sm"><?php _l('submit')?></button>
+           </form>
+
+            <div class="mt-3">
+                <span><?php _l('have-receive-cde')?></span>
+                <a style="color: orangered;" href="<?php echo url('two/factor/auth', array('id' => $user['id'], 'resend' => 1))?>" class="btn  btn-sm round-sm"><?php _l('resend-code')?></a>
+            </div>
+        </div>
+    </div>
+</div>

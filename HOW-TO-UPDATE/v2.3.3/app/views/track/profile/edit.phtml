@@ -1,0 +1,316 @@
+<form id="song--upload-form" action="<?php echo getFullUrl(true)?>" class="general-form mb-5" method="post" enctype="multipart/form-data">
+    <div class="row ">
+        <div class="col-md-12">
+
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true"><?php _l('basic-info')?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#metadata" role="tab" aria-controls="metadata" aria-selected="false"><?php _l('metadata')?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#permissions" role="tab" aria-controls="permissions" aria-selected="true"><?php _l('permissions')?></a>
+                </li>
+
+            </ul>
+            <div class="static-row mt-3 clearfix">
+                <div class="row-left" style="width: 150px;">
+                    <div class="avatar-placeholder">
+                        <div id="songAvatar" style="<?php echo ($track['art']) ? 'background-image:url('.$C->model('track')->getArt($track, 200).');display:block' : null?>"></div>
+                        <i class="la la-photo"></i>
+                    </div>
+
+                    <div class="input-picker mb-3">
+                        <button class="btn btn-secondary btn-sm btn-block round-sm"><?php _l('select-image')?></button>
+                        <input data-placeholder="#songAvatar" onchange="validate_file_size(this, 'image')" type="file" name="img"/>
+                    </div>
+                </div>
+                <div class="row-right" style="padding-left: 160px;">
+                    <div class="tab-content" id="myTabContent" style="min-height: 200px;">
+
+                        <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                            <?php if(model('track')->canChangeTrack()):?>
+                                <div class="track-selector">
+                                    <div class="mt-4 mb-4">
+                                        <span style="font-weight: bold;"><?php _l('select-song-note')?> <?php echo config('audio-file-types', 'mp3,m4a,mp4')?></span>
+                                    </div>
+                                    <button class="btn btn-primary  " style="padding-right: 40px;padding-left: 40px;text-transform: uppercase"><?php _l('browse-to-your-file')?></button>
+                                    <input   data-title-placeholder="#audioTitle" onchange="validate_file_size(this, 'audio')" class="main-audio edit-audio-file" type="file" name="tracks[]"/>
+                                </div>
+                                <div id="selected-songs">
+                                </div>
+                            <?php endif?>
+                            <div class="form-group">
+                                <label><?php _l('title')?><span class="important">*</span></label>
+                                <div id="audio-title-processing-0" >
+                                    <input value="<?php echo $track['title']?>" autocomplete="off" type="text" name="val[title]" class="form-control " >
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label><?php _l('custom-url')?></label>
+                                <input type="text" class="form-control" name="val[slug]" value="<?php echo $track['slug']?>"/>
+                                <small><?php echo url('track/xx-xx-xx')?> (<?php _l('alphanum_only')?>)</small>
+                            </div>
+
+                            <?php if(config('enable-artist-featuring', true)):?>
+                                <div class="form-group">
+                                    <label><?php _l('featuring')?></label>
+                                    <input type="text" class="form-control" name="val[featuring]" value="<?php echo $track['featuring']?>"/>
+                                </div>
+                            <?php endif?>
+
+                            <?php if(config('enable-lyrics-upload', true)):?>
+                                <div class="form-group">
+                                    <label><?php _l('lyrics')?></label>
+                                    <input type="hidden" name="val[lyrics]" value="<?php echo $track['lyrics']?>"/>
+                                    <input type="file" onchange="return validate_file_size(this, 'lyric-file')" class="form-control" name="lyrics_file"/>
+                                    <small><?php _l('add-lyrics-note')?><a target='_blank' href='https://en.wikipedia.org/wiki/LRC_(file_format)'>en.wikipedia.org/wiki/LRC_(file_format)</a></small>
+                                </div>
+                            <?php endif?>
+
+                            <div class="form-group">
+                                <label><?php _l('description')?></label>
+                                <textarea name="val[description]"  class="form-control form-control-sm" ><?php echo $track['description']?></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label><?php _l('tags')?><span class="important">*</span></label>
+                                        <input value="<?php echo $track['tag']?>" autocomplete="off" type="text" name="val[tags]" class=" input-tags" >
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group ">
+                                        <label><?php _l('genre')?></label>
+                                        <select data-ui-select="true" class=" select-input" name="val[genre]">
+                                            <?php foreach ($C->model('admin')->getGenres() as $genre):?>
+                                                <option <?php echo $genre['id'] == $track['genre'] ? 'selected': null?> value="<?php echo $genre['id']?>"><?php echo $genre['name']?></option>
+                                            <?php endforeach;?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <?php Hook::getInstance()->fire('track.edit.content', null, array($track))?>
+
+                        </div>
+                        <div class="tab-pane fade" id="metadata" role="tabpanel" aria-labelledby="metadata-tab">
+                            <div class="form-group">
+                                <label><?php _l('purchase-link')?></label>
+                                <input value="<?php echo $track['buy']?>" autocomplete="off" type="text" name="val[link]" class="form-control form-control-sm" >
+                            </div>
+
+                            <div class="form-group">
+                                <label><?php _l('record-label')?></label>
+                                <input value="<?php echo $track['record']?>" autocomplete="off" type="text" name="val[label]" class="form-control form-control-sm" >
+                            </div>
+
+                            <div class="form-group mb-5">
+                                <?php
+                                $day=null;$month=null;$year=null;
+                                    if ($track['track_release']) {
+                                        list($year,$month,$day) = explode('-', $track['track_release']);
+                                    }
+                                ?>
+                                <label><?php _l('release-date')?></label>
+                                <select name="val[day]">
+                                    <option value=""><?php _l('day')?></option>
+                                    <?php $i =1; while($i <= 31):?>
+                                        <option <?php echo $day==$i?'selected':null?>  value="<?php echo $i?>"><?php echo $i?></option>
+                                        <?php $i++; endwhile;?>
+                                </select>
+                                <select name="val[month]">
+                                    <option value=""><?php _l('month')?></option>
+                                    <?php $i=1;foreach (getMonths() as $dmonth):?>
+                                        <option <?php echo $dmonth==$i?'selected':null?> value="<?php echo $i?>"><?php _l($dmonth)?></option>
+                                        <?php $i++; endforeach;?>
+                                </select>
+                                <select name="val[year]">
+                                    <option value=""><?php _l('year')?></option>
+                                    <?php $i =date('Y'); while($i >= 1910):?>
+                                        <option <?php echo $year==$i?'selected':null?> value="<?php echo $i?>"><?php echo $i?></option>
+                                        <?php $i--; endwhile;?>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <?php
+
+                                $license=1;$non=0;$creative=0;
+                                if (count(explode('-', $track['license'])) > 1) {
+                                    list($license, $non, $creative) = explode('-', $track['license']);
+                                }
+                                ?>
+                                <label><?php _l('license')?></label>
+                                <div class="mb-2">
+                                    <label class="custom-control custom-radio">
+                                        <input <?php echo ($license == 1) ? 'checked':null?> onchange="hideView('.creative-container')" value="1" id="radio1" checked name="val[license]" type="radio" class="custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description"><?php _l('all-right-reserved')?></span>
+                                    </label>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="custom-control custom-radio">
+                                        <input <?php echo ($license == 2) ? 'checked':null?> onchange="toggleView(this, '.creative-container')" value="2" id="radio2" name="val[license]" type="radio" class="custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description"><?php _l('creative-commons')?></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="creative-container" style="display: none;">
+                                <hr/>
+                                <div class="row">
+                                    <div class="form-group col">
+                                        <label class="custom-control custom-checkbox">
+
+                                            <input checked type="checkbox" value="1"  disabled class="custom-control-input">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"><?php _l('attribution')?></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="form-group col">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="hidden" name="val[noncommercial]" value="0"/>
+                                            <input <?php echo ($non == 1) ? 'checked':null?> type="checkbox" name="val[noncommercial]" value="1"  class="custom-control-input">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"><?php _l('noncommercial')?></span>
+                                        </label>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col">
+                                        <label class="custom-control custom-radio">
+                                            <input <?php echo ($creative == 1) ? 'checked':null?> type="radio" name="val[creative_second]" value="1" class="custom-control-input">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"><?php _l('no-derivative-works')?></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="form-group col">
+                                        <label class="custom-control custom-radio">
+                                            <input <?php echo ($creative == 2) ? 'checked':null?> type="radio" name="val[creative_second]" value="2" class="custom-control-input">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"><?php _l('share-alike')?></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="permissions" role="tabpanel" aria-labelledby="permissions-tab">
+                            <div class="form-group">
+                                <label><?php _l('availability')?></label>
+                                <?php if($track['public'] != 3):?>
+                                    <div class="mb-2">
+                                        <label class="custom-control custom-radio">
+                                            <input <?php echo ($track['public'] == 1) ? 'checked':null?> value="1" id="radio4"  name="val[privacy]" type="radio" class="custom-control-input">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"><?php _l('public')?></span>
+                                        </label>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="custom-control custom-radio">
+                                            <input  <?php echo ($track['public'] == 2) ? 'checked':null?> value="2" id="radio3" name="val[privacy]" type="radio" class="custom-control-input">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"><?php _l('private')?></span>
+                                        </label>
+                                    </div>
+                                <?php endif?>
+
+                                <?php if($track['public'] == 3):?>
+                                    <div class="mb-2">
+                                        <label class="custom-control custom-radio">
+                                            <input
+                                                    checked
+                                                    value="3" id="radio5" name="val[privacy]" type="radio" class="custom-control-input">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description mt-1"
+                                            ><?php _l('scheduled')?></span>
+                                        </label>
+                                    </div>
+                                <?php endif?>
+                            </div>
+
+                            <?php if($C->model('user')->subscriptionActive() and $track['public'] == 3):?>
+                                <div id="scheduled-form" class=" mb-2">
+                                    <label><?php _l('select-release-date-for-tracks')?></label>
+
+                                    <input value="<?php echo date('d/m/y', $track['release_date'])?>" name="val[release_date]" placeholder="<?php _l('choose-date')?>" type="text" class="form-control datepicker"/>
+                                </div>
+                            <?php endif?>
+
+                            <?php Hook::getInstance()->fire('track.edit.permissions.extend', null, array($track))?>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('allow-downloads')?></label>
+                                <div class="col-sm-5">
+                                    <input  type="hidden" name="val[download]" value="0"/>
+                                    <div class="switch">
+                                        <input <?php echo ($track['downloads'] == 1) ? 'checked':null?> id="cmn-toggle-premium-users" value="1" name="val[download]"  class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                        <label for="cmn-toggle-premium-users"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('display-embeded-code')?></label>
+                                <div class="col-sm-5">
+                                    <input type="hidden" name="val[embed]" value="0"/>
+                                    <div class="switch">
+                                        <input id="cmn-toggle-embed-code" value="1" name="val[embed]"  <?php echo ($track['embed'] == 1) ? 'checked':null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                        <label for="cmn-toggle-embed-code"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <?php if(!$C->model('user')->subscriptionActive()):?>
+                                <div class="alert alert-warning text-center">
+                                    <h6><?php _l('be-in-control')?></h6>
+                                    <div class="mt-2 mb-2">
+                                        <?php _l('be-in-control-note')?>
+                                    </div>
+
+                                    <a href="<?php echo url('pro')?>" data-ajax="true" class="btn btn-sm btn-primary"><?php _l('unlock-with-pro-plan')?></a>
+                                </div>
+                            <?php else:?>
+                                <div class="form-group row">
+                                    <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('comments')?></label>
+                                    <div class="col-sm-5">
+                                        <select data-ui-select="true" class=" select-input" name="val[comments]">
+                                            <option <?php echo ($track['comments'] == 1) ? 'selected':null?> value="1"><?php _l('public')?></option>
+                                            <option <?php echo ($track['comments'] == 2) ? 'selected':null?> value="2"><?php _l('private-followers-only')?></option>
+                                            <option <?php echo ($track['comments'] == 3) ? 'selected':null?> value="3"><?php _l('disabled')?></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="staticEmail" class="col-sm-4 col-form-label"><?php _l('public-statistics')?></label>
+                                    <div class="col-sm-5">
+                                        <input type="hidden" name="val[stats]" value="0"/>
+                                        <div class="switch">
+                                            <input id="cmn-toggle-stats" value="1" name="val[stats]"  <?php echo ($track['stats'] == 1) ? 'checked':null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                            <label for="cmn-toggle-stats"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif?>
+                        </div>
+
+                    </div>
+
+                    <button style="-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;" type="submit" data-size="s" data-style="zoom-in" class="btn btn-info   ladda-button mt-3" id="upload-submit"><?php _l('save')?></button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+</form>

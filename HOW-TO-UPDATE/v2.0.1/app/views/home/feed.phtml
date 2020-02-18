@@ -1,0 +1,139 @@
+<div class="profile-menu">
+    <?php $C->useBreadcrumbs = false; $page = $C->request->input('filter', 'home')?>
+    <div class="inner-container">
+        <div class="clearfix">
+            <div class="float-left">
+                <ul class="nav nav-tabs responsive-nav" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($page == 'home') ? 'active': null?>" data-ajax="true"  href="<?php echo url('')?>" ><?php _l('summary-for-you')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($page == 'feed') ? 'active': null?>" data-ajax="true"  href="<?php echo url('', array('filter' => 'feed'))?>" ><?php _l('feed')?></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="inner-container pt-3">
+    <?php if($page == 'home'):?>
+        <?php if(moduleExists('spotlight')):?>
+            <?php $tracks = model('spotlight::spotlight')->getTracks(null, true,15)?>
+            <?php if(count($tracks) > 0):?>
+                <div class="horizontal-list">
+                    <div class="clearfix">
+                        <div class="float-left" style="width: 80%">
+                            <div class="title">
+                                <span><?php _l('featured')?></span>
+                                <?php _l('made-for-you')?>
+
+                            </div>
+                        </div>
+                        <div class="float-right">
+
+                        </div>
+                    </div>
+
+
+                    <div class="slider full-slider " >
+                        <div class="swiper-container" id="top-50-slider">
+                            <div class="swiper-wrapper">
+                                <?php  foreach($tracks as $track):?>
+                                    <?php if($track['trackid']):$track = model('track')->findTrack($track['trackid'])?>
+                                        <?php if($track):?>
+                                            <?php echo $C->view('track/track-slide', array('track' => $track, 'type' => 'global-spotlight', 'home' => true,'typeId' => '', 'hideTags' => true,'hideAbout' => true))?>
+                                        <?php endif?>
+                                    <?php endif?>
+                                <?php endforeach;?>
+
+                            </div>
+                        </div>
+                        <div class="swiper-button-next  scroller scroll-right" id="new-hot-slider-next"><i class="la  la-angle-right"></i></div>
+                        <div class="swiper-button-prev scroller scroll-left" id="new-hot-slider-right"><i class="la  la-angle-left"></i></div>
+                    </div>
+                </div>
+            <?php endif?>
+        <?php endif?>
+
+
+        <div class="row mt-4" style="margin-bottom: 50px;">
+            <div class="col-md-7">
+                <ul class="nav nav-tabs" style="border-color: #fff;">
+                    <li class="nav-item">
+                        <a class="nav-link " style="font-size: 20px;font-weight: bold;position:relative;bottom:4px"><?php _l('top-songs')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#thisweek" role="tab" ><?php _l('this-week')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#thismonth" role="tab" ><?php _l('this-month')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#thisyear" role="tab" ><?php _l('this-year')?></a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="thisweek" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="track-list" data-no-paginate="true" data-limit="10" data-view="inline" data-type-id="all/this-week" data-type="charts-top" data-offset="0">
+                            <?php echo $C->view('track/placeholder', array('type' => 'inline'))?>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="thismonth" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="track-list" data-no-paginate="true" data-limit="10" data-view="inline" data-type-id="all/this-month" data-type="charts-top" data-offset="0">
+                            <?php echo $C->view('track/placeholder', array('type' => 'inline'))?>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="thisyear" role="tabpanel" aria-labelledby="contact-tab">
+                        <div class="track-list" data-no-paginate="true" data-limit="10" data-view="inline" data-type-id="all/this-year" data-type="charts-top" data-offset="0">
+                            <?php echo $C->view('track/placeholder', array('type' => 'inline'))?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+
+                <a class="nav-link " style="font-size: 20px;font-weight: bold;position:relative;left: -10px;"><?php _l('new-albums')?></a>
+
+
+                <?php $type='album';$typeId='discover'; $playlists = $C->model('track')->listPlaylists($type, $typeId, 12)?>
+
+
+                <div
+                        data-paginate-url="playlist/paginate"
+                        data-offset="0"
+                        data-param="<?php echo perfectSerialize(array('type' => $type, 'typeId' => $typeId, 'limit' => 20))?>"
+                        class="playlists-container grid-container clearfix home-album-container"
+                        id="playlists-<?php echo $type?>-<?php echo $typeId?>">
+
+
+
+                    <?php foreach($playlists as $playlist):?>
+                        <?php
+                        $allowOwner = false;
+                        if (preg_match('#profile-#', $typeId)) $allowOwner = true;
+                        $canDisplay = model('track')->displayItem($playlist, $allowOwner);
+                        ?>
+                        <?php if($canDisplay):?>
+                            <?php echo $C->view('playlist/display', array('playlist' => $playlist, 'noTrackCount' => true))?>
+                        <?php endif?>
+                    <?php endforeach;?>
+
+                </div>
+
+
+            </div>
+        </div>
+    <?php else:?>
+        <div class="row">
+            <div class="col-md-8">
+                <?php Hook::getInstance()->fire('feed.top.extend')?>
+                <?php echo $content?>
+            </div>
+            <div class="col-md-4 pt-2">
+                <?php echo $C->view('home/general-right', array('stats' => true))?>
+            </div>
+
+
+        </div>
+    <?php endif?>
+</div>

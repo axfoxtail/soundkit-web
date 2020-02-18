@@ -1,0 +1,17 @@
+<div class="p-3 playlists-container" style="max-height:300px;overflow: auto;">
+    <?php foreach($playlists as $list):?>
+        <div class="each-item clearfix mb-3">
+            <div class="float-left">
+                <h6><?php echo str_limit($list['name'], 30)?></h6>
+                <span class="badge badge-secondary"><?php echo ($list['playlist_type'] == 1) ? l('playlist') : l('album')?></span> <span><i class="la la-music"></i> <?php echo $C->model('track')->countPlaylistTracks($list['id'])?></span>
+            </div>
+            <div class="float-right">
+                <?php if($C->model('track')->existInPlaylist($list['id'], $track)):?>
+                    <a  href="<?php echo url('playlist/add/track', array('id' => $list['id'], 'track' => $track))?>" class="btn btn-sm btn-outline-danger mt-2  ajax-action"><i class="la la-minus"></i></a>
+                <?php else:?>
+                    <a href="<?php echo url('playlist/add/track', array('id' => $list['id'], 'track' => $track))?>" class="btn btn-sm btn-outline-dark mt-2 ajax-action"><i class="la la-plus"></i></a>
+                <?php endif?>
+            </div>
+        </div>
+    <?php endforeach;?>
+</div>

@@ -1,0 +1,12 @@
+<?php foreach($comments as $comment):?>
+    <?php echo $C->view('track/comment/format', array('comment' => $comment))?>
+<?php endforeach;?>
+<?php if(!isset($paginate) and count($comments) > 3):?>
+    <div class="load-more-button-container" id="comments-<?php echo $type?>-<?php echo $typeId?>-load-more-container">
+        <a href=""
+           data-size="s" data-style="zoom-in"
+           class="load-more-button  btn btn-outline-dark btn-sm ladda-button"
+           data-container="comments-<?php echo $type?>-<?php echo $typeId?>"
+           id="comments-<?php echo $type?>-<?php echo $typeId?>-loadmore-button"><?php _l('load-more')?></a>
+    </div>
+<?php endif?>

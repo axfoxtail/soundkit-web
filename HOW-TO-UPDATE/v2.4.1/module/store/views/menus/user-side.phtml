@@ -1,0 +1,4 @@
+<li><a class="head" href="<?php echo url('store')?>"  data-ajax="true"><?php _l('store')?></a></li>
+<?php $activeMenu = getController()->activeMenu;?>
+<li><a id="store-browse-menu" class="sub-menu  <?php echo ( $activeMenu == 'store-browse') ? 'active' : null?> " href="<?php echo url('store')?>"  data-ajax="true"><i class="la la-shopping-cart "></i> <span><?php _l('browse')?></span></a></li>
+<li><a id="store-purchased-menu" class="sub-menu  <?php echo ( $activeMenu == 'store-purchased') ? 'active' : null?> " href="<?php echo url('store/purchased')?>"  data-ajax="true"><i class="la  la-cart-arrow-down "></i> <span><?php _l('purchased')?></span></a></li>

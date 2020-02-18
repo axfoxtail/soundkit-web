@@ -1,0 +1,65 @@
+<div class="auth-container">
+    <div class="content clearfix">
+        <div class="auth-left topography">
+            <div class="topography-cover"></div>
+        </div>
+        <div class="auth-right">
+            <img class="light-logo" src="<?php echo config('site_logo', 'assets/images/logo.png')?>"/>
+            <img class="dark-logo" src="<?php echo config('site_logo_dark', 'assets/images/logo-dark.png')?>"/>
+
+            <div class="login-for">
+                <form action="<?php echo url('signup')?>" class="general-form" method="post">
+                    <?php if(config('enable-facebook', false)):?>
+
+                        <a href="<?php echo url('auth/facebook')?>" class="btn btn-block fb-button"><i class="la la-facebook-f"></i> <?php _l('login-with-facebook')?></a>
+                        <div class="content-line">
+                            <span><?php _l('or')?></span>
+                        </div>
+                    <?php endif?>
+
+
+                    <div class="form-group">
+                        <input type="text" name="val[full_name]" class="form-control " placeholder="<?php _l('full_name')?>"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="val[username]" class="form-control " placeholder="<?php _l('username')?>"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="email" name="val[email]" class="form-control " placeholder="<?php _l('email_address')?>"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input name="val[password]" type="password" class="form-control" placeholder="<?php _l('password')?>"/>
+                    </div>
+
+                    <?php Hook::getInstance()->fire('user.signup.form')?>
+                    <?php if(config('user-signup-artist', true)):?>
+                        <label class="custom-control custom-checkbox">
+                            <input name="val[artist]"  value="1" type="checkbox" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description mt-1"><?php _l('i-am-artist')?></span>
+                        </label>
+                    <?php endif?>
+
+                    <?php if(config('enable-captcha', true)):?>
+                        <div class="captch-form mb-4">
+                            <div class="clearfix mb-3">
+                                <img class="float-left" style="width: 80%;" id="captcha" src="<?php echo assetUrl('captcha/securimage_show.php')?>" alt="CAPTCHA Image" />
+                                <a class="float-right" style="font-size: 20px;" href="#" onclick="document.getElementById('captcha').src = '<?php echo assetUrl('captcha/securimage_show.php')?>?' + Math.random(); return false">
+                                    <i class="la  la-refresh"></i>
+                                </a>
+                            </div>
+                            <input type="text" autocomplete="off" placeholder="<?php _l('enter-captcha-code')?>" class="form-control" name="captcha"/>
+                        </div>
+                    <?php endif?>
+                    <button type="submit" data-size="s" data-style="zoom-in" style="padding-left: 30px;padding-right: 30px;" class="btn btn-primary round-sm ladda-button" id="signup-submit"><?php _l('submit')?></button>
+                </form>
+
+                <p class=" mt-4">
+                    <?php _l('already-a-member')?>  <a  style="font-weight: 600;" href="<?php echo url('login')?>"><?php _l('login-here')?></a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

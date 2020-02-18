@@ -1,0 +1,20 @@
+<?php if($C->useBreadcrumbs):?>
+
+    <div class="breadcrumb-container">
+        <div class="inner-container">
+            <nav aria-label="breadcrumb" role="navigation">
+                <ol class="breadcrumb">
+
+                    <?php foreach($C->breadcrumbs as $breadcrum => $url):?>
+                        <?php if($url):?>
+                            <li class="breadcrumb-item"><a href="<?php echo $url?>" data-ajax="true"><?php echo $breadcrum?></a></li>
+                        <?php else:?>
+                            <li class="breadcrumb-item active"><?php echo $breadcrum?></li>
+                        <?php endif?>
+                    <?php endforeach;?>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+<?php endif?>

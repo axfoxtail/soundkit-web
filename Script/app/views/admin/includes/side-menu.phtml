@@ -1,0 +1,75 @@
+<div class="pr-3 pl-3 mt-3">
+    <a href="<?php echo url()?>" data-ajax="true" class="btn btn-secondary btn-block "><?php _l('go-back-home')?></a>
+</div>
+
+<ul class="nav" >
+    <li><a id="dashboard-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'dashboard') ? 'active' : null?>" href="<?php echo url('admin')?>"><i class="la la-safari"></i>  <?php _l('dashboard')?></a></li>
+    <?php if(model('user')->hasRole('manage-settings')):?>
+        <li><a id="settings-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'settings') ? 'active' : null?>" href="<?php echo url('admin/settings')?>"><i class="la la-cog"></i> <?php _l('site-settings')?></a></li>
+    <?php endif?>
+    <?php if(model('user')->hasRole('manage-users')):?>
+        <li><a id="users-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'users') ? 'active' : null?>" href="<?php echo url('admin/users')?>"> <i class="la la-users"></i> <?php _l('manage-users')?></a></li>
+    <?php endif?>
+    <?php if(model('user')->hasRole('manage-user-roles')):?>
+        <li><a id="roles-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'roles') ? 'active' : null?>" href="<?php echo url('admin/roles')?>"> <i class="la la-pencil-square"></i> <?php _l('user-roles')?></a></li>
+    <?php endif?>
+
+    <?php if(model('user')->hasRole('verify-request')):?>
+        <?php if(config('enable-artist-verification', false)):?>
+            <li><a id="verify-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'verify') ? 'active' : null?>" href="<?php echo url('admin/verification/request')?>">
+                    <i class="la  la-info-circle"></i> <?php _l('verification-requests')?>
+
+                    <?php $count  = $C->model('user')->countVerificationRequest()?>
+                    <?php if($count > 0):?>
+                        <span class="badge badge-danger float-right mt-2"><?php echo $count?></span>
+                    <?php endif?>
+                </a></li>
+        <?php endif?>
+    <?php endif?>
+
+    <?php if(model('user')->hasRole('manage-genres')):?>
+        <li><a id="genres-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'genres') ? 'active' : null?>" href="<?php echo url('admin/genres')?>"> <i class="la la-list-ul"></i> <?php _l('genres')?></a></li>
+    <?php endif?>
+
+    <?php if(model('user')->hasRole('manage-tracks')):?>
+        <li><a id="tracks-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'tracks') ? 'active' : null?>" href="<?php echo url('admin/tracks')?>"> <i class="la la-music"></i> <?php _l('tracks')?></a></li>
+    <?php endif?>
+
+    <?php if(model('user')->hasRole('manage-albums')):?>
+        <li><a id="playlist-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'playlist') ? 'active' : null?>" href="<?php echo url('admin/albums')?>"> <i class="la la-indent "></i> <?php _l('manage-playlist-album')?></a></li>
+    <?php endif?>
+
+    <?php if(model('user')->hasRole('manage-plugins')):?>
+        <li><a id="plugins-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'plugins') ? 'active' : null?>" href="<?php echo url('admin/plugins')?>"> <i class="la la-level-up"></i> <?php _l('plugins-manager')?></a></li>
+    <?php endif?>
+    <?php echo Hook::getInstance()->fire('admin.menu.middle')?>
+    <?php if(model('user')->hasRole('manage-site-design')):?>
+        <li><a id="design-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'design') ? 'active' : null?>" href="<?php echo url('admin/design')?>"> <i class="la la-desktop"></i> <?php _l('site-design')?></a></li>
+    <?php endif?>
+
+    <?php if(model('user')->hasRole('manage-payments')):?>
+        <li><a id="payments-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'payments') ? 'active' : null?>" href="<?php echo url('admin/payments')?>"><i class="la la-credit-card"></i> <?php _l('manage-payments')?></a></li>
+    <?php endif?>
+
+    <?php if(model('user')->hasRole('manage-report')):?>
+        <li><a id="reports-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'reports') ? 'active' : null?>" href="<?php echo url('admin/reports')?>">
+                <i class="la  la-info-circle"></i> <?php _l('manage-reports')?>
+
+                <?php $reports  = $C->model('admin')->countReports()?>
+                <?php if($reports > 0):?>
+                    <span class="badge badge-danger float-right mt-2"><?php echo $reports?></span>
+                <?php endif?>
+            </a></li>
+    <?php endif?>
+    <?php if(model('user')->hasRole('manage-ads')):?>
+        <li><a id="ads-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'ads') ? 'active' : null?>" href="<?php echo url('admin/ads')?>"><i class="la la-list-ul"></i> <?php _l('manage-ads')?></a></li>
+    <?php endif?>
+
+    <?php if(model('user')->hasRole('manage-info')):?>
+        <li><a id="pages-menu" data-ajax="true" class="sub-menu <?php echo ( $C->activeMenu == 'pages') ? 'active' : null?>" href="<?php echo url('admin/pages')?>"><i class="la la-newspaper-o"></i><?php _l('info-pages')?></a></li>
+    <?php endif?>
+    <?php if(model('user')->hasRole('send-newsletter')):?>
+        <li><a id="newsletter-menu" class="sub-menu <?php echo ( $C->activeMenu == 'newsletter') ? 'active' : null?>" href="<?php echo url('admin/newsletter')?>"><i class="la la-envelope"></i> <?php _l('newsletter')?></a></li>
+    <?php endif?>
+    <?php echo Hook::getInstance()->fire('admin.menu.end')?>
+</ul>

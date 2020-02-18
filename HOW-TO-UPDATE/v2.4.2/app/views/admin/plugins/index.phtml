@@ -1,0 +1,41 @@
+<div class="inner-container">
+    <div class="row mt-5">
+        <div class="col-md-8">
+            <?php
+                $plugins = $C->model('admin')->listPlugins();
+                $active = $C->model('admin')->getActivePlugins();
+            ?>
+
+            <form id="admin-plugins" action="<?php echo url('admin/plugins')?>" method="post" class="general-form">
+                <?php if($plugins):?>
+                    <?php foreach($plugins as $id => $info):?>
+                        <div class="media pb-3 mb-3" style="border-bottom: solid 1px #E9ECEF;">
+                            <img class="mr-3" src="<?php echo $info['icon']?>" style="width: 40px;height:40px" ">
+                            <div class="media-body clearfix">
+                                <div class="float-left" style="width: 80%">
+                                    <h5 class="mt-0 ">
+                                        <?php echo $info['title']?> - <span class="badge badge-secondary"><?php echo $info['version']?></span>
+                                    </h5>
+                                    <div>
+                                        <?php echo $info['desc']?>
+                                    </div>
+                                </div>
+                                <div class="float-right">
+                                    <div class="switch">
+                                        <input onchange="submitForm('#admin-plugins')" id="cmn-toggle-<?php echo $id?>" value="<?php echo $id?>" name="val[]" <?php echo (in_array($id, $active)) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                                        <label for="cmn-toggle-<?php echo $id?>"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach;?>
+                <?php else:?>
+                    <div class="empty-content">
+                        <i class="la la-level-up"></i>
+                        <span><?php _l('no-plugins-to-display')?></span>
+                    </div>
+                <?php endif?>
+            </form>
+        </div>
+    </div>
+</div>

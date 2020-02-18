@@ -1,0 +1,40 @@
+
+<div class="inner-container pt-3">
+
+    <div class="row">
+        <div
+            data-paginate-url="notification/paginate"
+            data-param="<?php echo perfectSerialize(array('limit' => 20))?>"
+            id="notifications-lists"
+            class="col-md-8" >
+            <?php Hook::getInstance()->fire('global.top')?>
+            <?php $notifications = $C->model('user')->getNotifications(0, 20)?>
+
+            <?php if(count($notifications) > 0):?>
+                <?php foreach($notifications as $notification):?>
+                    <?php echo $C->view('notification/display', array('notification' => $notification))?>
+                <?php endforeach?>
+
+                <?php if(count($notifications) > 19):?>
+                    <div class="load-more-button-container" id="notifications-lists-load-more-container">
+                        <a href=""
+                           data-size="s" data-style="zoom-in"
+                           class="load-more-button  btn btn-outline-dark btn-sm ladda-button"
+                           data-container="notifications-lists"
+                           id="notifications-lists-loadmore-button"><?php _l('load-more')?></a>
+                    </div>
+                <?php endif?>
+            <?php else:?>
+                <div class="empty-content">
+                    <i class="la la-bell-slash"></i>
+                    <span><?php _l('no-notifications')?></span>
+                </div>
+            <?php endif?>
+        </div>
+        <div class="col-md-4">
+            <?php echo $C->view('home/general-right')?>
+        </div>
+
+
+    </div>
+</div>

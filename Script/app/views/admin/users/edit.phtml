@@ -1,0 +1,197 @@
+<div class="profile-menu">
+    <div class="inner-container">
+        <nav class="nav nav-tabs" id="myTab" role="tablist">
+            <a class=" nav-link active" id="nav-home-tab" data-toggle="tab" href="" role="tab" aria-controls="nav-home" aria-selected="true"><?php echo $user['full_name']?> <?php _l('details')?></a>
+            <a class=" nav-link " data-ajax="true"  href="<?php echo url('admin/tracks', array('user' => $user['id']))?>" ><?php _l('tracks')?> (<?php echo $C->model('track')->countTracks($user['id'])?>)</a>
+            <a class=" nav-link " data-ajax="true"  href="<?php echo url('admin/payments', array('user' => $user['id']))?>" ><?php _l('payments')?></a>
+
+        </nav>
+    </div>
+</div>
+<div class="inner-container">
+    <form method="post" class="general-form" action="<?php echo getFullUrl(true)?>" enctype="multipart/form-data">
+
+        <div class="row">
+            <div class="col-md-8">
+                <?php if($message):?>
+                    <div class="alert mt-5 alert-<?php echo $messageType?>"><?php echo $message?></div>
+                <?php endif?>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('full_name')?></label>
+                            <input name="val[full_name]" value="<?php echo $user['full_name']?>" type="text" class="form-control"   placeholder="<?php _l('full_name')?>">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('username')?></label>
+                            <input name="val[username]" value="<?php echo $user['username']?>" type="text" class="form-control"   placeholder="<?php _l('username')?>">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('email-address')?></label>
+                            <input name="val[email]" value="<?php echo $user['email']?>" type="text" class="form-control"   placeholder="<?php _l('email-address')?>">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('gender')?></label>
+                            <select name="val[gender]" class="form-control ">
+                                <option <?php echo ($user['gender'] == 'male')? 'selected' : null?> value="male"><?php _l('male')?></option>
+                                <option <?php echo ($user['gender'] == 'female')? 'selected' : null?> value="female"><?php _l('female')?></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('country')?></label>
+                            <select name="val[country]" class="form-control ">
+                                <option value=""><?php _l('choose-country')?></option>
+                                <?php foreach (getCountries() as $country):?>
+                                    <option <?php echo $user['country'] == strtolower($country) ? 'selected' : null?> value="<?php echo strtolower($country)?>"><?php echo $country?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('city')?></label>
+                            <input name="val[city]" value="<?php echo $user['city']?>" type="text" class="form-control"   placeholder="<?php _l('city')?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('website')?></label>
+                            <input name="val[website]" value="<?php echo $user['website']?>" type="text" class="form-control"   placeholder="<?php _l('website')?>">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('Facebook')?></label>
+                            <input name="val[facebook]" value="<?php echo $user['facebook']?>" type="text" class="form-control"   placeholder="<?php _l('facebook')?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('Twitter')?></label>
+                            <input name="val[twitter]" value="<?php echo $user['twitter']?>" type="text" class="form-control"   placeholder="<?php _l('twitter')?>">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('Youtube')?></label>
+                            <input name="val[youtube]" value="<?php echo $user['youtube']?>" type="text" class="form-control"   placeholder="<?php _l('youtube')?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('Vimeo')?></label>
+                            <input name="val[vimeo]" value="<?php echo $user['vimeo']?>" type="text" class="form-control"   placeholder="<?php _l('vimeo')?>">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mt-3">
+                            <label><?php _l('Soundcloud')?></label>
+                            <input name="val[soundcloud]" value="<?php echo $user['soundcloud']?>" type="text" class="form-control"   placeholder="<?php _l('soundcloud')?>">
+                        </div>
+                    </div>
+                </div>
+
+                <?php Hook::getInstance()->fire('admin.user.edit', null,array($user))?>
+            </div>
+            <div class="col-md-4">
+
+               <?php if($user['user_type'] == 2):?>
+                   <div class="box mt-3">
+                       <a data-ajax="true" href="<?php echo url('upload', array('id' => $user['id']))?>" class="btn btn-sm btn-block btn-outline-secondary round-sm"><?php _l('upload-track')?></a>
+                   </div>
+                <?php endif?>
+
+                <?php if(moduleExists('advert')):?>
+                    <div class="box mt-2">
+                        <label><?php _l('advert::wallet-balance')?></label>
+                        <input type="text" class="form-control bg-white"  name="val[wallet]" value="<?php echo $user['wallet']?>"/>
+                    </div>
+                <?php endif?>
+
+                <div class="box mt-2">
+                    <?php if($user['user_type'] == 2):?>
+                        <?php if(config('enable-premium', false)):?>
+                            <?php if(!$C->model('user')->subscriptionActive($user['id'])):?>
+                                <a href="<?php echo url('admin/promote', array('id' => $user['id']))?>" class="btn btn-outline-success btn-block mb-4"><?php _l('promote-to_pro-member')?></a>
+                            <?php endif?>
+                        <?php endif?>
+                    <?php else:?>
+                        <?php if(config('enable-premium-listeners', false)):?>
+                            <?php if(!$C->model('user')->listenerSubscriptionActive($user['id'])):?>
+                                <a href="<?php echo url('admin/promote', array('id' => $user['id']))?>" class="btn btn-outline-success btn-block mb-4"><?php _l('promote-to_pro-member')?></a>
+                            <?php endif?>
+                        <?php endif?>
+                    <?php endif?>
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input name="val[admin]" type="hidden" value="0"/>
+                            <input type="checkbox" name="val[admin]" <?php echo $user['role'] == 2 ? 'checked' : null?> value="1" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description mt-1"><?php _l('administrator')?> (<?php _l('full-access')?>)</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label><?php _l('user-role')?></label>
+                        <select class="form-control" name="val[role]">
+                            <option value="0"><?php _l('default')?></option>
+                            <?php foreach(model('admin')->getRoles() as $role):?>
+                                <option <?php echo ($role['id'] == $user['role_id']) ? 'selected' : null?> value="<?php echo $role['id']?>"><?php echo $role['title']?></option>
+                            <?php endforeach?>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="hidden" name="val[artist]" value="1"/>
+                            <input type="checkbox" name="val[artist]" <?php echo ($user['user_type'] == 2) ?'checked':null?> value="2" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description mt-1"><?php _l('artist')?></span>
+                        </label>
+                    </div>
+
+                    <!--<div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" name="val[featured]" <?php echo ($user['featured'] == 1) ?'checked':null?> value="1" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description mt-1"><?php _l('featured-artist-only')?></span>
+                        </label>
+                    </div>-->
+
+                    <div class="clearfix">
+                        <div class="float-left">
+                            <button data-size="s" data-style="zoom-in" type="submit" class="round-sm btn btn-primary btn-sm ladda-button" id="user-edit-button"><?php _l('save')?></button>
+                        </div>
+                        <div class="float-right">
+                            <a href="<?php echo url('admin/user/action', array('action' => 'delete', 'id' => $user['id']))?>" class="btn btn-secondary btn-sm confirm"><?php _l('delete')?></a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,40 @@
+<div class="inner-container" id="search-page" data-page="<?php echo $page?>">
+    <div class="row left-nav mt-4">
+        <div class="col-md-3">
+            <div class="fixed-left-content">
+                
+                <ul class="nav">
+                    <?php Hook::getInstance()->fire('search.menu.start', null, array($page))?>
+                    <li><a data-ajax="true" class="nav-link <?php echo $page == 'tracks' ? 'active' : null?>" href="<?php echo url('search', array('term' => $term, 'page' => 'tracks'))?>"><i class="la la-music"></i> <?php _l('tracks')?></a></li>
+                    <?php if(moduleExists('video')):?>
+                        <li><a data-ajax="true" class="nav-link <?php echo $page == 'videos' ? 'active' : null?>" href="<?php echo url('search', array('term' => $term, 'page' => 'videos'))?>"><i class="la la-video-camera"></i> <?php _l('videos')?></a></li>
+                    <?php endif?>
+                    <?php if(moduleExists('radio')):?>
+                        <li><a data-ajax="true" class="nav-link <?php echo $page == 'radio' ? 'active' : null?>" href="<?php echo url('search', array('term' => $term, 'page' => 'radio'))?>"><i class="la la-music"></i> <?php _l('radio::live-radio')?></a></li>
+                    <?php endif?>
+                    <?php Hook::getInstance()->fire('search.menu.middle', null, array($page,$term))?>
+                    <li><a data-ajax="true" class="nav-link <?php echo $page == 'artists' ? 'active' : null?>" href="<?php echo url('search', array('term' => $term, 'page' => 'artists'))?>"><i class="la la-microphone"></i> <?php _l('artists')?></a></li>
+                    <li><a data-ajax="true" class="nav-link <?php echo $page == 'people' ? 'active' : null?>" href="<?php echo url('search', array('term' => $term, 'page' => 'people'))?>"><i class="la la-users"></i> <?php _l('people')?></a></li>
+                    <li><a data-ajax="true" class="nav-link <?php echo $page == 'playlists' ? 'active' : null?>" href="<?php echo url('search', array('term' => $term, 'page' => 'playlists'))?>"><i class="la la-indent"></i> <?php _l('playlists')?></a></li>
+                    <li><a data-ajax="true" class="nav-link <?php echo $page == 'albums' ? 'active' : null?>" href="<?php echo url('search', array('term' => $term, 'page' => 'albums'))?>"><i class="la la-folder"></i> <?php _l('albums')?></a></li>
+                    <?php Hook::getInstance()->fire('search.menu.end', null, array($page, $term))?>
+                </ul>
+
+                <?php echo $C->view('search/tags')?>
+            </div>
+
+
+
+        </div>
+        <div class="col-md-9">
+
+            <div class="search-title">
+                <?php _l('showing-result-for')?> - <strong><?php echo $term?></strong>
+            </div>
+            <?php Hook::getInstance()->fire('global.top')?>
+
+            <?php echo $content?>
+        </div>
+
+    </div>
+</div>

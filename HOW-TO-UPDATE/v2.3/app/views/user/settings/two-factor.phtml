@@ -1,0 +1,18 @@
+<?php $user = $C->model('user')->authUser?>
+
+<div class="row mt-4">
+    <div class="col-sm-4">
+        <div class="text-center p-4">
+            <i class="la la-lock" style="font-size: 100px;"></i>
+        </div>
+    </div>
+    <div class="col-sm-5">
+        <h4><?php _l('enable-two-factor-authentication')?></h4>
+        <p><?php _l('enable-two-factor-authentication-note')?></p>
+        <?php if($user['two_factor_auth']):?>
+            <a ajax="true" href="<?php echo url('settings/two-factor', array('action' => 1))?>" class="btn btn-danger round-sm btn-block mb-3 ajax-action"><?php _l('disable-two-factor-authentication')?></a>
+        <?php else:?>
+            <a  ajax="true" href="<?php echo url('settings/two-factor', array('action' => 2))?>" class="btn btn-secondary round-sm btn-block mb-3  ajax-action"><?php _l('enable-two-factor-authentication')?></a>
+        <?php endif?>
+    </div>
+</div>

@@ -1,0 +1,115 @@
+<form class="general-form" method="post" action="<?php echo getFullUrl(true)?>">
+    <?php $user = $C->model('user')->authUser?>
+
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold">Facebook</label>
+                <span class="form-text text-muted"><?php _l('provide-profile-id')?></span>
+            </div>
+            <div class="col-sm-8">
+                <div class="input-group mb-2 mb-sm-0">
+                    <div class="input-group-addon"><i class="la la-facebook"></i></div>
+                    <input type="text" class="form-control" name="val[facebook]" value="<?php echo $user['facebook']?>"/>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold">Instagram</label>
+                <span class="form-text text-muted"><?php _l('provide-profile-id')?></span>
+            </div>
+            <div class="col-sm-8">
+                <div class="input-group mb-2 mb-sm-0">
+                    <div class="input-group-addon"><i class="la la-instagram"></i></div>
+                    <input type="text" class="form-control" name="val[instagram]" value="<?php echo $user['instagram']?>"/>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold">Twitter</label>
+                <span class="form-text text-muted"><?php _l('provide-profile-id')?></span>
+            </div>
+            <div class="col-sm-8">
+                <div class="input-group mb-2 mb-sm-0">
+                    <div class="input-group-addon"><i class="la la-twitter"></i></div>
+                    <input type="text" class="form-control" name="val[twitter]" value="<?php echo $user['twitter']?>"/>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold">Youtube</label>
+                <span class="form-text text-muted"><?php _l('provide-profile-id')?></span>
+            </div>
+            <div class="col-sm-8">
+                <div class="input-group mb-2 mb-sm-0">
+                    <div class="input-group-addon"><i class="la la-youtube"></i></div>
+                    <input type="text" class="form-control" name="val[youtube]" value="<?php echo $user['youtube']?>"/>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold">Vimeo</label>
+                <span class="form-text text-muted"><?php _l('provide-profile-id')?></span>
+            </div>
+            <div class="col-sm-8">
+                <div class="input-group mb-2 mb-sm-0">
+                    <div class="input-group-addon"><i class="la la-vimeo"></i></div>
+                    <input type="text" class="form-control" name="val[vimeo]" value="<?php echo $user['vimeo']?>"/>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold">Soundcloud</label>
+                <span class="form-text text-muted"><?php _l('provide-profile-id')?></span>
+            </div>
+            <div class="col-sm-8">
+                <div class="input-group mb-2 mb-sm-0">
+                    <div class="input-group-addon"><i class="la la-soundcloud"></i></div>
+                    <input type="text" class="form-control" name="val[soundcloud]" value="<?php echo $user['soundcloud']?>"/>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <hr/>
+
+    <button data-size="s" data-style="zoom-in" class="btn btn-info  ladda-button mt-3" id="account-submit" type="submit"><?php _l('save')?></button>
+
+</form>

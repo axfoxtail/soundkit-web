@@ -1,0 +1,160 @@
+<div class="track-profile playlist-profile">
+    <?php $user = $C->model('user')->getUser($playlist['userid'])?>
+    <?php $track = $C->model('track')->getPlaylistFirstTrack($playlist['id'])?>
+    <?php
+        $image = model('track')->getPlaylistArt($playlist,$user, $track, 200);
+    ?>
+    <?php $countLikes = $C->model('track')->countLikes('playlist', $playlist['id'])?>
+    <?php $countReposts = $C->model('track')->countReposts($playlist['id'], true)?>
+
+    <div  data-image="<?php echo $image?>" data-bg-set="false" class="playlist-header">
+        <div class="inner-container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="clearfix mb-3">
+                        <div class="track-image" style="background-image: url(<?php echo $image?>)"></div>
+                    </div>
+                    <?php if($playlist['description']):?>
+                        <div class="track-description mt-4   mb-5 text-center">
+                            <?php echo $playlist['description']?>
+                        </div>
+                    <?php endif?>
+
+                    <?php if($playlist['public'] == 3):?>
+                        <div class="alert alert-warning"><?php _l('playlist-not-yet-published')?></div>
+                    <?php endif?>
+                    <div class="hide-mobile">
+                        <?php $likes = $C->model('track')->getLikes('playlist', $playlist['id'], 9)?>
+                        <?php if($countLikes > 0):?>
+                            <div class="inline-card-list">
+                                <div class="clearfix title">
+                                    <div class="float-left">
+                                        <div class="">
+                                            <i class="la la-heart"></i> <?php _l('likes')?>
+                                        </div>
+                                    </div>
+                                    <div class="float-right">
+                                        <a href="<?php echo $C->model('track')->playlistUrl($playlist,'likes')?>" data-ajax="true" class="like-count-playlist-<?php echo $playlist['id']?>"><span><?php echo $countLikes?></span>  <i class="la-angle-right la"></i></a>
+                                    </div>
+                                </div>
+
+
+
+                                <ul class="clearfix">
+                                    <?php foreach($likes as $usera):?>
+                                        <li><a href="<?php echo $C->model('user')->profileUrl($usera)?>" data-ajax="true" style="background-image: url(<?php echo $C->model('user')->getAvatar($usera, 75)?>)"> </a></li>
+                                    <?php endforeach;?>
+                                </ul>
+
+                            </div>
+                        <?php endif?>
+
+
+                        <?php if($countReposts > 0):?>
+                            <?php $reposts = $C->model('track')->getReposts($playlist['id'],true)?>
+                            <div class="inline-card-list">
+                                <div class="clearfix title">
+                                    <div class="float-left">
+                                        <div class="">
+                                            <svg xmlns="http://www.w3.org/2000/svg" style="color: grey;" width="21" height="13" viewBox="0 0 21 16"><path d="M20.72 7.29L18.43 9.4a1.06 1.06 0 0 1-1 .6h-.2a1 1 0 0 1-.53-.28l-2.42-2.6a1 1 0 0 1 0-1.33.9.9 0 0 1 1.29 0l.94.93V2h-12v1.5A.5.5 0 0 1 4 4H3a.5.5 0 0 1-.5-.5V1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v5.59l.72-.77a1.06 1.06 0 0 1 1.48 0 1 1 0 0 1 .02 1.47zm-17.92-1A1.05 1.05 0 0 1 3.56 6h.2a1 1 0 0 1 .53.28l2.45 2.61a1 1 0 0 1 0 1.34.89.89 0 0 1-1.29 0l-.94-.94V14h12v-1.5A.5.5 0 0 1 17 12h1a.5.5 0 0 1 .5.5V15a1 1 0 0 1-1 1h-14a1 1 0 0 1-1-1V9.42l-.72.77A1 1 0 0 1 .31 8.72l2.28-2.13a1.07 1.07 0 0 1 .21-.3z"></path></svg>
+                                            <?php _l('reposted-by')?>
+                                        </div>
+                                    </div>
+                                    <div class="float-right">
+                                        <a href="<?php echo $C->model('track')->playlistUrl($playlist,'reposters')?>" data-ajax="true" class=""><span><?php echo $countReposts?></span>  <i class="la-angle-right la"></i></a>
+                                    </div>
+                                </div>
+
+
+                                <ul class="clearfix">
+                                    <?php foreach($reposts as $usera):?>
+                                        <li><a href="<?php echo $C->model('user')->profileUrl($usera)?>" data-ajax="true" style="background-image: url(<?php echo $C->model('user')->getAvatar($usera, 75)?>)"> </a></li>
+                                    <?php endforeach;?>
+                                </ul>
+
+                            </div>
+                        <?php endif?>
+                        <?php Hook::getInstance()->fire('global.sidebar')?>
+
+                        <?php echo config('ad-unit2')?>
+                    </div>
+
+                </div>
+                <div class="col-md-8">
+                    <div id="track-header" style="min-height: auto;" class="">
+                        <div class="playlist-url-<?php echo $playlist['id']?>" data-link="<?php echo model('track')->playlistUrl($playlist)?>"></div>
+
+                        <div  class="float-left detail-content playlist-profile-play-container playlist-container-<?php echo $playlist['id']?>">
+                            <div class="media">
+
+                                <?php if($track):?>
+                                    <a href=""
+                                       data-id="<?php echo $track['id']?>"
+                                       data-type="playlist"
+                                       data-typeid="<?php echo $playlist['id']?>"
+                                       data-art="<?php echo $C->model('track')->getArt($track)?>"
+                                       data-title="<?php echo format_output_text(str_limit( $track['title'], 50))?>"
+                                       data-link="<?php echo url('track/'.$track['id'])?>"
+                                       data-owner="<?php echo format_output_text($user['full_name'])?>"
+                                       data-owner-link="<?php echo $C->model('user')->profileUrl($user)?>"
+                                       data-wave="<?php echo $track['wave'] ?>"
+                                       data-wave-colored="<?php echo $track['wave_colored'] ?>"
+                                       class="play-button mr-3 play-icon track-play-button-<?php echo $track['id']?>" id="track-play-button-<?php echo $track['id']?>" ><i class="fa  fa-play"></i></a>
+                                <?php endif?>
+                                <div class="media-body detail" >
+                                    <h5 class="mt-0 title"><?php echo format_output_text($playlist['name'])?></h5>
+                                    <?php _l('by')?> <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>"><span><?php echo $user['full_name']?></span></a>
+                                </div>
+                                <div class="play-controls" data-wave=""></div>
+                            </div>
+                        </div>
+                        <div class="playlist-tracks-total">
+                            <?php $entries = $C->model('track')->getPlaylistEntries($playlist['id'])?>
+                            <div class="count"><?php echo count($entries)?></div>
+                            <?php _l('tracks')?>
+                        </div>
+                    </div>
+                    <div class="track-footer mb-3">
+                        <div class="inner-containe">
+                            <div class="clearfix">
+                                <div class="float-left">
+                                    <div class="actions-container dropdown ">
+                                        <a class="btn <?php echo ($playlist['public'] == 3) ? 'disabled':null?> like-button-playlist-<?php echo $playlist['id']?> ajax-action <?php echo ($C->model('track')->hasLiked('playlist', $playlist['id'])) ? 'liked' : null?>" href="<?php echo url('like/item', array('type' => 'playlist', 'type_id' => $playlist['id']))?>"><i class="la la-heart"></i> <?php _l('like')?></a>
+                                        <?php if($playlist['userid'] != $C->model('user')->authId):?>
+                                            <?php $hasReposted = $C->model('track')->hasReposted(0, $playlist['id'], ($playlist['playlist_type'] == 1) ? 'repost-playlist' : 'repost-album')?>
+                                            <a
+                                                    href="<?php echo url('repost/item', array('action' => ($playlist['playlist_type'] == 1) ? 'repost-playlist' : 'repost-album', 'track' => $entries[0], 'playlist_id' => $playlist['id']))?>"
+                                                    class=" <?php echo ($playlist['public'] == 3) ? 'disabled':null?> btn ajax-action repost-button-playlist-<?php echo $playlist['id']?> <?php echo $hasReposted ? 'reposted' : null?>">
+                                                <i class="la la-retweet <?php echo ($hasReposted) ? 'colored' : null?>"></i>
+                                                <span><?php echo ($hasReposted) ? l('reposted') : l('repost')?></span>
+                                            </a>
+                                        <?php else:?>
+                                            <a data-ajax="true" href="<?php echo model('track')->playlistUrl($playlist, 'edit')?>" class="btn " ><i class="fa fa-pencil"></i> <?php _l('edit')?></a>
+                                        <?php endif?>
+                                        <button class="btn  <?php echo ($playlist['public'] == 3) ? 'disabled':null?>" onclick="return share(<?php echo $playlist['id']?>, 'playlist')"><i class="la la-external-link"></i> <?php _l('share')?></button>
+                                        <?php if(config('enable-zip-download-album', false) and model('track')->canDownloadZip($playlist['id'])):?>
+                                            <a href="<?php echo url('download/album', array('id' => $playlist['id']))?>" class="btn "><?php _l('download-all-tracks')?></a>
+                                        <?php endif?>
+                                        <?php Hook::getInstance()->fire('playlist.profile.actions', null, array($playlist))?>
+                                    </div>
+                                </div>
+                                <div class="float-right">
+                                    <ul class="track-stats">
+                                        <li ><a href="" class="like-count-playlist-<?php echo $playlist['id']?>" style="<?php echo ($countLikes < 1) ? 'display:none': null?>"><i class="la la-heart-o"></i> <span><?php echo $countLikes?></span></a></li>
+                                        <li ><a class="repost-count-playlist-<?php echo $playlist['id']?>" href="" style="<?php echo ($countReposts < 1) ? 'display:none': null?>">
+                                                <i class="la la-retweet"></i>
+                                                <span><?php echo $countReposts?></span>
+                                            </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php echo $content?>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

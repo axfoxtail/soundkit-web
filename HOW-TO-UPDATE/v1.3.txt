@@ -1,0 +1,122 @@
+Update from V1.2 to V1.3
+
+If you have not upgrade to 1.3 please follow the instructions in v1.1.txt file
+
+Before you start updating make sure you do this first part and get it correctly
+
+Make sure you are logged in as admin to your website !!Very !!Important
+
+Navigate to your admin panel -> settings
+
+Now Upload and replace/add the following files or folders
+
+    /index.php
+
+    update/update13.php
+
+    app/vendor/ftp/
+    app/vendor/youtube-sdk/
+
+    module/video/
+
+    app/controllers/admin.php
+	app/controllers/cron.php
+	app/controllers/home.php
+	app/controllers/payment.php
+	app/controllers/track.php
+	app/controllers/user.php
+
+	app/model/admin.php
+	app/model/track.php
+	app/model/user.php
+
+	app/request.php
+	app/routes.php
+
+
+	app/vendor/classes/controller.php
+	app/vendor/classes/uploader.php
+	app/vendor/classes/validator.php
+	app/vendor/utils.php
+
+       
+	app/views/admin/pages/add.phtml
+	app/views/admin/pages/edit.phtml
+	app/views/admin/users/verify.phtml
+	app/views/home/side-footer.phtml
+	app/views/upload/song.phtml
+    app/views/admin/includes/side-menu.phtml
+	app/views/admin/pages/add.phtml
+	app/views/admin/pages/edit.phtml
+	app/views/admin/pages/index.phtml
+	app/views/admin/settings.phtml
+	app/views/admin/users/edit.phtml
+	app/views/admin/users/verify.phtml
+	app/views/home/general-right.phtml
+	app/views/home/side-footer.phtml
+	app/views/pages/index.phtml
+	app/views/playlist/profile/layout.phtml
+	app/views/pro/index.phtml
+	app/views/share/index.phtml
+	app/views/track/comment/time-users.phtml
+	app/views/track/profile/details.phtml
+	app/views/track/profile/edit.phtml
+	app/views/track/profile/layout.phtml
+	app/views/track/profile/people.phtml
+	app/views/track/track-small-inline.phtml
+	app/views/upload/song.phtml
+	app/views/user/profile/layout.phtml
+	app/views/user/settings/account.phtml
+	app/views/user/settings/layout.phtml
+	app/views/user/settings/pro.phtml
+
+
+	assets/css/mejs-controls.png
+	assets/css/mejs-controls.svg
+	assets/js/mediaelement-flash-video-hls.swf
+	assets/js/mediaelement-flash-video-mdash.swf
+	assets/js/mediaelement-flash-video.swf
+	assets/images/flags/ja.png
+    assets/images/video.png
+    assets/css/plugin.css
+	assets/js/plugin.js
+
+
+	languages/de.php
+	languages/en.php
+	languages/es.php
+	languages/fr.php
+	languages/it.php
+	languages/ja.php
+	languages/nl.php
+	languages/pl.php
+	languages/pt.php
+	languages/ru.php
+
+    module/spotlight/start.php
+	module/spotlight/views/global.phtml
+	module/spotlight/views/profile/embed.phtml
+	module/store/controllers/store.php
+	module/store/model/store.php
+	module/store/start.php
+	module/store/views/admin/sales.phtml
+	module/store/views/dashboard/sales.phtml
+	module/store/views/purchased/index.phtml
+	module/store/views/settings/embed.phtml
+	module/store/views/store/overview.phtml
+	module/store/views/upload/embed.phtml
+
+    styles/main/colors.php
+	styles/main/css/main.css
+	styles/main/js/main.js
+	styles/main/views/includes/footer.phtml
+	styles/main/views/includes/header.phtml
+	styles/main/views/includes/layout.phtml
+	styles/main/views/includes/wrapper.phtml
+
+
+-——FINAL STEP——
+
+Go to your admin panel -> settings -> Click the Update System button
+
+Thanks

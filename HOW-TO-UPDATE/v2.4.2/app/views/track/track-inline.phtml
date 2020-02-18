@@ -1,0 +1,98 @@
+<div class="each-inline-track track-hover-display-container each-track-<?php echo $track['id']?> track-<?php echo $track['id']?>" id="track-<?php echo $track['id']?>">
+    <?php
+    $user = $C->model('user')->getUser($track['userid']);
+    ?>
+    <div class="art" style="background-image: url(<?php echo $C->model('track')->getArt($track)?>);">
+        <div class="track-hover-display">
+            <a href=""
+               data-id="<?php echo $track['id']?>"
+               data-art="<?php echo $C->model('track')->getArt($track)?>"
+               data-title="<?php echo str_limit( $track['title'], 50)?>"
+               data-link="<?php echo url('track/'.$track['id'])?>"
+               data-owner="<?php echo $user['full_name']?>"
+               data-owner-link="<?php echo $C->model('user')->profileUrl($user)?>"
+               data-wave="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave'] : '' ?>"
+               data-type="<?php echo $type?>"
+               data-typeid="<?php echo $typeId?>"
+               data-wave-colored="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave_colored'] : '' ?>"
+               class="play-button track-play-button track-play-button-<?php echo $track['id']?>" id="track-play-button-<?php echo $track['id']?>" ><i class="fa  fa-play"></i></a>
+
+            <div class="play-controls" data-wave="">
+            </div>
+        </div>
+    </div>
+    <div class="track-content">
+        <div class="clearfix">
+            <div class="float-left" style="width: 70%">
+                <div class="media">
+                    <?php if($type == 'listen-later'):?>
+                        <div class="track-position mr-3"><a href="<?php echo url('track/remove/later', array('track' => $track['id']))?>" class="ajax-action"><i class="la la-times"></i></a></div>
+                    <?php elseif($type == 'playlist' OR $type == 'charts-new-hot' OR $type == 'charts-top'):?>
+                        <div class="track-position mr-3"><?php echo $offset + 1?></div>
+                    <?php endif?>
+                    <div class="media-body">
+                         <span class="title-info">
+                             <a data-ajax="true" class="user-link "  data-id="<?php echo $user['id']?>" href="<?php echo $C->model('user')->profileUrl($user)?>">
+                                 <?php echo format_output_text($user['full_name'])?>
+                                 <?php echo $C->view('user/badge', array('userid'=> $user['id']))?>
+                             </a>
+                        </span>
+                        <h6 class="media-heading">
+                            <a data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track,$track['id'])?>">
+                                <?php echo format_output_text(str_limit($track['title'], 100))?>
+                            </a>
+                            <div><?php echo model('track')->getTrackFeaturing($track)?></div>
+
+                        </h6>
+                    </div>
+                </div>
+            </div>
+            <div class="float-right">
+                <div class="actions-container dropdown track-hover-displa">
+                    <?php $countViews = $C->model('track')->countViews($track['id'])?>
+                    <button class="btn hide-tablet"><i class="la la-headphones"></i> <?php echo $countViews?> </button>
+                    <?php Hook::getInstance()->fire('track.inline.actions', null, array($track))?>
+                    <button <?php echo ($track['public'] == 3) ? 'disabled':null?> data-toggle="tooltip" title="<?php _l('like')?>" class="btn like-button-track-<?php echo $track['id']?> ajax-action <?php echo ($C->model('track')->hasLiked('track', $track['id'])) ? 'liked' : null?>" href="<?php echo url('like/item', array('type' => 'track', 'type_id' => $track['id']))?>"><i class="la la-heart"></i></button>
+                    <?php if($track['userid'] != $C->model('user')->authId):?>
+                        <?php $hasReposted = $C->model('track')->hasReposted($track['id'], 0, 'repost-track')?>
+                        <a
+                            <?php echo ($track['public'] == 3) ? 'disabled':null?>
+                                data-toggle="tooltip" title="<?php echo ($hasReposted) ? l('remove-repost') : l('repost')?>"
+                                href="<?php echo url('repost/item', array('action' => 'repost-track', 'track' => $track['id'], 'playlist_id' => 0))?>"
+                                class="btn ajax-action repost-button-track-<?php echo $track['id']?> <?php echo $hasReposted ? 'reposted' : null?>">
+                            <i class="la la-retweet <?php echo ($hasReposted) ? 'colored' : null?>"></i>
+                        </a>
+                    <?php endif?>
+                    <?php Hook::getInstance()->fire('track.inline.buttons', null, array($track))?>
+                    <?php if(model('user')->isLoggedIn()):?>
+                        <?php if(model('track')->canDownload($track)):?>
+                            <a onclick="addDownload(<?php echo $track['id']?>)" class="btn" href="<?php echo model('track')->getDownloadUrl($track)?>" download>
+                                <i class="la la-cloud-download"></i>
+                            </a>
+                        <?php else:?>
+                            <?php Hook::getInstance()->fire('track-not-download-button', null, array($track))?>
+                        <?php endif?>
+
+                        <button  class="btn dropdown-toggle no-caret hover-show" data-toggle="dropdown"><i class="fa  fa-ellipsis-h"></i></button>
+                        <div class="dropdown-menu dropdown-menu-right  mt-2" style="min-width: 250px">
+                            <a <?php echo ($track['public'] == 3) ? 'disabled':null?> class="dropdown-item  <?php echo ($track['public'] == 3) ? 'disabled':null?>" href="#" onclick="return changePlaylistModal('.playlists', <?php echo $track['id']?>)"><i class="la la-plus-circle"></i> <?php _l('add-to-playlist')?></a>
+                            <a <?php echo ($track['public'] == 3) ? 'disabled':null?> class="dropdown-item ajax-action track-later <?php echo ($track['public'] == 3) ? 'disabled':null?>" href="<?php echo url('track/add/later', array('track' => $track['id']))?>"  ><i class="la la-music"></i> <span><?php echo ($C->model('track')->existInLater($track['id'])) ? l('remove-listen-later') : l('listen-later')?></span></a>
+                            <?php if(model('track')->canDownload($track)):?>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="<?php echo model('track')->getDownloadUrl($track)?>" target="_blank">
+                                    <i class="la la-cloud-download"></i>
+                                    <?php _l('download-track')?></a>
+
+                            <?php endif?>
+                            <div class="dropdown-divider"></div>
+                            <?php if($track['userid'] != $C->model('user')->authId):?>
+                                <a onclick="return showReportTrack(<?php echo $track['id']?>)" class="dropdown-item <?php echo ($track['public'] == 3) ? 'disabled':null?>" href="#"><i class="fa fa-flag"></i> <?php _l('report-copyright-infringment')?></a>
+                            <?php endif?>
+                            <a class="dropdown-item" data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track,$track['id'])?>"><i class="la la-eye"></i> <?php _l('go-to-track')?></a>
+                        </div>
+                    <?php endif?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

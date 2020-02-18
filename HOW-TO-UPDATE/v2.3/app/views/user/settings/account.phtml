@@ -1,0 +1,204 @@
+<form class="general-form" method="post" action="<?php echo getFullUrl(true)?>">
+    <?php $user = $C->model('user')->authUser?>
+
+    <?php if(config('enable-artist-verification', false) and $user['user_type'] == 1):?>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="text-center p-4">
+                    <i class="fa-microphone fa" style="font-size: 100px;"></i>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <h4><?php _l('are-you-an-artist')?></h4>
+                <p><?php _l('are-you-an-artist-note')?></p>
+                <?php if($user['verify_details']):?>
+                    <button disabled href="" class="btn btn-secondary round-sm btn-block mb-3 " ><?php _l('request-is-pending-approval')?></button>
+                <?php else:?>
+                    <a href="" class="btn btn-secondary round-sm btn-block mb-3 " data-toggle="modal" data-target="#artistVerification"><?php _l('become-an-artist')?></a>
+                <?php endif?>
+            </div>
+        </div>
+
+    <?php endif?>
+    <?php if(config('user-signup-artist', true)):?>
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('artist')?></label>
+                <span class="form-text text-muted"><?php _l('are-you-artist')?></span>
+            </div>
+            <div class="col-sm-8">
+                <input type="hidden" name="val[artist]" value="1"/>
+                <div class="switch">
+                    <input id="cmn-toggle-premium" value="2" name="val[artist]" <?php echo ($user['user_type'] == 2) ? 'checked': null?> class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+                    <label for="cmn-toggle-premium"></label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <?php endif?>
+
+    <?php if(config('enable-multi-currency', false)):?>
+        <div class="form-group mb-5">
+            <div class="row">
+                <div class="col-sm-4">
+                    <label class="bold"><?php _l('currency')?></label>
+                </div>
+                <div class="col-sm-8">
+                    <select name="val[currency]">
+                        <?php $currencies = getRawCurriencies();$currency = ($user['currency']) ? $user['currency'] : config('currency','USD'); foreach($currencies as $curr => $de):?>
+                            <option <?php echo ($currency== $curr) ? 'selected' : null?> value="<?php echo $curr?>"><?php echo $curr?> (<?php echo $de['name']?>)</option>
+                        <?php endforeach;?>
+                    </select>                </div>
+            </div>
+
+        </div>
+
+    <?php endif?>
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('display-name')?></label>
+                <span class="form-text text-muted"><?php _l('space-special-are-fine')?></span>
+            </div>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="val[full_name]" value="<?php echo $user['full_name']?>"/>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('username')?></label>
+            </div>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="val[username]" value="<?php echo $user['username']?>"/>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('email-address')?></label>
+            </div>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="val[email]" value="<?php echo $user['email']?>"/>
+            </div>
+        </div>
+
+    </div>
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('biography')?></label>
+                <span class="form-text text-muted"><?php _l('biography-note')?></span>
+            </div>
+            <div class="col-sm-8">
+                <textarea rows="5" class="form-control" name="val[bio]" ><?php echo $user['bio']?></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('website')?></label>
+                <span class="form-text text-muted"><?php _l('website-note')?></span>
+            </div>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="val[website]" value="<?php echo $user['website']?>"/>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('country-city')?></label>
+                <span class="form-text text-muted"><?php _l('where-are-from')?></span>
+            </div>
+            <div class="col-sm-8 ">
+                <div class="row">
+                    <div class="col">
+                        <select data-ui-select="true" name="val[country]" class="select-input">
+                            <option value=""><?php _l('choose-country')?></option>
+                            <?php foreach (getCountries() as $country):?>
+                                <option <?php echo $user['country'] == strtolower($country) ? 'selected' : null?> value="<?php echo strtolower($country)?>"><?php echo $country?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="val[city]" placeholder="<?php _l('city')?>" value="<?php echo $user['city']?>"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group mb-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="bold"><?php _l('gender')?></label>
+                <span class="form-text text-muted"><?php _l('optional-but-recommended')?></span>
+            </div>
+            <div class="col-sm-8 ">
+                <select data-ui-select="true" name="val[gender]" class="select-input ">
+                    <option <?php echo ($user['gender'] == 'male')? 'selected' : null?> value="male"><?php _l('male')?></option>
+                    <option <?php echo ($user['gender'] == 'female')? 'selected' : null?> value="female"><?php _l('female')?></option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <button data-size="s" data-style="zoom-in" class="btn btn-info  ladda-button mt-3" id="account-submit" type="submit"><?php _l('save')?></button>
+
+</form>
+
+<div class="modal" id="artistVerification" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form enctype="multipart/form-data" action="<?php echo url('artist/verify')?>" method="post" class="general-form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><?php _l('become-an-artist')?></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label><?php _l('your-full-name')?><span class="important">*</span></label>
+                        <input type="text" name="val[name]" required class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label><?php _l('record-label')?><span class="important">*</span></label>
+                        <input type="text" name="val[record]" required class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label><?php _l('your-photo')?><span class="important">*</span></label>
+                        <input type="file" name="file" required class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label><?php _l('additional-info')?></label>
+                        <textarea rows="4" class="form-control" name="val[info]"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" type="submit" id="reportbutton" data-size="s" data-style="zoom-in" class="ladda-button btn btn-primary"><?php _l('send-request')?></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

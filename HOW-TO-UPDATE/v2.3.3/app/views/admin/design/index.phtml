@@ -1,0 +1,74 @@
+<div class="inner-container">
+    <form action="<?php echo getFullUrl(true)?>" method="post">
+    <div class="row mt-4">
+        <div class="col-md-7">
+
+                <div class="form-group row">
+                    <label class="col-md-4"><?php _l('theme')?></label>
+                    <select class="form-control col-md-4" name="val[theme]">
+                         <?php foreach($C->model('admin')->getThemes() as $theme):?>
+                            <option <?php echo ($theme == config('theme', 'main')) ? 'selected' : null?> value="<?php echo $theme?>"><?php echo $theme?></option>
+                        <?php endforeach;?>
+                    </select>
+                    <div class="col-md-3">
+                        <button class="btn btn-secondary round-sm"><?php _l('save')?></button>
+                    </div>
+                </div>
+            <hr/>
+            <div class="form-group row">
+                <label class="col-md-4"><?php _l('separate-login-signup-page')?></label>
+                <select class="form-control col-md-4" name="val[separate-login]">
+                    <option <?php echo (0 == config('separate-login', 0)) ? 'selected' : null?> value="0"><?php _l('no')?></option>
+                    <option <?php echo (1 == config('separate-login', 0)) ? 'selected' : null?> value="1"><?php _l('yes')?></option>
+
+                </select>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary round-sm"><?php _l('save')?></button>
+                </div>
+            </div>
+                <hr/>
+
+                <?php $colors = path('styles/'.config('theme', 'main').'/colors.php')?>
+
+                <?php if(file_exists($colors)): $colors = include $colors; $theme = config('theme', 'main')?>
+                    <h5><?php _l('color-changes-base-on-selected-theme')?> - <a href="<?php echo url('admin/design', array('restore' => true))?>" class="btn btn-outline-secondary confirm"><?php _l('restore-to-default')?></a></h5>
+
+                    <?php foreach($colors as $segment => $info):?>
+                        <h6><?php echo $info['title']?> <?php if($segment == 'player'):?>
+                                <a href="" onclick="return admin_generate_waves(this, 0)" class="btn round-sm  btn-primary"><?php _l('update-track-waves-color')?></a>
+                            <?php endif?></h6>
+                        <?php foreach($info['colors'] as $id => $detail):?>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-4 col-form-label"><?php echo $detail['title']?></label>
+                                <div class="col-sm-5">
+                                    <div id="<?php echo $id?>" class="input-group colorpicker-component cp" data-color="<?php echo config($theme.'-'.$id, $detail['color'])?>">
+                                        <input name="val[<?php echo $id?>]" onchange="effectColor(this,'<?php echo $detail['target']?>', '<?php echo $detail['type']?>');" value="<?php echo config($theme.'-'.$id, $detail['color'])?>" id="<?php echo $id?>-color" type="text" class="form-control input-lg"/>
+                                        <span class="input-group-addon"><i></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach;?>
+
+
+
+                        <button class="btn btn-secondary round-sm"><?php _l('save-changes')?></button>
+
+
+                        <hr/>
+                    <?php endforeach?>
+                <?php endif?>
+
+        </div>
+
+        <div class="col-md-5">
+            <h6><?php _l('custom-css')?></h6>
+            <textarea class="form-control" rows="10" name="val[custom-css]"><?php echo config('custom-css', '')?></textarea>
+
+            <h6 class="mt-5"><?php _l('custom-js')?></h6>
+            <textarea class="form-control mb-3" rows="10" name="val[custom-js]"><?php echo config('custom-js', '')?></textarea>
+
+            <button class="btn btn-secondary round-sm"><?php _l('save-changes')?></button>
+        </div>
+    </div>
+    </form>
+</div>

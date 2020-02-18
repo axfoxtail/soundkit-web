@@ -1,0 +1,40 @@
+<div class="inner-container ">
+    <table class="table table-striped mt-3 table-responsive-sm">
+        <?php $requests = model('user')->getVeirificationRequests()?>
+        <thead>
+        <tr>
+            <th scope="col" style="width: 10%;"><?php _l('user')?></th>
+            <th scope="col" style="width: 20%;"><?php _l('full-name')?></th>
+            <th scope="col" style="width: 20%;"><?php _l('record-label')?></th>
+            <th scope="col" style="width: 20%;"><?php _l('passport')?></th>
+            <th scope="col" style="width: 20%;"><?php _l('info')?></th>
+            <th scope="col" style="width: 10%;"><?php _l('action')?></th>
+        </tr>
+        </thead>
+        <tbody>
+            <?php foreach($requests->results() as $request): $details = perfectUnserialize($request['verify_details'])?>
+                <tr>
+                    <td><img src="<?php echo model('user')->getAvatar($request)?>" style="width:30px;height:30px;border-radius:100px"/> </td>
+                    <td><?php echo $details['name']?></td>
+                    <td><?php echo $details['record']?></td>
+                    <td>
+                        <a href="<?php echo assetUrl($details['passport'])?>" target="_blank"><img src="<?php echo assetUrl($details['passport'])?>" style="width:150px;height:100px"/></a>
+                    </td>
+                    <td><?php echo $details['info']?></td>
+                    <td>
+                        <a href="<?php echo url('admin/verification/request', array('action' => 'approve', 'id' => $request['id']))?>" class="btn btn-success btn-sm"><i class="la la-check"></i></a>
+                        <a href="<?php echo url('admin/verification/request', array('action' => 'ignore', 'id' => $request['id']))?>" class="btn btn-danger btn-sm"><i class="la la-trash"></i></a>
+                    </td>
+                </tr>
+            <?php endforeach;?>
+        </tbody>
+    </table>
+    <?php if($requests->total < 1):?>
+        <div class="empty-content">
+            <i class="la la-info"></i>
+            <span><?php _l('no-contents-show')?></span>
+        </div>
+    <?php else:?>
+        <?php echo $requests->links()?>
+    <?php endif?>
+</div>

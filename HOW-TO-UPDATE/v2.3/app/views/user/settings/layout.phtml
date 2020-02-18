@@ -1,0 +1,37 @@
+<div class="inner-container">
+    <div class="row left-nav mt-4">
+        <div class="col-md-3">
+            <div class="fixed-left-content">
+                <?php echo  $C->view('user/completion')?>
+                <ul class="nav">
+                    <li><a data-ajax="true" class="nav-link <?php echo $type == 'account' ? 'active' : null?>" href="<?php echo url('settings')?>"><i class="la la-user"></i> <?php _l('account')?></a></li>
+                    <?php if(config('enable-premium', false) and $C->model('user')->subscriptionActive()):?>
+                        <li><a data-ajax="true" class="nav-link <?php echo $type == 'pro' ? 'active' : null?>" href="<?php echo url('settings/pro')?>"><i class="la la-money"></i> <?php _l('pro-account')?></a></li>
+
+                    <?php endif?>
+                    <?php if(config('enable-premium-listeners', false) and model('user')->authUser['user_type'] == 1 and $C->model('user')->listenerSubscriptionActive()):?>
+                        <li><a data-ajax="true" class="nav-link <?php echo $type == 'pro' ? 'active' : null?>" href="<?php echo url('settings/pro')?>"><i class="la la-money"></i> <?php _l('pro-account')?></a></li>
+
+                    <?php endif?>
+                    <?php if(config('allow-two-factor-authentication', true)):?>
+                        <li><a data-ajax="true" class="nav-link <?php echo $type == 'two-factor' ? 'active' : null?>" href="<?php echo url('settings/two-factor')?>"><i class="la la-lock"></i> <?php _l('two-factor-auth')?></a></li>
+                    <?php endif?>
+                    <?php Hook::getInstance()->fire('user.settings.menu',null, array($type))?>
+                    <li><a data-ajax="true" class="nav-link <?php echo $type == 'profile' ? 'active' : null?>" href="<?php echo url('settings/profile')?>"><i class="la la-user-plus"></i> <?php _l('profile')?></a></li>
+                    <li><a data-ajax="true" class="nav-link <?php echo $type == 'notification' ? 'active' : null?>" href="<?php echo url('settings/notification')?>"><i class="la la-bell-slash"></i> <?php _l('notifications')?></a></li>
+                    <li><a data-ajax="true" class="nav-link <?php echo $type == 'social' ? 'active' : null?>" href="<?php echo url('settings/social')?>"><i class="la la-facebook-f"></i> <?php _l('social')?></a></li>
+                    <li><a data-ajax="true" class="nav-link <?php echo $type == 'password' ? 'active' : null?>" href="<?php echo url('settings/password')?>"><i class="la la-lock"></i> <?php _l('password')?></a></li>
+                    <li><a data-ajax="true" class="nav-link <?php echo $type == 'blocked' ? 'active' : null?>" href="<?php echo url('settings/blocked')?>"><i class="la la-users"></i> <?php _l('block-users')?></a></li>
+                    <li><a data-ajax="true" class="nav-link <?php echo $type == 'delete' ? 'active' : null?>" href="<?php echo url('settings/delete')?>"><i class="la  la-trash "></i> <?php _l('delete-maccount')?></a></li>
+
+                </ul>
+            </div>
+
+
+        </div>
+        <div class="col-md-9">
+           <?php echo $content?>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,91 @@
+Update from V1.3.2 to V1.3.3
+
+If you have not upgrade to 1.3.2 please follow the instructions in v1.3.2.txt file
+
+Before you start updating make sure you do this first part and get it correctly
+
+Make sure you are logged in as admin to your website !!Very !!Important
+
+Navigate to your admin panel -> settings
+
+Now Upload and replace/add the following files or folders
+
+    /index.php
+
+    app/controllers/admin.php
+    app/controllers/api.php
+    app/controllers/track.php
+    app/controllers/home.php
+    app/controllers/payment.php
+    app/controllers/user.php
+
+
+    app/model/api.php
+    app/model/track.php
+    app/model/user.php
+
+    app/vendor/classes/email.php
+    app/vendor/utils.php
+
+    app/routes.php
+
+    app/views/admin/includes/side-menu.phtml
+    app/views/admin/newsletter/index.phtml
+    app/views/admin/settings.phtml
+    app/views/admin/design/index.phtml
+    app/views/share/index.phtml
+    app/views/track/track-slide.phtml
+    app/views/home/index.phtml
+    app/views/home/side-footer.phtml
+    app/views/track/profile/layout.phtml
+    app/views/track/profile/edit.phtml
+    app/views/track/track-inline.phtml
+    app/views/track/track.phtml
+    app/views/api/pay.phtml
+    app/views/api/video-player.phtml
+    app/views/auth/login.phtml
+    app/views/auth/signup.phtml
+    app/views/user/activate.phtml
+    app/views/upload/song.phtml
+    app/views/user/activate.phtml
+    app/views/user/profile/layout.phtml
+    app/views/user/settings/pro.phtml
+    app/views/user/settings/social.phtml
+
+
+
+    languages/en.php
+    languages/de.php
+    languages/es.php
+    languages/fr.phhp
+    languages/it.php
+    languages/ja.php
+    languages/nl.php
+    languages/pl.php
+    languages/pt.php
+    languages/ru.php
+
+    styles/main/views/includes/header.phtml
+    styles/main/views/includes/footer.phtml
+
+    styles/main/js/main.js
+    styles/main/css/main.css
+
+    update/update133.php
+
+    module/contact/
+
+    module/store/views/purchased/index.phtml
+    module/store/start.php
+    module/video/views/page/index.phtml
+    module/store/views/admin/sales.phtml
+    module/store/views/dashboard/sales.phtml
+
+
+
+
+-——FINAL STEP——
+
+Go to your admin panel -> settings -> Click the Update System button
+
+Thanks

@@ -1,0 +1,95 @@
+<div class="inner-container">
+
+    <div class="messages-container clearfix">
+        <div class="left">
+            <div class="head">
+                <h6><?php _l('conversations')?></h6>
+                <a href="" onclick="return showMessage()" class="btn btn-secondary round-sm new"><?php _l('new-message')?></a>
+            </div>
+            <div class="conversations">
+                <?php foreach($C->model('message')->getConversations() as $conversation):?>
+                   <a href="<?php echo url('messages', array('cid' => $conversation['id']))?>" data-ajax="true">
+                       <div class="each media <?php echo ($conversation['unread'] > 0 ) ? 'unread' : null?> <?php echo ( $cid==$conversation['id']) ? 'active': null?>">
+                           <div class="avatar" style="background-image: url(<?php echo $C->model('user')->getAvatar($conversation['user'], 200)?>);"></div>
+                           <div class="media-body">
+                               <h6 class="media-heading"><?php echo $conversation['user']['full_name']?></h6>
+                               <span class="text">
+                                <?php
+                                if ($conversation['lastMessage']['message']) {
+                                    echo $conversation['lastMessage']['message'];
+                                } elseif ($conversation['lastMessage']['trackid'] != 0) {
+                                    l('track-received');
+                                } else {
+                                    l('playlist-received');
+                                }
+                                ?>
+                            </span>
+                           </div>
+
+                           <?php if($conversation['unread'] > 0):?>
+                                <span class="count badge badge-info mt-3  "><?php echo $conversation['unread']?></span>
+                           <?php endif?>
+                       </div>
+                   </a>
+                <?php endforeach;?>
+            </div>
+        </div>
+        <div class="right">
+            <?php if($cid):?>
+                <div class="head">
+
+                    <?php $conversation = $C->model('message')->findConversation($cid);?>
+                    <div class="media">
+                        <div class="avatar" style="background-image: url(<?php echo $C->model('user')->getAvatar($conversation['user'], 200)?>);"></div>
+                        <div class="media-body">
+                            <h6 class="media-heading mt-1"><?php echo $conversation['user']['full_name']?></h6>
+                        </div>
+                    </div>
+
+                    <div class="action dropdown">
+                        <a href="" class="btn btn-outline-secondary round-sm dropdown-toggle no-caret" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right  mt-2" aria-labelledby="dropdownMenuButton">
+
+                            <?php if($C->model('user')->hasBlock($conversation['user']['id'])):?>
+                                <a class="dropdown-item"  data-ajax="true"  href="<?php echo url('settings/blocked')?>">
+                                    <i class="la la-lock"></i> <?php _l('unblock')?>
+                                </a>
+                            <?php else:?>
+                                <a class="dropdown-item confirm" data-message="<?php _l('confirm-block-user')?>" data-ajax-action="true"  href="<?php echo url('block', array('id' => $conversation['user']['id']))?>">
+                                    <i class="la la-lock"></i> <?php _l('block-user')?>
+                                </a>
+                            <?php endif?>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                        class="chats-container"
+                        data-paginate-url="chat/paginate"
+                        data-param="<?php echo perfectSerialize(array('cid' => $cid))?>"
+                        id="chats-container"
+                        data-offset="0"
+                        data-prepend="true"
+                >
+                    <div class="load-more-button-container hide" id="chats-load-more-container">
+                        <a href=""
+                           data-size="s" data-style="zoom-in"
+                           class="load-more-button  btn btn-outline-dark btn-sm ladda-button"
+                           data-container="chats-container"
+                           id="chats-container-loadmore-button"><?php _l('load-more')?></a>
+                    </div>
+                    <?php foreach($C->model('message')->getMessages($conversation['id'], 0, 10) as $message):?>
+                        <?php echo $C->view('message/format', array('message' => $message))?>
+                    <?php endforeach;?>
+                </div>
+                <div class="chat-form">
+                    <form action="<?php echo url('message/form')?>" method="post" class="general-form">
+                        <input type="hidden" name="val[to]" value="<?php echo $conversation['user']['id']?>"/>
+                        <input type="text" autocomplete="off" name="val[text]" placeholder="<?php _l('enter-a-message')?>"/>
+                        <button class="btn "><i class="la la-send"></i></button>
+                    </form>
+                </div>
+            <?php endif?>
+        </div>
+    </div>
+</div>

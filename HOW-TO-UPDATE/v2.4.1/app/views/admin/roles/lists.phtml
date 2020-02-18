@@ -1,0 +1,79 @@
+<div class="inner-container mt-4">
+    <div class="title clearfix" style="margin-bottom: 20px">
+        <div class="float-left">
+            <form class="form-inline" method="post">
+                <div class="input-group mb-2 mb-sm-0">
+                    <div class="input-group-addon"><i class="la la-search"></i></div>
+                    <input type="text" name="term" class="form-control" id="inlineFormInputGroup" placeholder="<?php _l('search')?>">
+                </div>
+            </form>
+        </div>
+        <div class="float-right">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-7">
+            <?php if(count($roles) > 0):?>
+                <div class="mt-5">
+                    <?php foreach($roles as $dRole):?>
+                        <hr/>
+                        <div style="margin-bottom: 10px;">
+
+                            <div class=" clearfix">
+                                <div class="float-left">
+                                    <h5 class="mt-0"><a data-ajax="true" href="<?php echo url('')?>"><?php echo $dRole['title']?></a></h5>
+                                    <span><?php _l('attached-to')?> <?php echo $C->model('admin')->countRoleUsers($dRole['id'])?> <strong><?php _l('users')?></strong></span>
+                                </div>
+                                <div class="float-right">
+                                    <div class="">
+                                        <a class="btn btn-sm btn-primary" data-ajax="true" href="<?php echo url('admin/roles', array('action'=> 'edit', 'id' => $dRole['id']))?>" role="button"  >
+                                            <i class="la la-edit"></i>
+                                        </a>
+                                        <a class="confirm no-caret btn btn-sm btn-danger" href="<?php echo url('admin/roles', array('action'=> 'delete', 'id' => $dRole['id']))?>" role="button"  >
+                                            <i class="la la-trash-o"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php endforeach;?>
+                </div>
+            <?php else:?>
+                <div class="alert alert-warning mt-5" ><?php _l('no-roles-display')?></div>
+            <?php endif?>
+        </div>
+        <div class="col-md-5">
+            <div class="box mt-5" style="overflow: visible !important;">
+                <?php if($message):?>
+                    <div class="alert alert-danger"><?php echo $message?></div>
+                <?php endif?>
+                <div class="box-title"><?php echo (!$role) ? l('add-user-role') : l('edit-user-role')?></div>
+                <form action="<?php echo getFullUrl(true)?>" class="general-form" method="post">
+
+                    <div class="form-group">
+                        <input value="<?php echo ($role) ? $role['title'] : null?>" autocomplete="off" name="val[name]" type="text" class="form-control"   placeholder="<?php _l('name')?>">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label><?php _l('permissions')?></label>
+                        <?php
+                            $permissions = ($role) ? perfectUnserialize($role['permissions']) : array();
+                        ?>
+                        <select style="background-color: #fff;"  name="permissions[]" multiple data-ui-select="true" class=" select-input-multiple">
+                            <?php foreach(model('admin')->getPredefinedRoles() as $roleId => $title):?>
+                                <option <?php echo (in_array($roleId, $permissions)) ? 'selected' : null?> value="<?php echo $roleId?>"><?php echo $title?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+
+                    <button type="submit" data-size="s" data-style="zoom-in" type="submit" class="btn round-sm btn-primary btn-sm ladda-button" id="user-edit-button"><?php _l('submit')?></button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

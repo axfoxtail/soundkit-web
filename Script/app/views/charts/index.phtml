@@ -1,0 +1,72 @@
+<div class="profile-menu">
+    <div class="inner-container">
+        <div class="clearfix">
+            <div class="float-left">
+                <ul class="nav nav-tabs exception" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($page == 'new-hot') ? 'active': null?>" data-ajax="true"  href="<?php echo url('charts')?>" ><?php _l('new-hot')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($page == 'top') ? 'active': null?>" data-ajax="true"  href="<?php echo url('charts/top')?>" ><?php _l('top-50')?></a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="inner-container">
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <?php Hook::getInstance()->fire('global.top')?>
+            <div class="clearfix">
+                <div class="float-left">
+                    <?php if($page == 'top'):?>
+                        <?php
+                        if(preg_match('#last#', $time)) {
+                            $dTime = 'from-'.$time;
+                        } else {
+                            $dTime = $time;
+                        }
+                        ?>
+                        <div class="pt-3" style="color: grey;"><i class="la la-clock-o"></i> <?php _l($dTime)?> <?php _l('top-50')?></div>
+                    <?php endif?>
+                </div>
+                <div class="float-right">
+                    <?php if($page ==  'top'):?>
+                        <div class="" style="display: inline-block;">
+                            <select onchange="reloadCharts('<?php echo $page == 'new-hot' ? 'charts' : 'charts/top'?>')" id="filter-time"  class="select-input" data-ui-select="true" style="width: 150px;">
+                                <option <?php echo ($time == 'this-week') ? 'selected': null?>  value="this-week"><?php _l('this-week')?></option>
+                                <option  <?php echo ($time == 'last-week') ? 'selected': null?>  value="last-week"><?php _l('from-last-week')?></option>
+                                <option  <?php echo ($time == 'this-month') ? 'selected': null?>  value="this-month"><?php _l('this-month')?></option>
+                                <option  <?php echo ($time == 'last-month') ? 'selected': null?>  value="last-month"><?php _l('from-last-month')?></option>
+                                <option  <?php echo ($time == 'this-year') ? 'selected': null?>  value="this-year"><?php _l('this-year')?></option>
+                            </select>
+                        </div>
+                    <?php endif?>
+                    <div style="display: inline-block">
+                        <select onchange="reloadCharts('<?php echo $page == 'new-hot' ? 'charts' : 'charts/top'?>')" id="filter-genre"  class="select-input" data-ui-select="true" style="width: 200px;">
+                            <option value="all"><?php _l('all-genres')?></option>
+                            <?php foreach($C->model('admin')->getGenres() as $dgenre):?>
+                                <option <?php echo ($dgenre['id'] == $genre) ? 'selected': null?> value="<?php echo $dgenre['id']?>"><?php echo $dgenre['name']?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <?php echo config('ad-unit1')?>
+            <div class="track-list"  data-limit="10" data-view="inline" data-type-id="<?php echo $genre.'/'.$time?>" data-type="<?php echo 'charts-'.$page?>" data-offset="0">
+                <?php echo $C->view('track/placeholder', array('type' => 'inline'))?>
+            </div>
+            <a href="" class="track-paginate-link show-mobile-sm show-mobile-md" onclick="return paginateTracks()"><?php _l('load-more-tracks')?></a>
+
+        </div>
+        <div class="col-md-4">
+            <?php echo $C->view('home/general-right', array('completion' => false))?>
+        </div>
+
+
+    </div>
+</div>

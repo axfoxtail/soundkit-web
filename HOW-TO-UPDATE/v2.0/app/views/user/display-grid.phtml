@@ -1,0 +1,9 @@
+<div class="grid list">
+    <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>">
+        <div class="art" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 200)?>);"></div>
+    </a>
+    <div class="grid-title-container ">
+        <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>" class="grid-title "><span><b><?php echo $user['full_name']?></b></span></a>
+        <span class="grid-info"><?php echo $C->model('user')->countFollowers($user['id'])?> <?php _l('followers')?></span>
+    </div>
+</div>

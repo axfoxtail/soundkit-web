@@ -1,0 +1,25 @@
+<input type="hidden" value="<?php echo $playlist['id']?>" name="id"/>
+<div class="form-group">
+    <input type="text" value="<?php echo $playlist['name']?>" name="val[title]" class="form-control " placeholder="<?php _l('title')?>"/>
+</div>
+<div class="form-group">
+    <textarea name="val[desc]" class="form-control" placeholder="<?php _l('description')?>"><?php echo $playlist['description']?></textarea>
+</div>
+
+<?php Hook::getInstance()->fire('playlist.edit.content', null, array($playlist))?>
+
+<div class="row">
+    <div class="col">
+        <label><?php _l('public')?></label>
+
+        <input type="hidden" name="val[public]" value="0"/>
+        <div class="switch">
+            <input id="cmn-toggle-premium"  <?php echo ($playlist['public'] == 1) ? 'checked':null?> value="1" name="val[public]" class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+            <label for="cmn-toggle-premium"></label>
+        </div>
+    </div>
+</div>
+
+<?php if(model('user')->isLoggedIn() and $playlist['userid'] == $C->model('user')->authId):?>
+    <a  class="btn btn-sm btn-outline-secondary mt-3 round-sm confirm" href="<?php echo url('playlist/delete', array('id' => $playlist['id']))?>"><i class="la la-trash"></i> <?php _l('delete-playlist')?></a>
+<?php endif?>

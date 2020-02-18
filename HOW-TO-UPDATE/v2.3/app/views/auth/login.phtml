@@ -1,0 +1,42 @@
+<div class="auth-container">
+    <div class="content clearfix">
+        <div class="auth-left topography">
+            <div class="topography-cover"></div>
+        </div>
+        <div class="auth-right">
+            <img class="light-logo logo" src="<?php echo config('site_logo', 'assets/images/logo.png')?>"/>
+            <img class="dark-logo logo" src="<?php echo config('site_logo_dark', 'assets/images/logo-dark.png')?>"/>
+            <div class="login-for">
+                <form action="<?php echo url('login')?>" class="general-form" method="post">
+                    <?php if(config('enable-facebook', false)):?>
+                        <a href="<?php echo url('auth/facebook')?>" class="btn btn-block fb-button" ><span style="position:relative;bottom:5px"><i class="la la-facebook-f"></i> <?php _l('login-with-facebook')?></span></a>
+                        <div class="content-line">
+                            <span><?php _l('or')?></span>
+                        </div>
+                    <?php endif?>
+
+
+
+                    <div class="form-group">
+                        <input name="val[username]" class="form-control " placeholder="<?php _l('username-email')?>"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" name="val[password]" class="form-control" placeholder="<?php _l('password')?>"/>
+                    </div>
+
+                    <button type="submit" style="padding-left:30px;padding-right:30px" data-style="zoom-in" data-size="s" class="btn btn-primary ladda-button round-sm" id="login-submit"><?php _l('login')?></button>
+                </form>
+
+                <p class=" mt-4">
+                    <?php if(config('user-signup', true)):?>
+                        <?php _l('new-to')?> <strong class="colored"><?php echo config('site-title')?></strong> <a style="font-weight: 600;"  href="<?php echo url('signup')?>"><?php _l('signup-here')?></a>
+                        <br/><br/>
+                    <?php endif?>
+
+                    <?php _l('forgot-your-password')?> <a onclick="return changeAuthModal('.forgot-form')" href=""  style="font-weight: 600;"><?php _l('reset-here')?></a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

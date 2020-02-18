@@ -1,0 +1,63 @@
+<?php if(count($tracks) > 0):?>
+
+    <?php $i = $offset;  foreach ($tracks as $track):?>
+        <?php
+        $listTracks = array();
+        ?>
+        <?php
+        if ($type == 'feed' or $type == 'my-stream' or $type == 'my-reposts') {
+            $stream = $C->model('track')->findStream($track['id']);
+            if ($stream['playlist_id']) {
+                $track = $C->model('track')->getPlaylistFirstTrack($stream['playlist_id']);
+                if ($viewType == 'small-inline-nextup') {
+                    $listTracks = $C->model('track')->getPlaylistTracks($stream['playlist_id'], $track['id']);
+                }
+            } else {
+                $track = $C->model('track')->findTrack($stream['trackid']);
+            }
+            if ($track) {
+                $track = array_merge($stream, $track);
+                //$track['time'] = $stream['str']
+            }
+            if ($track['public'] == 3) $track = false;
+        } else {
+            $result = Hook::getInstance()->fire('get.lists.track', array('track' => null), array($type, $typeId, $track));
+            if ($result['track']) {
+                $track = $result['track'];
+            }
+        }
+        ?>
+        <?php
+            $allowOwner = false;
+            if ($type == 'my-tracks') $allowOwner = true;
+            $canDisplay = model('track')->displayItem($track, $allowOwner);
+        ?>
+        <?php if($canDisplay):?>
+            <?php if($track and isset($track['time'])):?>
+                <?php if($viewType == 'inline'):?>
+                    <?php echo $C->view('track/track-inline', array('track' => $track ,'offset' => $i, 'type' => $type,'typeId' => $typeId))?>
+                <?php elseif($viewType == 'small-inline'):?>
+                    <?php echo $C->view('track/track-small-inline', array('track' => $track ,'offset' => $i, 'type' => $type,'typeId' => $typeId))?>
+                <?php elseif($viewType == 'small-inline-nextup'):?>
+                    <?php echo $C->view('track/track-small-inline', array('track' => $track ,'offset' => $i, 'type' => $type,'typeId' => $typeId))?>
+                    <?php if($listTracks):?>
+                        <?php foreach($listTracks as $playlistTrack):?>
+                            <?php echo $C->view('track/track-small-inline', array('track' => $playlistTrack ,'offset' => $i, 'type' => $type,'typeId' => $typeId))?>
+                        <?php endforeach?>
+                    <?php endif?>
+                <?php elseif($viewType == 'inline-grid'):?>
+                    <?php echo $C->view('store::track/display-grid', array('track' => $track ,'offset' => $i, 'type' => $type,'typeId' => $typeId))?>
+                <?php else:?>
+                    <?php echo $C->view('track/track', array('track' => $track, 'type' => $type,'typeId' => $typeId))?>
+                <?php endif?>
+
+            <?php endif?>
+            <?php if($i == 3):?>
+                <?php echo config('ad-unit3')?>
+            <?php endif?>
+            <?php $i++;?>
+            <?php endif?>
+    <?php  endforeach?>
+<?php else:?>
+
+<?php endif?>

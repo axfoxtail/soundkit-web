@@ -1,0 +1,42 @@
+<div class="fixed-left-content">
+
+   <?php if($C->model('user')->isLoggedIn()):?>
+       <?php if(!isset($completion)):?>
+           <?php echo  $C->view('user/completion', array('stats' => isset($stats) ? $stats : false ))?>
+       <?php endif?>
+       <?php endif?>
+
+       <?php Hook::getInstance()->fire('global.side')?>
+
+    <?php if($C->model('user')->isLoggedIn()):?>
+       <?php $people = $C->model('user')->getPeople('suggestion', null, 3)?>
+       <?php if(count($people) > 0):?>
+
+           <div class="card-list mt-3  bg-card">
+               <div class="clearfix title">
+                   <div class="float-left">
+                       <div class="">
+                           <i class="la la-users"></i>
+                           <?php _l('people-to-follow')?>
+                       </div>
+                   </div>
+                   <div class="float-right">
+                       <a href="" onclick="return reloadPeopleSuggestions()"><i class=" la-refresh la"></i></a>
+                   </div>
+               </div>
+
+               <div class="list people-list-container people-suggestion-list">
+                   <?php foreach($people as $user):?>
+                       <?php echo $C->view('user/display-inline', array('user' => $user))?>
+                   <?php endforeach?>
+               </div>
+
+           </div>
+       <?php endif?>
+    <?php endif?>
+
+
+    <?php echo config('ad-unit2')?>
+
+    <?php echo view('home/side-footer')?>
+</div>

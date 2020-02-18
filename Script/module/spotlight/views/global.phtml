@@ -1,0 +1,25 @@
+<?php $tracks = model('spotlight::spotlight')->getTracks(null, true)?>
+
+<?php if(count($tracks) > 0):?>
+    <div class="spotlight-container mb-3">
+        <h5><?php _l('featured')?></h5>
+        <div class="horizontal-list" style="border: none;margin: 0;padding: 0;">
+        <div class="slider side-slider" >
+            <div class="swiper-container" id="global-spotlight-slider">
+                <div class="swiper-wrapper">
+                    <?php  foreach($tracks as $track):?>
+                        <?php if($track['trackid']):$track = model('track')->findTrack($track['trackid'])?>
+                            <?php if($track):?>
+                                <?php echo $C->view('track/track-slide', array('track' => $track, 'type' => 'global-spotlight', 'typeId' => '', 'hideTags' => true))?>
+                            <?php endif?>
+                        <?php endif?>
+                    <?php endforeach;?>
+
+                </div>
+            </div>
+            <div class="swiper-button-next  scroller scroll-right" id="new-hot-slider-next"><i class="la  la-angle-right"></i></div>
+            <div class="swiper-button-prev scroller scroll-left" id="new-hot-slider-right"><i class="la  la-angle-left"></i></div>
+        </div>
+        </div>
+    </div>
+<?php endif?>

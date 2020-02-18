@@ -1,0 +1,32 @@
+<div class="user media lists">
+    <a class="" href="<?php echo $C->model('user')->profileUrl($user)?>" data-ajax="true" >
+        <div class="avatar" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 200)?>)"></div>
+    </a>
+    <div class="media-body">
+        <div class="clearfix">
+            <div class="float-left">
+                <h5 class="mt-0 media-heading">
+                    <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>">
+                        <?php echo $user['full_name']?>
+                        <?php echo $C->view('user/badge', array('userid'=> $user['id']))?>
+                    </a></h5>
+                <?php $countFollowers = $C->model('user')->countFollowers($user['id']); echo $countFollowers?> <?php _l('followers')?>
+            </div>
+            <div class="float-right">
+                <div class="actions-container">
+                    <?php if($C->model('user')->isLoggedIn()):?>
+                        <?php if($user['id'] != $C->model('user')->authId): $isFollowing = $C->model('user')->isFollowing($user['id'])?>
+                            <a href="<?php echo url('follow', array('id' => $user['id']))?>" class="btn follow-<?php echo $user['id']?>-btn <?php echo !$isFollowing ? 'follow' : null?> ajax-action " >
+                                <?php if($isFollowing):?>
+                                    <i class="la la-user-times"></i>
+                                <?php else:?>
+                                    <i class="la la-user-plus"></i>
+                                <?php endif?>
+                            </a>
+                        <?php endif?>
+                    <?php endif?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

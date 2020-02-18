@@ -1,0 +1,286 @@
+<?php $result = Hook::getInstance()->fire('start.pro.page', array('content' => ''))?>
+<?php if($result['content']):?>
+    <?php echo $result['content']?>
+<?php else:?>
+    <?php if(config('enable-premium-listeners', false) and (model('user')->isLoggedIn() and model('user')->authUser['user_type'] == 1)):?>
+        <?php
+        $userType = ($C->model('user')->isLoggedIn()) ? $C->model('user')->authUser['user_type'] : 2;
+
+        $yearlyPriceArtist = config('pro-user-yearly-price', '55');
+        $monthlyPriceArtists = config('pro-user-month-price', '5')
+
+        ?>
+        <div class="pro-plans-container">
+            <div class="inner-container pro-content">
+                <h5><?php _l('become-a-pro-listener')?></h5>
+
+                <div><?php _l('become-pro-listener-note')?></div>
+            </div>
+        </div>
+
+
+
+        <div class="inner-container">
+            <div class="tab-content">
+                <div class="tab-pane fade show active">
+                    <div class="pro-plans clearfix">
+                        <div class="plan-A plan">
+                            <div class="price-container">
+                            <span class="price">
+                                <?php echo (config('currency-placement') == 'before') ? getDefaultCurrencySymbol() : null?>
+                                0
+                                <?php echo (config('currency-placement') == 'after') ? getDefaultCurrencySymbol() : null?>
+
+                            </span>
+                            </div>
+
+                            <img style="width: 100px;margin: 20px auto;display: block;" src="<?php echo assetUrl('assets/images/plan-icons/free.png')?>"/>
+                            <div class="plan-name"><?php _l('free')?></div>
+                            <div class="plan-features">
+                                <ul>
+                                    <li><?php _l('listen-to-free-music')?></li>
+                                </ul>
+                            </div>
+                            <div style="text-align: center;" class="mt-4 p-4">
+                                <?php if($C->model('user')->isLoggedIn()):?>
+                                    <button class="btn btn-secondary btn-sm mt-3 disabled btn-block"><?php _l('active')?></button>
+                                <?php else:?>
+                                    <button  onclick="return changeAuthModal('.signup-form')"  class="btn btn-secondary btn-sm mt-3  btn-block"><?php _l('start-free')?></button>
+                                <?php endif?>
+                            </div>
+                        </div>
+                        <div class="plan-B plan special-pla">
+                            <div class="price-container">
+                            <span class="price">
+                                <?php echo formatMoney($yearlyPriceArtist)?>
+                            </span>
+                            </div>
+                            <img style="width: 90px;margin: 20px auto;display: block;" src="<?php echo assetUrl('assets/images/plan-icons/yearly.png')?>"/>
+
+                            <div class="plan-name"><?php _l('premium-yearly')?></div>
+                            <div class="plan-features">
+                                <ul>
+                                    <li><?php _l('listen-to-both-free-premium-music')?></li>
+                                </ul>
+                            </div>
+                            <div style="text-align: center;" class="mt-4 p-4">
+
+                                <?php if($C->model('user')->isLoggedIn()):$user = $C->model('user')->authUser;$hasTried = $user['has_tried']?>
+                                    <button onclick="return load_payment_method('<?php echo $yearlyPriceArtist?>', 'pro-users', 'yearly')" class="btn btn-secondary btn-sm mt-3 btn-block"><?php _l('go-pro')?></button>
+                                <?php else:?>
+                                    <button  onclick="return changeAuthModal('.login-form')"  class="btn btn-secondary btn-sm mt-3  btn-block"><?php _l('go-pro')?></button>
+                                <?php endif?>
+
+                            </div>
+                        </div>
+                        <div class="plan-C plan">
+                            <div class="price-container">
+                            <span class="price">
+                                <?php echo formatMoney($monthlyPriceArtists)?>
+                            </span>
+                            </div>
+                            <img style="width: 93px;margin: 20px auto;display: block;" src="<?php echo assetUrl('assets/images/plan-icons/monthly.png')?>"/>
+
+                            <div class="plan-name"><?php _l('premium-monthly')?></div>
+
+                            <div class="plan-features">
+                                <ul>
+                                    <li><?php _l('listen-to-both-free-premium-music')?></li>
+                                </ul>
+                            </div>
+                            <div style="text-align: center;" class="mt-4 p-4">
+                                <?php if($C->model('user')->isLoggedIn()):?>
+                                    <button onclick="return load_payment_method('<?php echo $monthlyPriceArtists?>', 'pro-users', 'monthly')" class="btn btn-secondary btn-sm mt-3 btn-block"><?php _l('go-pro')?></button>
+
+                                <?php else:?>
+                                    <button  onclick="return changeAuthModal('.login-form')"  class="btn btn-secondary btn-sm mt-3  btn-block"><?php _l('go-pro')?></button>
+                                <?php endif?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    <?php else:?>
+        <?php if($C->model('user')->isLoggedIn() and $C->model('user')->subscriptionActive()):?>
+
+        <?php else:?>
+            <?php
+            $userType = ($C->model('user')->isLoggedIn()) ? $C->model('user')->authUser['user_type'] : 2;
+
+            $yearlyPriceArtist = config('pro-artist-yearly-price', '55');
+            $monthlyPriceArtists = config('pro-artist-month-price', '5')
+
+            ?>
+            <div class="pro-plans-container">
+                <div class="inner-container pro-content">
+                    <h5><?php _l('become-a-pro')?></h5>
+
+                    <div><?php _l('become-pro-note')?></div>
+                </div>
+            </div>
+
+
+
+            <div class="inner-container">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="artists">
+                        <div class="pro-plans clearfix">
+                            <div class="plan-A plan">
+                                <div class="price-container">
+                                <span class="price">
+                                     <?php echo (config('currency-placement') == 'before') ? getDefaultCurrencySymbol() : null?>
+                                    0
+                                    <?php echo (config('currency-placement') == 'after') ? getDefaultCurrencySymbol() : null?>
+                                </span>
+                                </div>
+
+                                <img style="width: 100px;margin: 20px auto;display: block;" src="<?php echo assetUrl('assets/images/plan-icons/free.png')?>"/>
+                                <div class="plan-name"><?php _l('free')?></div>
+                                <div class="plan-features">
+                                    <ul>
+                                        <li><strong><?php echo config('free-artist-total-track-size', 100)?>MB</strong> <?php _l('track-space')?></li>
+                                        <li><strong><?php echo config('free-artist-track-size', 5)?>MB</strong> <?php _l('track-size')?></li>
+                                    </ul>
+                                </div>
+                                <div style="text-align: center;" class="mt-4 p-4">
+                                    <?php if($C->model('user')->isLoggedIn()):?>
+                                        <button class="btn btn-secondary btn-sm mt-3 disabled btn-block"><?php _l('active')?></button>
+                                    <?php else:?>
+                                        <button  onclick="return changeAuthModal('.signup-form')"  class="btn btn-secondary btn-sm mt-3  btn-block"><?php _l('start-free')?></button>
+                                    <?php endif?>
+                                </div>
+                            </div>
+                            <div class="plan-B plan special-pla">
+                                <div class="price-container">
+                                <span class="price">
+                                    <?php echo formatMoney($yearlyPriceArtist)?>
+
+                                </span>
+                                </div>
+                                <img style="width: 90px;margin: 20px auto;display: block;" src="<?php echo assetUrl('assets/images/plan-icons/yearly.png')?>"/>
+
+                                <div class="plan-name"><?php _l('premium-yearly')?></div>
+                                <div class="plan-features">
+                                    <ul>
+                                        <li>
+                                            <?php if(config('pro-artist-total-track-size', 1024) == '-1'):?>
+                                                <?php _l('unlimited')?>
+                                            <?php else:?>
+                                                <strong><?php echo config('pro-artist-total-track-size', 1024)?>MB</strong>
+                                            <?php endif?>
+                                            <?php _l('track-space')?></li>
+                                        <li><strong><?php echo config('pro-artist-track-size', 50)?>MB</strong> <?php _l('track-size')?></li>
+                                    </ul>
+                                </div>
+                                <div style="text-align: center;" class="mt-4 p-4">
+
+                                    <?php if($C->model('user')->isLoggedIn()):$user = $C->model('user')->authUser;$hasTried = $user['has_tried']?>
+                                        <?php if(config('enable-trial') and !$hasTried):?>
+                                            <a class="btn btn-secondary btn-sm mt-3 btn-block" href="<?php echo url('trial/pro')?>"><?php _l('trial-now')?></a>
+
+                                        <?php else:?>
+                                            <button onclick="return load_payment_method('<?php echo $yearlyPriceArtist?>', 'pro', 'yearly')" class="btn btn-secondary btn-sm mt-3 btn-block"><?php _l('go-pro')?></button>
+                                        <?php endif?>
+                                    <?php else:?>
+                                        <button  onclick="return changeAuthModal('.login-form')"  class="btn btn-secondary btn-sm mt-3  btn-block"><?php _l('go-pro')?></button>
+                                    <?php endif?>
+
+                                </div>
+                            </div>
+                            <div class="plan-C plan">
+                                <div class="price-container">
+                                <span class="price">
+                                    <?php echo formatMoney($monthlyPriceArtists)?>
+                                    </span>
+                                </div>
+                                <img style="width: 93px;margin: 20px auto;display: block;" src="<?php echo assetUrl('assets/images/plan-icons/monthly.png')?>"/>
+
+                                <div class="plan-name"><?php _l('premium-monthly')?></div>
+
+                                <div class="plan-features">
+                                    <ul>
+                                        <li>
+                                            <?php if(config('pro-artist-total-track-size', 1024) == '-1'):?>
+                                                <?php _l('unlimited')?>
+                                            <?php else:?>
+                                                <strong><?php echo config('pro-artist-total-track-size', 1024)?>MB</strong>
+                                            <?php endif?>
+                                            <?php _l('track-space')?></li>
+
+                                        <li><strong><?php echo config('pro-artist-track-size', 50)?>MB</strong> <?php _l('track-size')?></li>
+                                    </ul>
+                                </div>
+                                <div style="text-align: center;" class="mt-4 p-4">
+                                    <?php if($C->model('user')->isLoggedIn()):?>
+                                        <?php if(config('enable-trial')  and !$hasTried):?>
+                                            <a class="btn btn-secondary btn-sm mt-3 btn-block" href="<?php echo url('trial/pro')?>"><?php _l('trial-now')?></a>
+
+                                        <?php else:?>
+                                            <button onclick="return load_payment_method('<?php echo $monthlyPriceArtists?>', 'pro', 'monthly')" class="btn btn-secondary btn-sm mt-3 btn-block"><?php _l('go-pro')?></button>
+                                        <?php endif?>
+
+                                    <?php else:?>
+                                        <button  onclick="return changeAuthModal('.login-form')"  class="btn btn-secondary btn-sm mt-3  btn-block"><?php _l('go-pro')?></button>
+                                    <?php endif?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="bg-section">
+                <div class="inner-container">
+                    <div class="section">
+                        <div class="section-title" data-animation="fadeInDown" data-animation-delay="400">
+                            <h2><?php _l('premium-features')?></h2>
+                            <div class="form-group">
+                                <label class="custom-control custom-checkbox">
+                                    <input checked disabled type="checkbox" class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description"><?php _l('turn-off-downloads-comments')?></span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="custom-control custom-checkbox">
+                                    <input checked disabled type="checkbox" class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description"><?php _l('additional-track-space')?></span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="custom-control custom-checkbox">
+                                    <input checked disabled type="checkbox" class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description"><?php _l('pro-badge')?></span>
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="custom-control custom-checkbox">
+                                    <input checked disabled type="checkbox" class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description"><?php _l('advance-statistics')?></span>
+                                </label>
+                            </div>
+
+                            <?php Hook::getInstance()->fire('pro.features')?>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <?php endif?>
+
+    <?php endif?>
+
+<?php endif?>

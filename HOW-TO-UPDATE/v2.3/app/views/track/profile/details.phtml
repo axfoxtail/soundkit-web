@@ -1,0 +1,66 @@
+<?php Hook::getInstance()->fire('track.details.top', null, array($track))?>
+<div class="track-tags">
+    <?php $tags = explode(',', $track['tag']);?>
+    <?php foreach($tags as $tag):?>
+        <a class="tag" href="<?php echo url('search', array('term' => str_replace('#', '', $tag)))?>" data-ajax="true">#<?php echo str_replace('#', '', $tag)?></a>
+    <?php endforeach;?>
+</div>
+<div class="track-description mt-3">
+    <?php echo $track['description']?>
+</div>
+<?php Hook::getInstance()->fire('track.details.middle', null, array($track))?>
+<div class="row">
+    <?php if($track['record']):?>
+        <div class="col-md-6 mt-3">
+            <div class="clearfix">
+                <div class="float-left">
+                    <strong><?php _l('record-label')?>:</strong>
+                </div>
+                <div class="float-right">
+                    <?php echo $track['record']?>
+                </div>
+            </div>
+        </div>
+    <?php endif?>
+    <?php if($track['track_release']):?>
+        <div class="col-md-6 mt-3">
+            <div class="clearfix">
+                <div class="float-left">
+                    <strong><?php _l('release-date')?>:</strong>
+                </div>
+                <div class="float-right">
+                    <?php echo $track['track_release']?>
+                </div>
+            </div>
+        </div>
+    <?php endif?>
+    <?php if($track['buy']):?>
+        <div class="col-md-6 mt-3">
+            <div class="clearfix">
+                <div class="float-left">
+                    <strong><?php _l('buy-link')?>:</strong>
+                </div>
+                <div class="float-right">
+                    <a href="<?php echo $track['buy']?>" target="_blank"><?php echo $track['buy']?></a>
+                </div>
+            </div>
+        </div>
+    <?php endif?>
+</div>
+<?php Hook::getInstance()->fire('track.details.bottom', null, array($track))?>
+<?php if($track['comments'] == 1 or $track['comments'] == 2):?>
+    <div class="page-title">
+        <?php _l('comments')?>
+    </div>
+    <?php if($track['comments'] == 2 and !$C->model('track')->canComment($track)):?>
+        <div class="alert alert-danger text-center"><?php _l('follow-track-owner-tocomment')?></div>
+    <?php endif?>
+    <?php if($track['public'] != 3):?>
+        <div class="main-loadmore-container" data-container="comments-track-<?php echo $track['id']?>">
+            <?php echo $C->view('track/comment/display', array('form'=> $C->model('track')->canComment($track),'type' => 'track', 'typeId' => $track['id'], 'title' => l('what-do-think').' '.$track['title']));?>
+        </div>
+    <?php else:?>
+        <div class="alert alert-warning text-center"><?php _l('track-not-release-yet')?></div>
+    <?php endif?>
+
+<?php endif?>

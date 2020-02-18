@@ -1,0 +1,327 @@
+<div class="track-profile  each-track-<?php echo $track['id']?> track-<?php echo $track['id']?>">
+    <div id="track-header" data-image="<?php echo $C->model('track')->getArt($track, 200)?>" data-bg-set="false" class="">
+        <?php $user = $C->model('user')->getUser($track['userid'])?>
+        <div class="inner-container">
+           <div class="row">
+               <div class="col-md-8">
+                   <div class="clearfix">
+                       <div class="float-left">
+                           <div class="track-image" style="background-image: url(<?php echo $C->model('track')->getArt($track, 600)?>)"></div>
+                       </div>
+                       <div class="float-left track-main-progress-<?php echo config('player-progress-type','bar')?> detail-content <?php echo (config('player-progress-type','bar') == 'bar') ? 'track-bar-progress-type' : null?>">
+                           <div class="media">
+                               <a href=""
+                                  data-id="<?php echo $track['id']?>"
+                                  data-art="<?php echo $C->model('track')->getArt($track)?>"
+                                  data-title="<?php echo format_output_text(str_limit( $track['title'], 50))?>"
+                                  data-link="<?php echo url('track/'.$track['id'])?>"
+                                  data-owner="<?php echo $user['full_name']?>"
+                                  data-owner-link="<?php echo $C->model('user')->profileUrl($user)?>"
+                                  data-wave="<?php echo $track['wave'] ?>"
+                                  data-wave-colored="<?php echo $track['wave_colored'] ?>"
+                                  class="play-button mr-3 play-icon track-play-button-<?php echo $track['id']?>" id="track-play-button-<?php echo $track['id']?>" ><i class="fa  fa-play"></i></a>
+                               <div class="media-body detail">
+                                   <h5 class="mt-0 title"><?php echo format_output_text($track['title'])?></h5>
+                                   <div><?php echo model('track')->getTrackFeaturing($track)?></div>
+                                   <?php _l('by')?> <a data-ajax="true" href="<?php echo $C->model('user')->profileUrl($user)?>">
+                                       <span><?php echo format_output_text($user['full_name'])?></span>
+                                       <?php echo $C->view('user/badge', array('userid'=> $user['id']))?>
+                                   </a>
+                               </div>
+                           </div>
+
+                           <div class="play-controls wave-possible-play-control" data-wave="">
+                               <div class="playprogress" data-id="<?php echo $track['id']?>">
+                                   <?php if(config('player-progress-type','bar') != 'bar'):?>
+                                       <img class="wave-image" src="<?php echo assetUrl($track['wave']) ?>"/>
+                                   <?php endif?>
+                                   <div class="track-time"><?php echo $C->model('track')->formatDuration($track['track_duration'])?></div>
+                               </div>
+                           </div>
+                           <?php if(config('player-progress-type','bar') == 'wave-revert'):?>
+                               <div class="playprogress-revert">
+                                   <img src='<?php echo assetUrl($track['wave']) ?>' class='wave-image'/>
+                               </div>
+                           <?php endif?>
+                           <?php echo $C->view("track/track-time-comment", array('track' => $track));?>
+                           <div class="mt-1">
+                               <?php echo $C->view('track/likes/inline-display', array('type' => 'track', 'typeId' => $track['id']))?>
+                           </div>
+                       </div>
+
+                   </div>
+                   <div class="track-footer mb-3">
+                       <div class="inner-containe">
+                           <div class="clearfix">
+                               <div class="float-left">
+                                   <div class="actions-container dropdown ">
+                                       <a class="btn <?php echo ($track['public'] == 3) ? 'disabled':null?> like-button-track-<?php echo $track['id']?> ajax-action <?php echo ($C->model('track')->hasLiked('track', $track['id'])) ? 'liked' : null?>" href="<?php echo url('like/item', array('type' => 'track', 'type_id' => $track['id']))?>"><i class="la la-heart"></i> <?php _l('like')?></a>
+                                       <?php if($track['userid'] != $C->model('user')->authId):?>
+                                           <?php $hasReposted = $C->model('track')->hasReposted($track['id'], 0, 'reposted')?>
+                                           <a
+                                                   href="<?php echo url('repost/item', array('action' => 'reposted', 'track' => $track['id'], 'playlist_id' => 0))?>"
+                                                   class="<?php echo ($track['public'] == 3) ? 'disabled':null?> btn ajax-action repost-button-track-<?php echo $track['id']?> <?php echo $hasReposted ? 'reposted' : null?>">
+                                               <i class="la la-retweet <?php echo ($hasReposted) ? 'colored' : null?>"></i>
+                                               <span><?php echo ($hasReposted) ? l('reposted') : l('repost')?></span>
+                                           </a>
+                                       <?php else:?>
+                                           <a class="btn " data-ajax="true" href="<?php echo  $C->model('track')->trackUrl($track, null, 'edit')?>"><i class="fa fa-pencil"></i> <?php _l('edit')?></a>
+                                       <?php endif?>
+                                       <?php if ($track['embed'] and $track['public'] != 2):?>
+                                           <button class="btn <?php echo ($track['public'] == 3) ? 'disabled':null?>" onclick="return share(<?php echo $track['id']?>, 'track')"><i class="la la-external-link"></i> <?php _l('share')?></button>
+                                       <?php endif?>
+                                       <?php if($track['public'] == 2):?>
+                                           <button class="btn colored-bg mtitle" title="<?php _l('private-track-only-you')?>" style="color: #ffffff;"><i class="la la-lock"></i></button>
+                                       <?php endif?>
+                                       <?php if(model('track')->canDownload($track)):?>
+                                           <a onclick="addDownload(<?php echo $track['id']?>)" class="btn" href="<?php echo model('track')->getDownloadUrl($track)?>" download>
+                                               <i class="la la-cloud-download"></i>
+                                           </a>
+                                       <?php else:?>
+                                           <?php Hook::getInstance()->fire('track-not-download-button', null, array($track))?>
+                                       <?php endif?>
+
+                                       <?php Hook::getInstance()->fire('track.profile.buttons', null, array($track))?>
+                                       <button class="btn dropdown-toggle no-caret hover-show" data-toggle="dropdown"><i class="la  la-ellipsis-h"></i></button>
+                                       <div class="dropdown-menu  mt-2" aria-labelledby="dropdownMenuButton">
+                                           <?php if(model('user')->isLoggedIn()):?>
+                                               <a class="dropdown-item   <?php echo ($track['public'] == 3) ? 'disabled':null?>" href="#" onclick="return changePlaylistModal('.playlists', <?php echo $track['id']?>)"><i class="la la-plus-circle"></i> <?php _l('add-to-playlist')?></a>
+                                               <a class="dropdown-item ajax-action track-later <?php echo ($track['public'] == 3) ? 'disabled':null?>" href="<?php echo url('track/add/later', array('track' => $track['id']))?>"  ><i class="la la-music"></i> <span><?php echo ($C->model('track')->existInLater($track['id'])) ? l('remove-listen-later') : l('listen-later')?></span></a>
+                                           <?php endif?>
+                                           <?php if(model('track')->canDownload($track)):?>
+                                               <div class="dropdown-divider"></div>
+                                               <a onclick="addDownload(<?php echo $track['id']?>)" class="dropdown-item" href="<?php echo model('track')->getDownloadUrl($track)?>" download>
+                                                   <i class="la la-cloud-download"></i>
+                                                   <?php _l('download-track')?></a>
+                                           <?php endif?>
+                                           <div class="dropdown-divider"></div>
+                                           <?php if(model('user')->isLoggedIn() and $track['userid'] != $C->model('user')->authId):?>
+                                               <a onclick="return showReportTrack(<?php echo $track['id']?>)" class="dropdown-item <?php echo ($track['public'] == 3) ? 'disabled':null?>" href="#"><i class="fa fa-flag"></i> <?php _l('report-copyright-infringment')?></a>
+                                           <?php endif?>
+                                           <?php if(model('user')->isLoggedIn() and $track['userid'] == $C->model('user')->authId):?>
+                                               <a  class="dropdown-item confirm" href="<?php echo url('track/delete', array('id' => $track['id']))?>"><i class="la la-trash"></i> <?php _l('delete-track')?></a>
+                                           <?php endif?>
+
+                                           <a class="dropdown-item" data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track,$track['id'])?>"><i class="la la-eye"></i> <?php _l('go-to-track')?></a>
+                                       </div>
+                                       <?php Hook::getInstance()->fire('track.profile.action', null, array($track))?>
+                                   </div>
+                               </div>
+                               <div class="float-right">
+                                   <?php $countReposts = $C->model('track')->countReposts($track['id'])?>
+                                   <?php $countLikes = $C->model('track')->countLikes('track', $track['id'])?>
+                                   <?php if($track['stats'] OR $track['userid'] == $C->model('user')->authId):?>
+                                       <?php $countComments = $C->model('track')->countComments('track', $track['id'])?>
+                                       <ul class="track-stats">
+
+                                           <li ><a href="" class="like-count-track-<?php echo $track['id']?>" style="<?php echo ($countLikes < 1) ? 'display:none': null?>"><i class="la la-heart-o"></i> <span><?php echo $countLikes?></span></a></li>
+
+                                           <li ><a href="" class="comment-count-track-<?php echo $track['id']?>" style="<?php echo ($countComments < 1) ? 'display:none': null?>"><i class="fa fa-comment"></i> <span><?php echo $countComments?></span></a></li>
+
+                                           <li ><a class="repost-count-track-<?php echo $track['id']?>" href="" style="<?php echo ($countReposts < 1) ? 'display:none': null?>">
+                                                   <i class="la la-retweet"></i>
+                                                   <span><?php echo $countReposts?></span>
+                                               </a></li>
+
+                                           <?php if($track['downloads']):$countDownloads = model('track')->countDownloads($track['id'])?>
+                                               <li ><a href="javascript:void(0)" style="<?php echo ($countDownloads < 1) ? 'display:none': null?>"><i class="la la-download"></i> <span><?php echo $countDownloads?></span></a></li>
+                                           <?php endif?>
+                                           <?php $countViews = $C->model('track')->countViews($track['id'])?>
+                                           <li ><a href="" style="<?php echo ($countViews < 1) ? 'display:none': null?>"><i class="la la-headphones"></i> <span><?php echo $countViews?></span></a></li>
+
+                                       </ul>
+                                   <?php endif?>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <?php echo $content?>
+               </div>
+               <div class="col-md-4 mt-5">
+                   <div class="fixed-left-con">
+                       <?php Hook::getInstance()->fire('track.side.details', null, array($track))?>
+                       <?php if($track['stats'] or $track['userid'] == $C->model('user')->authId):?>
+                           <div class="card-list">
+                               <div class="clearfix title">
+                                   <div class="float-left">
+                                       <div class="">
+                                           <i class="la la-signal"></i> <?php _l('statistics')?>
+                                       </div>
+                                   </div>
+
+                                   <div class="float-right">
+                                       <?php if($track['userid'] === $C->model('user')->authId):?>
+                                           <a href="<?php echo url('statistics', array('id' => $track['id']))?>" class="" data-ajax="true"><span><?php _l('view-more')?></span>  <i class="la-angle-right la"></i></a>
+                                       <?php endif?>
+                                   </div>
+                               </div>
+
+                               <div class="track-side-stats">
+                                   <div class="each clearfix">
+                                       <div class="float-left"><?php _l('today')?></div>
+                                       <div class="float-right">
+                                           <div class="count">
+                                               <?php $stats = $C->model('track')->countTrackStatistics($track['id'], strtotime('today'))?>
+                                               <?php echo $stats['plays']?>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="each clearfix">
+                                       <div class="float-left"><?php _l('yesterday')?></div>
+                                       <div class="float-right">
+                                           <div class="count">
+                                               <?php $stats = $C->model('track')->countTrackStatistics($track['id'], strtotime('yesterday'))?>
+                                               <?php echo $stats['plays']?>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="each clearfix">
+                                       <div class="float-left"><?php _l('total')?></div>
+                                       <div class="float-right">
+                                           <div class="count">
+                                               <?php $stats = $C->model('track')->countTrackStatistics($track['id'], strtotime('first day of January 2018'))?>
+                                               <?php echo $stats['plays']?>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+
+                           </div>
+                       <?php endif?>
+                       <?php $views = $C->model('track')->getViews($track['id'], 9)?>
+
+                       <?php if(count($views) > 0):?>
+                           <div class="inline-card-list">
+                               <div class="clearfix title">
+                                   <div class="float-left">
+                                       <div class="">
+                                           <i class="la la-headphones"></i> <?php _l('listeners')?>
+                                       </div>
+                                   </div>
+                                   <div class="float-right">
+                                       <a href="<?php echo $C->model('track')->trackUrl($track,null,'listeners')?>" class="" data-ajax="true">
+                                           <?php if($track['stats'] OR $track['userid'] == $C->model('user')->authId):?>
+
+                                           <?php endif?>
+                                           <i class="la-angle-right la"></i></a>
+                                   </div>
+                               </div>
+
+
+
+                               <ul class="clearfix">
+                                   <?php foreach($views as $user):$user = model('user')->getUser($user['userid']);?>
+                                       <li><a href="<?php echo $C->model('user')->profileUrl($user)?>" data-ajax="true" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 75)?>)"> </a></li>
+                                   <?php endforeach;?>
+                               </ul>
+
+                           </div>
+                       <?php endif?>
+
+                       <div class="inline-card-list">
+                           <div class="clearfix title">
+                               <div class="float-left">
+                                   <div class="">
+                                       <i class="la la-heart"></i> <?php _l('likes')?>
+                                   </div>
+                               </div>
+                               <div class="float-right">
+                                   <a href="<?php echo $C->model('track')->trackUrl($track,null,'likes')?>" data-ajax="true" class="like-count-track-<?php echo $track['id']?>">
+                                       <?php if($track['stats'] OR $track['userid'] == $C->model('user')->authId):?>
+                                           <span><?php echo $countLikes?></span>
+                                       <?php endif?>
+                                       <i class="la-angle-right la"></i></a>
+                               </div>
+                           </div>
+
+                           <?php $likes = $C->model('track')->getLikes('track', $track['id'], 9)?>
+
+                           <ul class="clearfix">
+                               <?php foreach($likes as $user):?>
+                                   <li><a href="<?php echo $C->model('user')->profileUrl($user)?>" data-ajax="true" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 75)?>)"> </a></li>
+                               <?php endforeach;?>
+                           </ul>
+
+                       </div>
+
+
+                       <?php if($countReposts > 0):?>
+                           <?php $reposts = $C->model('track')->getReposts($track['id'])?>
+                           <div class="inline-card-list">
+                               <div class="clearfix title">
+                                   <div class="float-left">
+                                       <div class="">
+                                           <svg xmlns="http://www.w3.org/2000/svg" style="color: grey;" width="21" height="13" viewBox="0 0 21 16"><path d="M20.72 7.29L18.43 9.4a1.06 1.06 0 0 1-1 .6h-.2a1 1 0 0 1-.53-.28l-2.42-2.6a1 1 0 0 1 0-1.33.9.9 0 0 1 1.29 0l.94.93V2h-12v1.5A.5.5 0 0 1 4 4H3a.5.5 0 0 1-.5-.5V1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v5.59l.72-.77a1.06 1.06 0 0 1 1.48 0 1 1 0 0 1 .02 1.47zm-17.92-1A1.05 1.05 0 0 1 3.56 6h.2a1 1 0 0 1 .53.28l2.45 2.61a1 1 0 0 1 0 1.34.89.89 0 0 1-1.29 0l-.94-.94V14h12v-1.5A.5.5 0 0 1 17 12h1a.5.5 0 0 1 .5.5V15a1 1 0 0 1-1 1h-14a1 1 0 0 1-1-1V9.42l-.72.77A1 1 0 0 1 .31 8.72l2.28-2.13a1.07 1.07 0 0 1 .21-.3z"></path></svg>
+                                           <?php _l('reposted-by')?>
+                                       </div>
+                                   </div>
+                                   <div class="float-right">
+                                       <a href="<?php echo $C->model('track')->trackUrl($track,null,'reposters')?>" data-ajax="true" class="">
+                                           <?php if($track['stats'] OR $track['userid'] == $C->model('user')->authId):?>
+                                               <span><?php echo $countReposts?></span>
+                                           <?php endif?>
+                                           <i class="la-angle-right la"></i></a>
+                                   </div>
+                               </div>
+
+
+                               <ul class="clearfix">
+                                   <?php foreach($reposts as $user):?>
+                                       <li><a href="<?php echo $C->model('user')->profileUrl($user)?>" data-ajax="true" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 75)?>)"> </a></li>
+                                   <?php endforeach;?>
+                               </ul>
+
+                           </div>
+                       <?php endif?>
+
+                       <?php $moreTracks = $C->model("track")->getTracks('my-tracks', $user['id'].'-'.$track['id'], 0, 3)?>
+                       <?php if(count($moreTracks) > 0):?>
+                           <div class="card-list bg-card">
+                               <div class="clearfix title">
+                                   <div class="float-left">
+                                       <div class="">
+                                           <?php _l('more-from')?> <?php echo $user['full_name']?>
+                                       </div>
+                                   </div>
+                               </div>
+
+                               <div class="list">
+                                   <?php foreach($moreTracks as $dTrack):?>
+                                       <div class="media">
+                                           <a data-ajax="true" href="<?php echo $C->model('track')->trackUrl($dTrack)?>">
+                                               <img class="mr-3 avatar" src="<?php echo $C->model('track')->getArt($dTrack, 75)?>">
+                                           </a>
+                                           <div class="media-body">
+                                               <h5 class="mt-0  wrap">
+                                                   <a data-ajax="true" href="<?php echo $C->model('track')->trackUrl($dTrack)?>">
+                                                       <?php echo $dTrack['title']?>
+                                                   </a>
+                                               </h5>
+                                               <?php _l('added')?> <span class="timeago " title="<?php echo date('c', $dTrack['time']) ?>"><?php echo date('c', $dTrack['time']) ?></span>
+
+                                           </div>
+                                       </div>
+                                   <?php endforeach?>
+                               </div>
+
+                           </div>
+                       <?php endif?>
+
+                       <?php Hook::getInstance()->fire('global.sidebar')?>
+                       <?php echo config('ad-unit2')?>
+
+                       <?php if($C->model('user')->isLoggedIn()):?>
+                           <a class="" onclick="return showReportTrack(<?php echo $track['id']?>)" class="" href="#"> <?php _l('report-copyright-infringment')?></a>
+                       <?php else:?>
+                           <a onclick="return changeAuthModal()" class="" href="#"> <?php _l('report-copyright-infringment')?></a>
+
+                       <?php endif?>
+
+
+                   </div>
+
+               </div>
+           </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+{
+    "require": {
+        "league/omnipay": "^3.0",
+        "omnipay/paypal": "^3.0",
+        "omnipay/stripe": "^3.0",
+        "omnipay/mollie": "^5.0",
+        "aws/aws-sdk-php": "^3.67",
+        "stichoza/google-translate-php": "^3.2"
+    }
+}

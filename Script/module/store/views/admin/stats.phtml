@@ -1,0 +1,13 @@
+<?php if(model('user')->hasRole('manage-sales')):?>
+<div class="col-md-4">
+    <div class="stat">
+        <div class="count-container clearfix">
+            <div class="float-left"><i class="la la-money"></i></div>
+            <div class="float-right">
+                <div class="count" style="color: #e84393;"><?php echo model('store::store')->countPendingWithdraw()?></div>
+            </div>
+        </div>
+        <div class="stat-title"><?php _l('pending-withdraw')?></div>
+    </div>
+</div>
+<?php endif?>

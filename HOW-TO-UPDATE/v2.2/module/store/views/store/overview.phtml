@@ -1,0 +1,194 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="store-title clearfix">
+            <div class="float-left">
+                <?php _l('new-music')?>
+            </div>
+            <div class="float-right">
+                <a href="<?php echo url('store/browse')?>" data-ajax="true"><?php _l('see-all')?> <i class="la la-chevron-right "></i></a>
+            </div>
+        </div>
+
+        <div class="inline-grid">
+            <?php $tracks = model('track')->getTracks('store-browse', 'tracks-all', 0, 15)?>
+
+            <div class="grid-container">
+                <?php foreach($tracks as $track):?>
+                    <?php echo view('store::track/display-grid', array('track' => $track, 'type' => 'store-browse', 'typeId' => 'track-all'))?>
+                <?php endforeach;?>
+            </div>
+
+        </div>
+
+        <?php Hook::getInstance()->fire('store.overview.middle')?>
+
+        <div class="store-title clearfix mt-4">
+            <div class="float-left">
+                <?php _l('new-albums')?>
+            </div>
+            <div class="float-right">
+                <a  href="<?php echo url('store/browse', array('which' => 'albums'))?>" data-ajax="true"><?php _l('see-all')?> <i class="la la-chevron-right "></i></a>
+            </div>
+        </div>
+
+        <div class="inline-grid">
+            <?php $tracks = model('track')->getTracks('store-browse', 'albums-all', 0, 15)?>
+
+            <div class="grid-container">
+                <?php foreach($tracks as $track):$t = model('track')->getPlaylistFirstTrack($track['id']);$t['playlist_id']=$track['id']?>
+                    <?php echo view('store::track/display-grid', array('track' => $t, 'type' => 'playlist', 'typeId' => $track['id']))?>
+                <?php endforeach;?>
+            </div>
+
+        </div>
+
+
+        <div class="store-title clearfix mt-4">
+            <div class="float-left">
+                <?php _l('best-of-the-week')?>
+            </div>
+
+        </div>
+
+        <div class="inline-grid">
+            <?php $tracks = model('track')->getTracks('store-best-week', '', 0, 15)?>
+
+            <div class="grid-container">
+                <?php foreach($tracks as $track): $user = $C->model('user')->getUser($track['userid']);?>
+                    <?php echo view('store::track/display-grid', array('track' => $track, 'type' => 'store-best-week', 'typeId' => ''))?>
+                <?php endforeach;?>
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="col-md-4">
+
+        <select onchange="load_store_browse(this, 'tracks')" id="filter-genre"  class="select-input" data-ui-select="true" style="">
+            <option value="all"><?php _l('all-genres')?></option>
+            <?php foreach($C->model('admin')->getGenres() as $dgenre):?>
+                <option  value="<?php echo $dgenre['id']?>"><?php echo $dgenre['name']?></option>
+            <?php endforeach;?>
+        </select>
+
+        <h6 class="mt-4"><a  href="<?php echo url('store/top-songs')?>" data-ajax="true"><?php _l('top-songs')?> <i class="la la-chevron-right "></i></a> </h6>
+
+        <?php $tracks = model('track')->getTracks('store-top-songs', '', 0, 5)?>
+
+        <?php $offset = 0; foreach($tracks as $track):?>
+
+            <div class="each-inline-track store-inline-track track-hover-display-container each-track-<?php echo $track['id']?> track-<?php echo $track['id']?>" id="track-<?php echo $track['id']?>">
+                <?php
+                $user = $C->model('user')->getUser($track['userid']);
+                ?>
+                <div class="art" style="background-image: url(<?php echo $C->model('track')->getArt($track)?>);width:20px;height:20px">
+                    <div class="track-hover-display">
+                        <a href=""
+                           data-id="<?php echo $track['id']?>"
+                           data-art="<?php echo $C->model('track')->getArt($track)?>"
+                           data-title="<?php echo str_limit( $track['title'], 50)?>"
+                           data-link="<?php echo url('track/'.$track['id'])?>"
+                           data-owner="<?php echo $user['full_name']?>"
+                           data-owner-link="<?php echo $C->model('user')->profileUrl($user)?>"
+                           data-wave="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave'] : '' ?>"
+                           data-type="store-top-songs"
+                           data-typeid=""
+                           data-wave-colored="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave_colored'] : '' ?>"
+                           class="play-button track-play-button track-play-button-<?php echo $track['id']?>" id="track-play-button-<?php echo $track['id']?>" ><i class="fa  fa-play"></i></a>
+
+                        <div class="play-controls" data-wave="">
+                        </div>
+                    </div>
+                </div>
+                <div class="track-content">
+                    <div class="clearfix">
+                        <div class="float-left" style="width: 70%">
+                            <div class="media">
+                                <div class="track-position mr-3"><?php echo $offset + 1?></div>
+                                <div class="media-body">
+                                    <h6 class="media-heading" style="margin-bottom:2px;overflow: hidden">
+                                        <a data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track,$track['id'])?>">
+                                            <b><?php echo str_limit($track['title'], 30)?></b>
+                                        </a>
+                                    </h6>
+                         <span class="title-info">
+                             <a data-ajax="true" class="user-link "  data-id="<?php echo $user['id']?>" href="<?php echo $C->model('user')->profileUrl($user)?>">
+                                 <?php echo $user['full_name']?>
+                             </a>
+                        </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="float-right">
+                            <div class="actions-container dropdown track-hover-displa">
+                                <?php Hook::getInstance()->fire('track.inline.actions', null, array($track))?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php $offset++;endforeach;?>
+
+
+        <h6 class="mt-4"><a  href="<?php echo url('store/top-albums')?>" data-ajax="true"><?php _l('top-albums')?> <i class="la la-chevron-right "></i></a> </h6>
+
+        <?php $tracks = model('track')->getTracks('store-top-albums', '', 0, 5)?>
+
+        <?php $offset = 0; foreach($tracks as $dtrack):$track = model('track')->getPlaylistFirstTrack($dtrack['id']);?>
+
+            <div class="each-inline-track store-inline-track track-hover-display-container each-track-<?php echo $track['id']?> track-<?php echo $track['id']?>" id="track-<?php echo $track['id']?>">
+                <?php
+                $user = $C->model('user')->getUser($dtrack['userid']);
+                ?>
+                <div class="art" style="background-image: url(<?php echo $C->model('track')->getArt($track)?>);width:20px;height:20px">
+                    <div class="track-hover-display">
+                        <a href=""
+                           data-id="<?php echo $track['id']?>"
+                           data-art="<?php echo $C->model('track')->getArt($track)?>"
+                           data-title="<?php echo str_limit( $track['title'], 50)?>"
+                           data-link="<?php echo url('track/'.$track['id'])?>"
+                           data-owner="<?php echo $user['full_name']?>"
+                           data-owner-link="<?php echo $C->model('user')->profileUrl($user)?>"
+                           data-wave="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave'] : '' ?>"
+                           data-type="playlist"
+                           data-typeid="<?php echo $dtrack['id']?>"
+                           data-wave-colored="<?php echo (config('player-progress-type','bar') != 'bar') ? $track['wave_colored'] : '' ?>"
+                           class="play-button track-play-button track-play-button-<?php echo $track['id']?>" id="track-play-button-<?php echo $track['id']?>" ><i class="fa  fa-play"></i></a>
+
+                        <div class="play-controls" data-wave="">
+                        </div>
+                    </div>
+                </div>
+                <div class="track-content">
+                    <div class="clearfix">
+                        <div class="float-left" style="width: 70%">
+                            <div class="media">
+                                <div class="track-position mr-3"><?php echo $offset + 1?></div>
+                                <div class="media-body">
+                                    <h6 class="media-heading" style="margin-bottom:2px">
+                                        <a data-ajax="true" href="<?php echo $C->model('track')->playlistUrl($dtrack)?>">
+                                            <b><?php echo str_limit($dtrack['name'], 30)?></b>
+                                        </a>
+                                    </h6>
+                                    <span class="title-info">
+                             <a data-ajax="true" class="user-link "  data-id="<?php echo $user['id']?>" href="<?php echo $C->model('user')->profileUrl($user)?>">
+                                 <?php echo $user['full_name']?>
+                             </a>
+                        </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="float-right">
+                            <div class="actions-container dropdown track-hover-displa">
+                                <?php Hook::getInstance()->fire('playlist.inline.actions', null, array($dtrack))?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php $offset++;endforeach;?>
+    </div>
+</div>

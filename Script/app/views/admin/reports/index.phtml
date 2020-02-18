@@ -1,0 +1,113 @@
+<div class="inner-container">
+    <table class="table table-striped mt-4 table-responsive-sm">
+        <thead>
+        <tr>
+            <th scope="col" style="width: 10%;"><?php _l('id')?></th>
+            <th scope="col" style="width: 30%;"><?php _l('by')?></th>
+            <th scope="col" style="width: 25%;"><?php _l('type')?></th>
+            <th scope="col" style="width: 20%;"><?php _l('reported-on')?></th>
+            <th scope="col" style="width: 20%;"><?php _l('action')?></th>
+        </tr>
+        </thead>
+        <tbody>
+            <?php foreach($reports->results() as $report):?>
+            <tr>
+                <td>
+                    <span style="font-size: 10px;"><?php echo $report['id']?></span>
+                </td>
+                <td>
+                    <?php $theUser = $C->model('user')->getUser($report['userid'])?>
+                    <a href="<?php echo $C->model('user')->profileUrl($theUser)?>" data-ajax="true"><img src="<?php echo $C->model('user')->getAvatar($theUser)?>" style="width:20px;height:20px;border-radius:100px"/> <?php echo $theUser['full_name']?></a>
+                </td>
+                <td>
+                    <?php
+                        if ($report['type'] == 'comment') {
+                            _l('abusive-comment');
+                        } elseif($report['type'] == 'track') {
+                            _l('copyright-infringement');
+                        }
+
+                        Hook::getInstance()->fire('report.type.title', null, array($report));
+                    ?>
+                </td>
+                <td>
+                    <?php echo date('d/m/Y', $report['time'])?>
+                </td>
+                <td>
+                    <a href="" class="btn btn-sm btn-secondary " data-toggle="modal" data-target="#transactionModal-<?php echo $report['id']?>"><?php _l('view-details')?></a>
+
+                    <div class="modal" id="transactionModal-<?php echo $report['id']?>" tabindex="-1" role="dialog">
+                        <div class="modal-dialog " role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"><?php _l('report-details')?></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+                                <div class="p-4">
+                                    <?php if($report['type'] == 'comment'):?>
+                                        <h5><?php _l('reported-by')?></h5>
+                                        <a href="<?php echo $C->model('user')->profileUrl($theUser)?>" data-ajax="true"><img src="<?php echo $C->model('user')->getAvatar($theUser)?>" style="width:20px;height:20px;border-radius:100px"/> <?php echo $theUser['full_name']?></a>
+
+                                        <hr/>
+                                        <h5><?php _l('reporter-message')?></h5>
+                                        <span class="text-muted"><?php echo $report['content']?></span>
+                                    <hr/>
+                                    <h5><?php _l('abusive-comment')?></h5>
+                                    <?php $comment = $C->model('track')->findComment($report['typeid'])?>
+                                    <span><?php echo $comment['message']?></span>
+
+                                    <hr/>
+                                    <h5><?php _l('author')?></h5>
+                                    <?php $author = $C->model('user')->getUser($comment['userid'])?>
+                                        <a href="<?php echo $C->model('user')->profileUrl($author)?>" data-ajax="true"><img src="<?php echo $C->model('user')->getAvatar($author)?>" style="width:20px;height:20px;border-radius:100px"/> <?php echo $author['full_name']?></a>
+
+                                    <hr/>
+
+                                    <a href="<?php echo url('admin/reports', array('action' => 'delete-comment', 'id' => $report['id']))?>" class="btn btn-danger round-sm"><?php _l('delete-comment')?></a>
+                                        <a href="<?php echo url('admin/reports', array('action' => 'delete-report', 'id' => $report['id']))?>" class="btn btn-secondary round-sm"><?php _l('delete-report')?></a>
+                                    <?php elseif($report['type'] == 'track'):?>
+                                        <h5><?php _l('claimant')?></h5>
+                                        <a href="<?php echo $C->model('user')->profileUrl($theUser)?>" data-ajax="true"><img src="<?php echo $C->model('user')->getAvatar($theUser)?>" style="width:20px;height:20px;border-radius:100px"/> <?php echo $theUser['full_name']?></a>
+
+                                        <hr/>
+
+                                        <h5><?php _l('copyright-infringement')?></h5>
+                                        <?php $track = $C->model('track')->findTrack($report['typeid'])?>
+                                        <span class="text-muted"><?php echo $report['content']?></span>
+
+                                        <hr/>
+                                        <h5><?php _l('infringement-material')?></h5>
+                                        <a data-ajax="true" href="<?php echo $C->model('track')->trackUrl($track)?>"><?php echo $track['title']?></a>
+
+                                        <hr/>
+                                        <a href="<?php echo url('admin/reports', array('action' => 'suspend-track', 'id' => $report['id']))?>" class="btn btn-danger round-sm"><?php _l('suspend-track')?></a>
+                                        <a href="<?php echo url('admin/reports', array('action' => 'delete-track', 'id' => $report['id']))?>" class="btn btn-danger round-sm"><?php _l('delete-track')?></a>
+                                        <a href="<?php echo url('admin/reports', array('action' => 'delete-report', 'id' => $report['id']))?>" class="btn btn-secondary round-sm"><?php _l('delete-report')?></a>
+
+                                    <?php endif?>
+
+                                    <?php Hook::getInstance()->fire('report.details', null, array($report))?>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <?php endforeach;?>
+        </tbody>
+    </table>
+    <?php if($reports->total < 1):?>
+        <div class="empty-content">
+            <i class="la la-money"></i>
+            <span><?php _l('no-contents-show')?></span>
+        </div>
+    <?php else:?>
+        <?php echo $reports->links()?>
+    <?php endif?>
+</div>

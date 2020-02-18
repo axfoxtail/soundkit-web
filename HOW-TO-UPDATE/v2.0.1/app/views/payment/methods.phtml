@@ -1,0 +1,38 @@
+<div class="payment-methods">
+
+    <?php if(config('stripe-secret-key', '') != ''):?>
+
+        <?php
+            $currency = model('user')->getUserCurrency();
+            if (!userCurrencySupportStripe()) {
+                $price = convertBackToBase($price);
+                $currency = config('currency-converter-source', 'USD');
+            }
+        ?>
+        <div class="each">
+            <a data-price="<?php echo $price?>"
+               data-type="<?php echo $type?>"
+               data-typeid="<?php echo $typeId?>"
+               data-desc="<?php _l($detail['desc'])?>"
+               data-title="<?php _l($detail['title'])?>"
+               data-currency="<?php echo $currency?>"
+               href="" id="stripeButton"><img src="<?php echo assetUrl('assets/images/stripe-btn.png')?>"/> </a>
+        </div>
+    <?php endif?>
+
+    <?php if(config('paypal-username', '') != ''):?>
+        <div class="each">
+            <a href="<?php echo url('payment/paypal', array('type' => $type, 'typeid' => $typeId, 'price' => $price))?>"><img src="<?php echo assetUrl('assets/images/paypal-btn.png')?>"/> </a>
+        </div>
+    <?php endif?>
+
+
+
+    <?php if(config('mollie-api-key', '')):?>
+        <div class="each">
+            <a href="<?php echo url('payment/mollie', array('type' => $type, 'typeid' => $typeId, 'price' => $price))?>"><img src="<?php echo assetUrl('assets/images/mollie.png')?>"/> </a>
+        </div>
+    <?php endif?>
+
+    <?php Hook::getInstance()->fire('payment.method', null, array($price,$type,$typeId,$detail))?>
+</div>

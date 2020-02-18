@@ -1,0 +1,61 @@
+<div class="inner-container mt-4">
+    <div class="row">
+        <div class="col-md-4 ">
+            <div class="flat-stat clearfix" style="background: #E9ECEF;">
+                <div class="left">
+                    <div style="width:40px;height:40px;border-radius:100px;margin:25px 30px;background-image: url(<?php echo model('user')->getAvatar()?>);background-position:center;-webkit-background-size: cover;background-size: cover;"></div>
+                </div>
+                <div class="content" style="text-align: left;color: #000;">
+                    <h5 style="font-size: 20px;"><?php echo model('user')->authUser['full_name']?></h5>
+                    <div class="count" style="font-size: 15px;"><?php _l('store')?></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 ">
+            <div class="flat-stat clearfix" style="background: #EA1A62;">
+                <div class="left"><i  class="la la-money" style="margin: 0 20px"></i></div>
+                <div class="content">
+                    <h5><?php _l('account-balance')?></h5>
+                    <div class="count"><?php echo formatMoney(model('user')->authUser['balance'])?></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 ">
+            <div class="flat-stat clearfix" style="background: #8AC45D;">
+                <div class="left"><i  class="la-cart-plus la " style="margin: 0 20px"></i></div>
+                <div class="content">
+                    <h5><?php _l('total-item-sold')?></h5>
+                    <div class="count"><?php echo model('store::store')->getTotalItemSold()?></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="profile-menu">
+    <div class="inner-container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link <?php echo $type == 'sales' ? 'active' : null?>" data-ajax="true" href="<?php echo url('store/dashboard', array('type' => 'sales'))?>" ><?php _l('sales')?></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo $type == 'withdrawals' ? 'active' : null?>"  data-ajax="true" href="<?php echo url('store/dashboard', array('type' => 'withdrawals'))?>"><?php _l('withdrawals')?></a>
+            </li>
+
+            <?php if($type == 'withdrawals'):?>
+                <li class="nav-item">
+                    <a href="" data-toggle="modal" data-target="#withdrawModal" class="btn btn-outline-secondary btn-sm round-sm"><?php _l('add-withdraw')?></a>
+                </li>
+                <li class="nav-item ml-2">
+                    <a href="<?php echo url('settings/payment-details')?>" data-ajax="true" class="btn btn-outline-secondary btn-sm round-sm"><?php _l('setup-payment')?></a>
+                </li>
+            <?php endif?>
+            <?php Hook::getInstance()->fire('sales.dashboard.tabs', null, array($type))?>
+        </ul>
+
+    </div>
+</div>
+
+<div class="inner-container mt-4">
+    <?php echo $content?>
+</div>

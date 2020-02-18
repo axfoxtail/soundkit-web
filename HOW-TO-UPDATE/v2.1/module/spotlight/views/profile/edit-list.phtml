@@ -1,0 +1,36 @@
+<?php foreach(model('spotlight::spotlight')->getTracks() as $spotlight):?>
+    <div class="media">
+        <?php if($spotlight['trackid']): $track = model('track')->findTrack($spotlight['trackid']);?>
+            <div class="image mr-1" style="
+                    width:25px;
+                    height:25px;
+                    background-position: center;
+                    -webkit-background-size: cover;background-size: cover;
+                    background-image: url(<?php echo model('track')->getArt($track);?>)" ></div>
+            <div class="media-body clearfix">
+                <div class="float-left" style="width:85%">
+                    <h6 ><b><?php echo $track['title']?></b></h6>
+                    <span class="text-muted"><?php _l('track')?></span>
+                </div>
+
+                <a title="<?php _l('remove-track')?>" href="<?php echo url('spotlight/remove', array('id' => $spotlight['id']))?>" class="btn btn-secondary float-right ajax-action mtitle"><i class="la la-trash"></i></a>
+            </div>
+        <?php else: $playlist = model('track')->findPlaylist($spotlight['playlistid'])?>
+            <div class="image mr-1" style="
+                    width:25px;
+                    height:25px;
+                    background-position: center;
+                    -webkit-background-size: cover;background-size: cover;
+                    background-image: url(<?php echo model('track')->getPlaylistArt($playlist,model('user')->authUser);?>)"></div>
+            <div class="media-body clearfix">
+                <div class="float-left" style="width:85%">
+                    <h6 ><b><?php echo $playlist['name']?></b></h6>
+                    <span class="text-muted"><?php _l('playlist')?></span>
+                </div>
+
+                <a title="<?php _l('remove-track')?>" href="<?php echo url('spotlight/remove', array('id' => $spotlight['id']))?>" class="btn btn-secondary float-right ajax-action mtitle"><i class="la la-trash"></i></a>
+            </div>
+        <?php endif?>
+    </div>
+    <hr/>
+<?php endforeach?>

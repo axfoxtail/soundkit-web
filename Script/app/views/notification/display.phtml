@@ -1,0 +1,21 @@
+<?php $C->model('user')->markRead($notification['notifyid'])?>
+<a href="<?php echo $notification['link']?>" data-ajax="true" class="each-notification clearfix  <?php echo !$notification['is_read'] ? 'unread' : null?>">
+   <div class="clearfix">
+       <div class="float-left">
+           <div class="media">
+               <div class="image" style="background-image: url(<?php echo $C->model('user')->getAvatar($notification, 200)?>)"></div>
+               <div class="media-body clearfix">
+                   <h6 class="media-heading mt-1"><?php echo $notification['full_name']?> <span><?php echo $notification['title']?></span></h6>
+
+                   <i class="la la-clock-o"></i> <span class="timeago" title="<?php echo date('c', $notification['notifytime']) ?>"><?php echo date('c', $notification['notifytime']) ?></span>
+
+               </div>
+           </div>
+       </div>
+       <div class="float-right">
+           <?php if(!$notification['is_read']):?>
+               <i class="la la-circle-o"></i>
+           <?php endif?>
+       </div>
+   </div>
+</a>

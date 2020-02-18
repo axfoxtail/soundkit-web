@@ -1,0 +1,43 @@
+<div class="inner-container">
+    <div class="title clearfix mt-4">
+        <div class="float-left">
+            <h5><?php _l('info-pages')?></h5>
+        </div>
+        <div class="float-right">
+            <a  href="<?php echo url('admin/page/add')?>" class="btn btn-secondary round-sm"><?php _l('add-new-page')?></a>
+        </div>
+    </div>
+
+
+
+    <table class="table table-striped mt-4 table-responsive-sm">
+        <thead>
+        <tr>
+            <th scope="col" style="width: 10%;"><?php _l('id')?></th>
+            <th scope="col" style="width: 50%;"><?php _l('title')?></th>
+            <th scope="col" style="width: 20%;"><?php _l('menu-location')?></th>
+            <th scope="col" style="width: 20%;"><?php _l('action')?></th>
+        </tr>
+        </thead>
+        <tbody>
+            <?php foreach($pages as $page):?>
+                <tr>
+                    <td><?php echo $page['id']?></td>
+                    <td><?php _l($page['title'])?></td>
+                    <td><?php echo ($page['location'] == 'footer') ? l('footer-menu') : l('side-menu')?></td>
+                    <td>
+                        <a href="<?php echo url('admin/pages', array('action' => 'delete', 'id' => $page['id']))?>" class="btn btn-secondary mtitle confirm" title="<?php _l('delete')?>"><i class="la la-trash"></i></a>
+                        <a href="<?php echo url('admin/page/edit', array('id' => $page['id']))?>"  class="btn btn-secondary mtitle ml-3" title="<?php _l('edit')?>"><i class="la la-pencil"></i></a>
+                    </td>
+                </tr>
+            <?php endforeach;?>
+        </tbody>
+    </table>
+
+    <?php if(count($pages) < 1):?>
+        <div class="empty-content">
+            <i class="la la-info"></i>
+            <span><?php _l('no-contents-show')?></span>
+        </div>
+    <?php endif?>
+</div>

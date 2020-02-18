@@ -1,0 +1,7 @@
+<?php $likes = $C->model('track')->getLikes($type, $typeId, 15)?>
+
+<div class="display-inline-likes track-likes-<?php echo $typeId?>">
+    <?php foreach($likes as $like): $user = $C->model('user')->getUser($like['userid'])?>
+        <a class="user-link "  data-id="<?php echo $user['id']?>" href="<?php echo $C->model('user')->profileUrl($user)?>" data-ajax="true" style="background-image: url(<?php echo $C->model('user')->getAvatar($user, 75)?>)"> </a>
+    <?php endforeach;?>
+</div>

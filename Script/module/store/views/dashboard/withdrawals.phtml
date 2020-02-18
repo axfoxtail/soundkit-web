@@ -1,0 +1,59 @@
+<div class="modal" id="withdrawModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog " role="document">
+        <form action="<?php echo url('store/dashboard', array('type' => 'withdrawals'))?>" method="post" class="general-form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><?php _l('withdrawal-request')?></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label><?php _l('amount')?>*</label>
+                        <input type="text" class="form-control" name="val[amount]"/>
+
+                        <span class="text-muted"><?php _l('minimum-amount-withdraw', array('amount' => formatMoney(config('minimum-withdraw-request', 50))))?></span>
+                    </div>
+
+                    <button class="btn btn-primary round-sm"><?php _l('send')?></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<table class="table table-responsive-sm">
+    <thead class="thead-light">
+    <tr>
+
+        <th scope="col"  style="width: 30%"><?php _l('date')?></th>
+        <th scope="col"  style="width: 40%"><?php _l('amount')?></th>
+        <th scope="col"  style="width: 30%"><?php _l('status')?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php $withdraws = model('store::store')->getMyWithdraws()?>
+    <?php foreach($withdraws->results() as $withdraw):?>
+        <tr>
+            <td>
+                <?php echo date('m - d - Y', $withdraw['time'])?>
+            </td>
+            <td>
+                <?php echo formatMoney($withdraw['amount'])?>
+            </td>
+
+            <td>
+                <span class="badge <?php echo ($withdraw['status'] == 1) ? 'badge-success' : 'badge-secondary'?>"><?php echo ($withdraw['status']) ? l('paid') : l('pending')?></span>
+            </td>
+        </tr>
+    <?php endforeach?>
+    </tbody>
+</table>
+<?php if($withdraws->total < 1):?>
+    <div class="empty-content" style="padding:5% 0">
+        <i class="la la-money"></i>
+        <span><?php _l('no-contents-show')?></span>
+    </div>
+<?php else:?>
+    <?php echo $withdraws->links()?>
+<?php endif?>

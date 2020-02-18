@@ -1,0 +1,29 @@
+<div id="sideHeader">
+    <div class="top clearfix">
+        <div class="float-left">
+            <a class="navbar-brand " <?php echo ($C->model('user')->isLoggedIn()) ? 'data-ajax="true"' : null?> href="<?php echo url()?>">
+                <img class="light-logo" style="" src="<?php echo assetUrl(config('site_logo', 'assets/images/logo.png'))?>"/>
+                <img class="dark-logo" src="<?php echo assetUrl(config('site_logo_dark', 'assets/images/logo-dark.png'))?>"/>
+            </a>
+        </div>
+        <div class="float-right dropdown pt-4 pr-2">
+            <a href="" title="<?php _l('change-theme-mode')?>" style="position: relative;top:3px" onclick="return change_theme_mode('<?php echo getThemeMode()?>')" class="theme-mode-button mtitle"><i class="la la-lightbulb-o"></i></a>
+            <?php $languages = Translator::instance()->getAvailableLanguages()?>
+            <a data-toggle="dropdown" class="dropdown-toggle " href="#" >
+                <img style="width:20px" src="<?php echo assetUrl('assets/images/flags/'.Translator::instance()->lang().'.png')?>"/>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <?php foreach ($languages as $language):?>
+                    <a href="<?php echo url('change/language', array('id' => $language))?>" class="dropdown-item"> <img style="width: 17px;" class="mr-1" src="<?php echo assetUrl('assets/images/flags/'.$language.'.png')?>"/> <span class="pt-1"><?php echo getLanguageName($language)?></span></a>
+                <?php endforeach;?>
+            </div>
+        </div>
+    </div>
+
+    <div id="side-menu">
+        <?php echo $sideMenu?>
+    </div>
+</div>
+<div id="page-container">
+    <?php echo $content?>
+</div>

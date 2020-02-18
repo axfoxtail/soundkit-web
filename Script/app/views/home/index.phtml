@@ -1,0 +1,290 @@
+<div class="homepage-container">
+    <div class="topography">
+        <div class="topography-cover"></div>
+        <div class="inner-container">
+            <div class="topo-header clearfix">
+                <div class="float-left">
+                    <a class="navbar-brand" href="#">
+                        <img class="light-logo" src="<?php echo config('site_logo_dark', 'assets/images/logo.png')?>"/>
+                        <img class="dark-logo" src="<?php echo config('site_logo_dark', 'assets/images/logo-dark.png')?>"/>
+                    </a>
+                </div>
+                <div class="float-right">
+                    <ul>
+                        <li><a href="" title="<?php _l('change-theme-mode')?>" onclick="return change_theme_mode('<?php echo getThemeMode()?>')" class="theme-mode-button mtitle"><i class="la la-lightbulb-o"></i></a> </li>
+                        <li class="dropdown">
+                            <?php $languages = Translator::instance()->getAvailableLanguages()?>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#" >
+                                <img class="language-image" src="<?php echo assetUrl('assets/images/flags/'.Translator::instance()->lang().'.png')?>"/>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <?php foreach ($languages as $language):?>
+                                    <a href="<?php echo url('change/language', array('id' => $language))?>" class="dropdown-item"> <img class="mr-1" src="<?php echo assetUrl('assets/images/flags/'.$language.'.png')?>"/> <span class="pt-1"><?php echo getLanguageName($language)?></span></a>
+                                <?php endforeach;?>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="topography-content">
+                <div class="topo-hero" data-animation="slideInLeft" data-animation-delay="400">
+                    <div class="">
+                        <?php if(!config('separate-login', 0)):?>
+                            <a class="btn btn-white-border mr-4" href="#" onclick="return changeAuthModal('.login-form')" ><?php _l('sign-in')?></a>
+                            <?php if(config('user-signup', true)):?>
+                                <a href="#" onclick="return changeAuthModal('.signup-form')" class="btn btn-white-bg"><?php _l('create-account')?></a>
+                            <?php endif?>
+                        <?php else:?>
+                            <a class="btn btn-white-border mr-4" href="<?php echo url('login')?>" ><?php _l('sign-in')?></a>
+                            <?php if(config('user-signup', true)):?>
+                                <a href="<?php echo url('signup')?>"  class="btn btn-white-bg"><?php _l('create-account')?></a>
+                            <?php endif?>
+                        <?php endif?>
+                    </div>
+
+                    <div class="mt-5">
+                        <h1><?php _l('find-the-music')?> <span class="colored"><?php _l('you-love')?></span>. </h1>
+                        <h4 class="mt-4"><?php _l('discover-new-tracks-title')?></h4>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div></div>
+    </div>
+    <div class="bg-section-search">
+        <div class="section">
+            <div class="inner-container">
+                <form action="<?php echo url('search')?>" method="post" class="search-hero" >
+                    <input type="text" name="term" placeholder="<?php _l('search-for-artists-tracks')?>"/>
+                    <i class="la la-search"></i>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+    <input type="text" name="city"  class="form-control geo-input" autocomplete="off">
+    <div class="inner-container ">
+        <div class="row mt-4" style="margin-bottom: 50px;">
+            <div class="col-md-7">
+                <ul class="nav nav-tabs" style="border-color: #fff;">
+                    <li class="nav-item">
+                        <a class="nav-link " href="#" style="font-size: 20px;font-weight: bold;position:relative;bottom:4px"><?php _l('top-songs')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#thisweek" role="tab" ><?php _l('this-week')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#thismonth" role="tab" ><?php _l('this-month')?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#thisyear" role="tab" ><?php _l('this-year')?></a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="thisweek" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="track-list" data-no-paginate="true" data-limit="5" data-view="inline" data-type-id="all/this-week" data-type="charts-top" data-offset="0">
+                            <?php echo $C->view('track/placeholder', array('type' => 'inline'))?>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="thismonth" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="track-list" data-no-paginate="true" data-limit="5" data-view="inline" data-type-id="all/this-month" data-type="charts-top" data-offset="0">
+                            <?php echo $C->view('track/placeholder', array('type' => 'inline'))?>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="thisyear" role="tabpanel" aria-labelledby="contact-tab">
+                        <div class="track-list" data-no-paginate="true" data-limit="5" data-view="inline" data-type-id="all/this-year" data-type="charts-top" data-offset="0">
+                            <?php echo $C->view('track/placeholder', array('type' => 'inline'))?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <a class="nav-link " href="#" style="font-size: 20px;font-weight: bold;position:relative;left: 5px;"><?php _l('new-albums')?></a>
+
+
+                <?php $type='album';$typeId='discover'; $playlists = $C->model('track')->listPlaylists($type, $typeId, 6)?>
+
+
+                <div
+                        data-paginate-url="playlist/paginate"
+                        data-offset="0"
+                        data-param="<?php echo perfectSerialize(array('type' => $type, 'typeId' => $typeId, 'limit' => 20))?>"
+                        class="playlists-container grid-container clearfix home-album-container"
+                        id="playlists-<?php echo $type?>-<?php echo $typeId?>">
+
+
+
+                    <?php foreach($playlists as $playlist):?>
+                        <?php
+                        $allowOwner = false;
+                        if (preg_match('#profile-#', $typeId)) $allowOwner = true;
+                        $canDisplay = model('track')->displayItem($playlist, $allowOwner);
+                        ?>
+                        <?php if($canDisplay):?>
+                            <?php echo $C->view('playlist/display', array('playlist' => $playlist, 'noTrackCount' => true))?>
+                        <?php endif?>
+                    <?php endforeach;?>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-section">
+        <div class="inner-container">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="section" >
+                        <div class="section-title align-left-to-center" style="" data-animation="fadeInDown" data-animation-delay="400">
+                            <h2><?php _l('get-connected-with-great-artists')?></h2>
+                            <span class="note"><?php _l('get-connected-with-great-artists-note')?></span>
+                            <div class="mt-5">
+                                <a  href="<?php echo url('discover/artists')?>" class="btn btn-primary  pr-5 pl-5"><?php _l('meet-great-artists')?></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="home-artists-container clearfix" data-animation="fadeInDown" data-animation-delay="400">
+                        <?php foreach(model('user')->getRandomArtists(14) as $user):?>
+
+                            <a href="<?php echo model('user')->profileUrl($user)?>" style="background-image: url(<?php echo model('user')->getAvatar($user)?>);"></a>
+                        <?php endforeach;?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="inner-container">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="section">
+                    <div class="section-title" data-animation="fadeInDown" data-animation-delay="400">
+                        <div class="content">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="hero-box" data-animation="fadeInDown" data-animation-delay="400">
+                                        <i class="la la-cloud-upload colored"></i>
+                                        <h6 class="title"><?php _l('upload')?></h6>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="hero-box" data-animation="fadeInDown" data-animation-delay="400">
+                                        <i class="la la-users colored"></i>
+                                        <h6 class="title"><?php _l('access-to-fans')?></h6>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-6">
+                                    <div class="hero-box" data-animation="fadeInDown" data-animation-delay="400">
+                                        <i class="la la-bar-chart colored"></i>
+                                        <h6 class="title"><?php _l('know-more-about-music')?></h6>
+                                    </div>
+                                </div>
+                                <?php if(moduleExists('store')):?>
+                                    <div class="col-sm-6">
+                                        <div class="hero-box" data-animation="fadeInDown" data-animation-delay="400">
+                                            <i class="la la-money colored"></i>
+                                            <h6 class="title"><?php _l('sell-your-tracks')?></h6>
+                                        </div>
+                                    </div>
+
+                                <?php endif?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="section">
+                    <div class="section-title align-right-to-center" style=" margin-top: 150px;" data-animation="fadeInDown" data-animation-delay="400">
+                        <h2><?php _l('calling-all-creators')?></h2>
+                        <span class="note"><?php _l('calling-all-creators-note')?> <span class="colored"><?php echo config('site-title')?></span></span>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <?php
+    $android = config('android-app-download-link');
+    $iphone = config('iphone-app-download-link');
+    $window = config('window-app-download-link');
+    $mac = config('mac-app-download-link');
+    ?>
+    <?php if($android or $iphone or $window or $mac):?>
+        <div class="download-app-links bg-section">
+            <div class="inner-container">
+                <div class="section" >
+                    <div class="section-title"  data-animation="fadeInDown" data-animation-delay="400">
+                        <h2><?php _l('download-our-application')?></h2>
+                        <span class="note"><?php _l('and-listen-to-music-wherever')?></span>
+
+                        <div class="mt-5 buttons">
+                            <?php if($mac):?>
+                                <a  href="<?php echo $mac?>" target="_blank" class=""><img src="<?php echo assetUrl('assets/images/mac-button.png')?>" </a>
+                            <?php endif?>
+
+                            <?php if($window):?>
+                                <a  href="<?php echo $window?>" target="_blank" class=""><img style="height:100px" src="<?php echo assetUrl('assets/images/window-button.png')?>" </a>
+                            <?php endif?>
+                            <?php if($android):?>
+                                <a  href="<?php echo $android?>" target="_blank" class=""><img style="height:50px" src="<?php echo assetUrl('assets/images/android-button.png')?>" </a>
+                            <?php endif?>
+
+                            <?php if($iphone):?>
+                                <a  href="<?php echo $iphone?>" target="_blank" class=""><img src="<?php echo assetUrl('assets/images/iphone-button.png')?>" </a>
+                            <?php endif?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif?>
+    <?php if(config('enable-premium', false)):?>
+
+        <div class="bg-section-pricing">
+            <div class="img-container">
+                <div class="inner-container ">
+                    <img src="<?php echo assetUrl('assets/images/topo.png')?>"/>
+                </div>
+            </div>
+            <div class="cover">
+            </div>
+            <div class="inner-container">
+                <div class="section">
+                    <div class="section-title" data-animation="fadeInDown" data-animation-delay="400">
+                        <h2><?php _l('go-pro')?></h2>
+                        <span class="note" style="font-size: 20px;color: grey;font-weight: lighter;"><?php _l('go-pro-note')?></span>
+                        <div class="mt-5">
+                            <a data-animation="fadeInDown" data-animation-delay="400" href="<?php echo url('pro')?>" class="btn btn-primary ml-3 pr-5 pl-5"><?php _l('pricing')?></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    <?php endif?>
+    <div class="inner-container">
+        <div class="section footer-section">
+            <div class="links">
+                <?php foreach($C->model('admin')->getPagesMenu('footer') as $page):?>
+                    <a href="<?php echo url('page/'.$page['url'])?>"><?php _l($page['title'])?></a>
+                <?php endforeach;?>
+                <?php Hook::getInstance()->fire('home-footer-links')?>
+            </div>
+
+            <span><?php _l('copyright')?> © <?php echo date('Y')?> <span class="colored"><?php echo config('site-title')?></span>. <?php _l('all-right-reserved')?>.</span>
+        </div>
+    </div>
+</div>

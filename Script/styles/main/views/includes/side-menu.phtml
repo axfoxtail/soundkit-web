@@ -1,0 +1,39 @@
+<ul class="nav">
+    <li><a class="head" href="<?php echo url('')?>"  data-ajax="true"><?php _l('explore')?></a></li>
+    <?php if($C->model('user')->isLoggedIn()):?>
+        <li><a id="feed-menu" class="sub-menu <?php echo ( $C->activeMenu == 'feed') ? 'active' : null?> " href="<?php echo url('')?>"  data-ajax="true"><i class="la la-home "></i> <span><?php _l('home')?></span></a></li>
+    <?php endif?>
+    <li><a id="discover-menu" class="sub-menu  <?php echo ( $C->activeMenu == 'discover') ? 'active' : null?> " href="<?php echo url('discover')?>"  data-ajax="true"> <i class="la la-compass  "></i><span><?php _l('browse')?></span></a></li>
+
+    <li><a id="charts-menu" class="sub-menu  <?php echo ( $C->activeMenu == 'charts') ? 'active' : null?> " href="<?php echo url('charts')?>"  data-ajax="true"><i class="la la-bar-chart "></i> <span><?php _l('trending')?></span></a></li>
+    <li><a id="charts-top-menu" class="sub-menu  <?php echo ( $C->activeMenu == 'charts-top') ? 'active' : null?> " href="<?php echo url('charts/top')?>"  data-ajax="true"><i class="la la-fire "></i> <span><?php _l('top-songs')?></span></a></li>
+
+    <?php Hook::getInstance()->fire('main.menu.home', null)?>
+
+    <?php Hook::getInstance()->fire('main.menu.top')?>
+
+    <?php $pages = $C->model('admin')->getPagesMenu('side');?>
+    <?php if(count($pages) > 0):?>
+        <li><a class="head" href="<?php echo url('')?>"  data-ajax="true"><?php _l('pages')?></a></li>
+        <?php foreach($pages as $page):?>
+            <li><a id="page-<?php echo $page['id']?>" class="sub-menu  <?php echo ( $C->activeMenu == 'page-'.$page['id']) ? 'active' : null?> " href="<?php echo url('page/'.$page['url'])?>"  data-ajax="true"> <i class="la la-info  "></i><span><?php _l($page['title'])?></span></a></li>
+        <?php endforeach?>
+    <?php endif?>
+    <li><a class="head" href="<?php echo url('collection/listen-later')?>"  data-ajax="true"><?php _l('collection')?></a></li>
+    <li><a id="listen-later-menu" class="sub-menu clearfix <?php echo ( $C->activeMenu == 'listen-later') ? 'active' : null?> " href="<?php echo url('collection/listen-later')?>"  data-ajax="true">
+            <div class="float-left">
+                <i class="la-clock-o la "></i> <span><?php _l('listen-later')?></span>
+            </div>
+            <?php if($C->model('user')->isLoggedIn() and $count = $C->model('track')->countInLater()):?>
+                <div class="float-right">
+                    <span class="badge badge-secondary mt-2"><?php echo $count?></span>
+                </div>
+            <?php endif?>
+        </a></li>
+    <li><a id="history-menu" class="sub-menu  <?php echo ( $C->activeMenu == 'history') ? 'active' : null?> " href="<?php echo url('collection/history')?>"  data-ajax="true"> <i class="la-calendar la "></i> <span><?php _l('history')?></span></a></li>
+    <li><a id="likes-menu" class="sub-menu  <?php echo ( $C->activeMenu == 'likes') ? 'active' : null?> " href="<?php echo url('collection/likes')?>"  data-ajax="true"> <i class="la la-heart-o "></i><span><?php _l('likes')?></span></a></li>
+    <li><a id="playlists-menu" class="sub-menu  <?php echo ( $C->activeMenu == 'playlists') ? 'active' : null?> " href="<?php echo url('collection/playlists')?>"  data-ajax="true"> <i class="la la-indent "></i><span><?php _l('playlists')?></span></a></li>
+    <li><a id="collection-albums-menu" class="sub-menu  <?php echo ( $C->activeMenu == 'collection-albums') ? 'active' : null?> " href="<?php echo url('collection/albums')?>"  data-ajax="true"> <i class="la-folder-open la "></i> <span><?php _l('albums')?></span></a></li>
+    <?php Hook::getInstance()->fire('main.menu.collection')?>
+    <?php Hook::getInstance()->fire('main.menu.bottom')?>
+</ul>
